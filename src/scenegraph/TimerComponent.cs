@@ -16,9 +16,22 @@ public class TimerComponent : TextComponent {
         Start = gb.EmulatedSamples;
     }
 
+    public TimeSpan Duration(GameBoy gb)
+    {
+        return TimeSpan.FromSeconds((gb.EmulatedSamples - Start) / 2097152.0);
+    }
+
     public override void BeginScene(GameBoy gb) {
-        TimeSpan duration = TimeSpan.FromSeconds((gb.EmulatedSamples - Start) / 2097152.0);
-        if(Running) Text = string.Format("{0:ss\\.ff}", duration);
+        TimeSpan duration = Duration(gb);//TimeSpan.FromSeconds((gb.EmulatedSamples - Start) / 2097152.0);
+        // if(Running) Text = string.Format("{0:ss\\.ff}", duration);
+        if(Running)
+        {
+            if(duration.Hours>0)
+                Text = string.Format("{0:h\\:mm\\:ss\\.ff}", duration);
+            else
+                Text = string.Format("{0:mm\\:ss\\.fff}", duration);
+        }
+        // if(Running) Text = duration.ToString();
     }
 
     public override void Render(GameBoy gb) {
