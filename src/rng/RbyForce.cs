@@ -124,7 +124,7 @@ public class RbyForce : Rby {
         A = 1;
     }
 
-    public void ForceTurn(RbyTurn playerTurn, RbyTurn enemyTurn = null, bool speedTieWin = true) {
+    public void ForceTurn(RbyTurn playerTurn, RbyTurn enemyTurn = null, bool speedTieWin = true, bool clearText = true) {
         bool useItem = Items[playerTurn.Move] != null;
         if(useItem) {
             if(playerTurn.Pokemon != null) UseItem(playerTurn.Move, playerTurn.Pokemon, playerTurn.Target);
@@ -177,6 +177,8 @@ public class RbyForce : Rby {
         }
 
         CurrentMenuType = MenuType.None;
+
+        if(!clearText) return;
 
         // Semi-terrible code to get around thrash. TODO: fix
         if(BattleMon.ThrashingAbout) {
