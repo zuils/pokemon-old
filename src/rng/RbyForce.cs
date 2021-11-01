@@ -229,6 +229,8 @@ public class RbyForce : Rby {
                     if(roll > 39) roll = 39;
                     roll += 216;
                     A = (byte) ((roll << 1) | (roll >> 7)); // rotate left to counter a rrca instruction
+        // RunUntil("PlayerCalcMoveDamage.moveHitTest", "EnemyMoveHitTest");
+        // Console.WriteLine("damage roll: " + CpuReadBE<ushort>(SYM["hQuotient"] + 2));
                 } else if(address == "StatModifierDownEffect+0021") { // AI's 25% chance to miss
                     A = (turn.Flags & Miss) > 0 ? 0x00 : 0xff;
                 } else if(sideEffects.Any(effect => address.StartsWith(effect))) { // various side effects
