@@ -1194,18 +1194,16 @@ public class RedComparison : RedGlitchless {
     }
     void Bide()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("bide"));
-
+        Record("bide");
         LoadState("basesaves/red/bide.gqs");
+
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE", 3*Turns));
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
         // ForceTurn(new RbyTurn("BUBBLE"));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void EarlyMisty()
     {
@@ -1310,9 +1308,7 @@ public class RedComparison : RedGlitchless {
     }
     void Wrap()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("wrap"));
+        Record("wrap");
 
         LoadState("basesaves/red/wrap.gqs");
 
@@ -1324,13 +1320,11 @@ public class RedComparison : RedGlitchless {
         ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("LEER", Miss));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void TestRange()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("testrange"));
+        Record("testrange");
 
         // LoadState("basesaves/red/psrange2.gqs");
         // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1));
@@ -1394,13 +1388,11 @@ public class RedComparison : RedGlitchless {
         AdvanceFrames(300);
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void MistyAI()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("mistyai"));
+        Record("mistyai");
 
         LoadState("basesaves/red/misty2.gqs");
 
@@ -1409,7 +1401,7 @@ public class RedComparison : RedGlitchless {
         ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void PostMisty()
     {
@@ -1565,10 +1557,7 @@ public class RedComparison : RedGlitchless {
     }
     void Potion()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("potion"));
-
+        Record("potion");
         LoadState("basesaves/red/potion.gqs");
 
         ForceTurn(new RbyTurn("POTION", "SQUIRTLE"), new RbyTurn("STRING SHOT"));
@@ -1576,27 +1565,21 @@ public class RedComparison : RedGlitchless {
         ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void FuryAttack()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("furyattack"));
-
+        Record("furyattack");
         LoadState("basesaves/red/furyattack.gqs");
 
         ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4*Turns));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void Disable()
     {
-        Scene s = new Scene(this, 160, 144);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("disable"));
-
+        Record("disable");
         LoadState("basesaves/red/disable.gqs");
 
         ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("DISABLE", 1*Turns, "EARTHQUAKE"));
@@ -1609,7 +1592,7 @@ public class RedComparison : RedGlitchless {
         // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSION"));
 
         AdvanceFrames(60);
-        s.Dispose();
+        Dispose();
     }
     void Agatha()
     {
@@ -1717,9 +1700,76 @@ public class RedComparison : RedGlitchless {
             MoveTo(27, 7, 5);
         });
     }
+    void GenSquirtle(ushort dvs=0x8777)
+    {
+        // Record("test");
+
+        new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
+        Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
+
+        ClearText(Joypad.A);
+        Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
+
+        ClearText(Joypad.A);
+        Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name rival
+        ClearText(); // Journey begins!
+
+        // PC potion
+        TalkTo(0, 1);
+        ChooseMenuItem(0);
+            ChooseMenuItem(0);
+            ClearText();
+            MenuPress(Joypad.A);
+            ClearText();
+        MenuPress(Joypad.B);
+        ClearText();
+        MenuPress(Joypad.B);
+
+        MoveTo("PalletTown", 10, 1); // Oak cutscene
+        ClearText();
+
+        TalkTo(7, 3);
+        Yes();
+        ClearText();
+        Yes();
+        Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
+        ForceGiftDVs(dvs);
+        ClearText(); // Squirtle received
+
+        MoveTo(5, 6);
+        ClearText();
+
+        // RIVAL1
+        ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("TACKLE"));
+        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
+        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
+        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
+        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
+        ClearText();
+
+        MoveTo("Route1",14,14);
+        ForceEncounter(Action.Up, 1, 0x8888);
+        ClearText();
+        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
+        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
+        ForceTurn(new RbyTurn("TACKLE"));
+
+        MoveTo("ViridianCity", 29, 19);
+        ClearText(); // Receive parcel
+
+        TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
+
+        TalkTo("ViridianMart", 1, 5);
+        Buy("POKE BALL", 4);
+        MoveTo("ViridianCity", 27, 18);
+
+        MoveTo("ViridianCity", 7, 18, Action.Left);
+        Save();
+        SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
+    }
 
     public RedComparison() : base() {
-        ThrashvsHA();
+        GenSquirtle();
         Environment.Exit(0);
     }
 }

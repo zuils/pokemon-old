@@ -27,8 +27,8 @@ public partial class RedGlitchless : RedBlueForce {
         }
         return output.Trim();
     }
-    public static RbyIntroSequence nopal=new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0, RbyStrat.Continue, RbyStrat.Continue);
-    public static RbyIntroSequence palhold=new RbyIntroSequence(RbyStrat.PalHold, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0, RbyStrat.Continue, RbyStrat.Continue);
+    public static RbyIntroSequence nopal=new RbyIntroSequence(RbyStrat.NoPal);
+    public static RbyIntroSequence palhold=new RbyIntroSequence(RbyStrat.PalHold);
     public void MoveAndSplit(Joypad j)
     {
         Inject(j);
