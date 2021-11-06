@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class RedComparison : RedGlitchless {
     public delegate void Scenario();
-    public void Comparison(string state, Scenario left, Scenario right, int wait=300)
+    public void Comparison(string name, byte[] state, Scenario left, Scenario right, int wait=300)
     {
         LoadState(state);
 
@@ -43,12 +43,17 @@ public class RedComparison : RedGlitchless {
 
         s.Dispose();
 
-        Console.WriteLine("left: " + tleft.Text);
-        Console.WriteLine("right: " + tright.Text);
-        Console.WriteLine("diff: " + diff);
+        Console.WriteLine("left:  " + tleft.Text  + "   " + (diff.TotalSeconds<0?"+":"-") + diff.ToString("ss\\.fffffff"));
+        Console.WriteLine("right: " + tright.Text + "   " + (diff.TotalSeconds<0?"-":"+") + diff.ToString("ss\\.fffffff"));
 
-        string output=Regex.Match(state, @"([^/\\]+)\.gqs").Groups[1].Value;
-        FFMPEG.RunFFMPEGCommand("-y -i movies/left.mp4 -i movies/right.mp4 -filter_complex hstack movies/" + output + ".mp4");
+        FFMPEG.RunFFMPEGCommand("-y -i movies/left.mp4 -i movies/right.mp4 -filter_complex hstack movies/" + name + ".mp4");
+    }
+    public void Comparison(string statepath, Scenario left, Scenario right, int wait=300)
+    {
+        LoadState(statepath);
+        byte[] state = SaveState();
+        string name = Regex.Match(statepath, @"([^/\\]+)\.gqs").Groups[1].Value;
+        Comparison(name, state, left, right, wait);
     }
 
     void BlackBeltSave()
@@ -242,18 +247,18 @@ public class RedComparison : RedGlitchless {
             MoveTo(10, 96, Action.Up);
             ClearText();
 
-            // TalkTo(8, 85, Action.Up);
+            TalkTo(8, 85, Action.Up); // talk to the girl
             // MoveTo(8, 86, Action.Up);
-            MoveTo(7, 85, Action.Up);
-            ClearText();
+            // MoveTo(7, 85, Action.Up);
+            // ClearText();
 
             MoveTo(8, 71, Action.Up);
             UseItem("SUPER REPEL");
             UseItem("BICYCLE");
 
-            TalkTo(10, 56, Action.Up);
-            // MoveTo(12, 56, Action.Up);
-            // ClearText();
+            // TalkTo(10, 56, Action.Up); // talk to the guy
+            MoveTo(12, 56, Action.Up);
+            ClearText();
 
             MoveTo(5, 35, Action.Up);
             ClearText();
@@ -818,12 +823,15 @@ public class RedComparison : RedGlitchless {
     {
         Comparison("basesaves/red/billether.gqs", ()=>{
             ClearText();
+            // CpuWriteBE<ushort>("wPartyMon1HP", 15 );
             PickupItemAt(38, 3);
             TalkTo("BillsHouse", 6, 5, Action.Right);
             Yes();
             ClearText();
             TalkTo(1, 4);
             TalkTo(4, 4);
+            // UseItem("POTION", "NIDOKING");
+            // UseItem("POTION", "NIDOKING");
             UseItem("POTION", "NIDOKING");
             UseItem("RARE CANDY", "NIDOKING");
             UseItem("ETHER", "NIDOKING", "MEGA PUNCH");
@@ -846,6 +854,7 @@ public class RedComparison : RedGlitchless {
     }
     void AgathaMenu()
     {
+        // todo fix this
         Comparison("basesaves/red/agathamenu.gqs", ()=>{
             ClearText();
             Execute("U U U");
@@ -863,7 +872,7 @@ public class RedComparison : RedGlitchless {
             Press(Joypad.Right);
         });
     }
-    void Sabrina()
+    void SabrinaMovement()
     {
         Comparison("basesaves/red/sabrina.gqs", ()=>{
             Execute("R");
@@ -883,7 +892,7 @@ public class RedComparison : RedGlitchless {
             TalkTo("SaffronGym", 9, 8, Action.Up);
         });
     }
-    void Erika()
+    void ErikaMovement()
     {
         Comparison("basesaves/red/erika.gqs", ()=>{
             // AdvanceFrames(10);
@@ -1033,14 +1042,14 @@ public class RedComparison : RedGlitchless {
     }
     void ThrashvsHA()
     {
-        // LoadState("basesaves/red/oddishthrash_full.gqs");
+        // LoadState("basesaves/red/oddishthrash.gqs");
         // Press(Joypad.A);
         // ClearText();
         // ForceTurn(new RbyTurn("MEGA PUNCH"));
         // ForceTurn(new RbyTurn("HORN ATTACK"));
-        // SaveState("basesaves/red/oddishthrash.gqs");
+        // byte[] state = SaveState();
 
-        // Comparison("basesaves/red/oddishthrash.gqs", ()=>{
+        // Comparison("oddishthrash", state, ()=>{
         //     TeachLevelUpMove("WATER GUN");
         //     ForceTurn(new RbyTurn("THRASH"), null, true, false);
         // }, ()=>{
@@ -1048,36 +1057,36 @@ public class RedComparison : RedGlitchless {
         //     ForceTurn(new RbyTurn("HORN ATTACK"), null, true, false);
         // });
 
-        LoadState("basesaves/red/4ttgthrash_full.gqs");
-        Press(Joypad.A);
-        ClearText();
-        ForceTurn(new RbyTurn("THRASH", ThreeTurn));
-        ForceTurn(new RbyTurn("THRASH"));
-        SaveState("basesaves/red/4ttgthrash.gqs");
-
-        Comparison("basesaves/red/4ttgthrash.gqs", ()=>{
-            ForceTurn(new RbyTurn("THRASH"));
-            ForceTurn(new RbyTurn("THRASH"), null, true, false);
-        }, ()=>{
-            ForceTurn(new RbyTurn("THRASH"));
-            ForceTurn(new RbyTurn("HORN ATTACK"), null, true, false);
-        });
-
-        // LoadState("basesaves/red/surgethrash_full.gqs");
+        // LoadState("basesaves/red/4ttgthrash.gqs");
+        // Press(Joypad.A);
         // ClearText();
         // ForceTurn(new RbyTurn("THRASH", ThreeTurn));
         // ForceTurn(new RbyTurn("THRASH"));
-        // ForceTurn(new RbyTurn("THRASH"), new RbyTurn("GROWL", Miss));
-        // BattleSwitch("PIDGEY", new RbyTurn("THUNDERBOLT"));
-        // SaveState("basesaves/red/surgethrash.gqs");
+        // byte[] state = SaveState();
 
-        // Comparison("basesaves/red/surgethrash.gqs", ()=>{
-        //     SendOut("NIDOKING");
+        // Comparison("4ttgthrash", state, ()=>{
+        //     ForceTurn(new RbyTurn("THRASH"));
         //     ForceTurn(new RbyTurn("THRASH"), null, true, false);
         // }, ()=>{
-        //     SendOut("NIDOKING");
+        //     ForceTurn(new RbyTurn("THRASH"));
         //     ForceTurn(new RbyTurn("HORN ATTACK"), null, true, false);
         // });
+
+        LoadState("basesaves/red/surgethrash.gqs");
+        ClearText();
+        ForceTurn(new RbyTurn("THRASH", ThreeTurn));
+        ForceTurn(new RbyTurn("THRASH"));
+        ForceTurn(new RbyTurn("THRASH"), new RbyTurn("GROWL", Miss));
+        BattleSwitch("PIDGEY", new RbyTurn("THUNDERBOLT"));
+        byte[] state = SaveState();
+
+        Comparison("surgethrash", state, ()=>{
+            SendOut("NIDOKING");
+            ForceTurn(new RbyTurn("THRASH"), null, true, false);
+        }, ()=>{
+            SendOut("NIDOKING");
+            ForceTurn(new RbyTurn("HORN ATTACK"), null, true, false);
+        });
     }
     void Boulder()
     {
@@ -1142,68 +1151,6 @@ public class RedComparison : RedGlitchless {
             MoveTo(26, 3);
             MoveAndSplit(Joypad.Right);
         });
-    }
-    void AgathaBug()
-    {
-        LoadState("basesaves/red/agathabug.gqs");
-        ForceTurn(new RbyTurn("EARTHQUAKE"));
-
-        // return;
-
-        string GetLine()
-        {
-            int pc = PC;
-            if(pc > 0x4000) pc |= CpuRead("hLoadedROMBank") << 16;
-            string pcs = SYM.Contains(pc) ? SYM[pc] : String.Format("{0:x4}",pc);
-
-            int sp=CpuReadLE<ushort>(SP);
-            if(sp > 0x4000) sp |= CpuRead("hLoadedROMBank") << 16;
-            string sps = String.Format("{0:x4}",sp) + (SYM.Contains(sp) ? " ("+SYM[sp]+")" : "");
-
-            return "instruction: " + pcs + "  stack: " + sps + "  ly:"+(int)CpuRead(0xff44);
-        }
-
-
-        LoadState("basesaves/red/agathabug_test.gqs");
-
-        for(int k=0; k<30; ++k) {
-            const int maxhist=100;
-            string[] hist=new string[maxhist];
-            int j=0;
-            string ins=GetLine();
-            while(!ins.Contains("NULL+0040")) {
-                RunFor(1);
-                ins=GetLine();
-                hist[j]=ins;
-                j=(j+1)%maxhist;
-            }
-
-            for(int i=j; i<maxhist; ++i )
-                Console.WriteLine(hist[i]);
-            for(int i=0; i<j; ++i )
-                Console.WriteLine(hist[i]);
-
-            // RunUntil(SYM["RandomizeDamage.loop"] + 0x0);
-
-            for(int i=0; i<100; ++i) {
-                RunFor(1);
-                Console.WriteLine(GetLine());
-            }
-            Console.WriteLine();
-        }
-    }
-    void Bide()
-    {
-        Record("bide");
-        LoadState("basesaves/red/bide.gqs");
-
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE", 3*Turns));
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
-        // ForceTurn(new RbyTurn("BUBBLE"));
-
-        AdvanceFrames(60);
-        Dispose();
     }
     void EarlyMisty()
     {
@@ -1305,103 +1252,6 @@ public class RedComparison : RedGlitchless {
             // MoveTo("CeruleanCity", 36, 19);
             // ForceTurnAndSplit(new RbyTurn("THRASH"));
         });
-    }
-    void Wrap()
-    {
-        Record("wrap");
-
-        LoadState("basesaves/red/wrap.gqs");
-
-        ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("WRAP", 20 | ThreeTurn));
-        ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        // ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        // ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("LEER", Miss));
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void TestRange()
-    {
-        Record("testrange");
-
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1 | Crit));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39 | Crit));
-
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1 | Crit));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39 | Crit));
-
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1 | Crit));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39 | Crit));
-
-
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1 | Crit));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39 | Crit));
-
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39));
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1 | Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39 | Crit));
-
-        // ForceTurn(new RbyTurn("LEER"), new RbyTurn("QUICK ATTACK", 39 | Crit));
-
-        // ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("HAZE"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"));
-        // ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("BITE", 1));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 1 | Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39 | Crit));
-        AdvanceFrames(300);
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void MistyAI()
-    {
-        Record("mistyai");
-
-        LoadState("basesaves/red/misty2.gqs");
-
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM", AiItem));
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
-
-        AdvanceFrames(60);
-        Dispose();
     }
     void PostMisty()
     {
@@ -1555,129 +1405,6 @@ public class RedComparison : RedGlitchless {
             MoveTo("SaffronGym", 8, 17);
         });
     }
-    void Potion()
-    {
-        Record("potion");
-        LoadState("basesaves/red/potion.gqs");
-
-        ForceTurn(new RbyTurn("POTION", "SQUIRTLE"), new RbyTurn("STRING SHOT"));
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void FuryAttack()
-    {
-        Record("furyattack");
-        LoadState("basesaves/red/furyattack.gqs");
-
-        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4*Turns));
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void Disable()
-    {
-        Record("disable");
-        LoadState("basesaves/red/disable.gqs");
-
-        ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("DISABLE", 1*Turns, "EARTHQUAKE"));
-        ForceTurn(new RbyTurn("THUNDERBOLT", Miss), new RbyTurn("POISON GAS"));
-        ForceTurn(new RbyTurn("EARTHQUAKE"));
-
-        // RbyTurn.defaultRoll=20;
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("DISABLE", 8*Turns, "EARTHQUAKE"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("HEADBUTT", Crit));
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSION"));
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void Agatha()
-    {
-        Record("agatha");
-
-        LoadState("basesaves/red/agatha.gqs");
-
-        ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("DREAM EATER", Switch));
-        ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("CONFUSE RAY", AiItem));
-        ForceTurn(new RbyTurn("EARTHQUAKE"));
-
-        AdvanceFrames(60);
-        Dispose();
-    }
-    void MoveRng()
-    {
-        // Record("moverng");
-
-        // int i=0;
-        // for(int i=0; i<256; ++i) {
-            // LoadState("basesaves/red/agatha.gqs");
-            // LoadState("basesaves/red/blackbelt.gqs");
-            // LoadState("basesaves/red/champ.gqs");
-            // LoadState("basesaves/red/lorelei.gqs");
-            // AdvanceFrames(7);
-
-
-
-            // Hold(Joypad.B, SYM["Random"]);
-            // int addr = CpuReadLE<ushort>(SP);
-            // if(addr > 0x4000) addr |= CpuRead("hLoadedROMBank") << 16;
-            // string address = SYM[addr];
-            // Console.WriteLine(address);
-
-            // Hold(Joypad.B, SYM["TrainerAI.getpointer+0006"]);
-            // A=i;
-            // if(ClearText(Joypad.B, 1, SYM["ExecuteEnemyMove"], SYM["MainInBattleLoop.AIActionUsedPlayerFirst"])==SYM["ExecuteEnemyMove"])
-            //     Console.WriteLine(i + " skip");
-            // else
-            //     Console.WriteLine(i + " AI");
-
-            // 63 64 63 66
-            // Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
-            // A=i;
-            // int r;
-            // while((r=Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"], SYM["SelectEnemyMove.moveChosen"], SYM["SelectEnemyMove.done"]))!=SYM["SelectEnemyMove.done"])
-            // {
-            //     if(r==SYM["SelectEnemyMove.chooseRandomMove+0004"]) Console.WriteLine("chooseRandomMove "+A);
-            //     if(r==SYM["SelectEnemyMove.moveChosen"]) Console.WriteLine("moveChosen "+B);
-            //     RunFor(1);
-            // }
-            // Console.WriteLine("done " + Moves[A].Name + "\n");
-
-            // Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
-            // A=i;
-            // Hold(Joypad.B, SYM["SelectEnemyMove.moveChosen"]);
-            // Console.WriteLine(B);
-            // Hold(Joypad.B, SYM["SelectEnemyMove.done"]);
-            // Console.WriteLine(Moves[A].Name);
-        // }
-
-        // var score=new Dictionary<string,int>();
-        // LoadState("basesaves/red/lorelei.gqs");
-        // byte[] state=SaveState();
-        // const int it=1000000;
-        // Console.WriteLine("iterations: "+it);
-        // for(int i=0; i<it; ++i) {
-        //     Hold(Joypad.B, SYM["SelectEnemyMove.done"]);
-        //     score[Moves[A].Name] = score.GetValueOrDefault(Moves[A].Name) + 1;
-        //     LoadState(state);
-        //     AdvanceFrame();
-        //     state=SaveState();
-        //     if(i%1000==999) Console.WriteLine(".");
-        // }
-        // foreach(var e in score)
-        //     Console.WriteLine(e.Key + ": " + e.Value + " (" + 100.0*e.Value/it + "%)");
-
-        // iterations: 1000000
-        // AURORA BEAM: 532773 (53,2773%)
-        // REST: 467227 (46,7227%)
-
-
-        AdvanceFrames(60);
-        Dispose();
-    }
     void BikevsWalk()
     {
         // Comparison("basesaves/red/biketower.gqs", ()=>{
@@ -1700,76 +1427,168 @@ public class RedComparison : RedGlitchless {
             MoveTo(27, 7, 5);
         });
     }
-    void GenSquirtle(ushort dvs=0x8777)
+    void ChampAnims()
     {
-        // Record("test");
+        Scenario Setup = ()=>{
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            // ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WING ATTACK", 20));
+        };
+        Scenario BlizzPidgeot = ()=>{
+            Setup();
+            ForceTurn(new RbyTurn("BLIZZARD"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"), null, true, false);
+        };
+        Scenario EQAlakazam = ()=>{
+            Setup();
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("EARTHQUAKE"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"), null, true, false);
+        };
+        Scenario BlizzRhydon = ()=>{
+            Setup();
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("BLIZZARD"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"), null, true, false);
+        };
+        Scenario TBGyarados = ()=>{
+            Setup();
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"), null, true, false);
+        };
+        Scenario DrillAll = ()=>{
+            Setup();
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"), null, true, false);
+        };
 
-        new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
-        Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
-
-        ClearText(Joypad.A);
-        Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
-
-        ClearText(Joypad.A);
-        Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name rival
-        ClearText(); // Journey begins!
-
-        // PC potion
-        TalkTo(0, 1);
-        ChooseMenuItem(0);
-            ChooseMenuItem(0);
+        Comparison("basesaves/red/champanims_noredbar.gqs", ()=>{
+            // CpuWriteBE<ushort>("wPartyMon2HP", 25 );
+            // CpuWrite("wPartyMon2PP", 6 );
             ClearText();
-            MenuPress(Joypad.A);
+            BlizzRhydon();
+            ClearTextUntil(Joypad.None, SYM["EnterMap"]);
+        }, ()=>{
+            // CpuWriteBE<ushort>("wPartyMon2HP", 70 );
+            CpuWrite("wPartyMon2PP", 6 );
             ClearText();
-        MenuPress(Joypad.B);
-        ClearText();
-        MenuPress(Joypad.B);
+            DrillAll();
+            ClearTextUntil(Joypad.None, SYM["EnterMap"]);
+        });
+    }
+    void PalletSurf()
+    {
+        Comparison("basesaves/red/palletsurf.gqs", ()=>{
+            MoveTo(4, 8); // no troll
 
-        MoveTo("PalletTown", 10, 1); // Oak cutscene
-        ClearText();
+            MoveTo(4, 13, Action.Down);
+            UseItem("SUPER REPEL");
+            UseItem("HM03", "SQUIRTLE");
+            Surf();
+            MoveTo(32, 4, 0);
+        }, ()=>{
+            MoveTo(4, 8); // no troll
+            MoveTo(3, 17);
+            Press(Joypad.Right);
 
-        TalkTo(7, 3);
-        Yes();
-        ClearText();
-        Yes();
-        Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
-        ForceGiftDVs(dvs);
-        ClearText(); // Squirtle received
+            // MoveTo(3, 17, Action.Right); // troll
 
-        MoveTo(5, 6);
-        ClearText();
-
-        // RIVAL1
-        ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("TACKLE"));
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
-        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
-        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
-        ClearText();
-
-        MoveTo("Route1",14,14);
-        ForceEncounter(Action.Up, 1, 0x8888);
-        ClearText();
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
-        ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
-        ForceTurn(new RbyTurn("TACKLE"));
-
-        MoveTo("ViridianCity", 29, 19);
-        ClearText(); // Receive parcel
-
-        TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
-
-        TalkTo("ViridianMart", 1, 5);
-        Buy("POKE BALL", 4);
-        MoveTo("ViridianCity", 27, 18);
-
-        MoveTo("ViridianCity", 7, 18, Action.Left);
-        Save();
-        SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
+            UseItem("SUPER REPEL");
+            UseItem("HM03", "SQUIRTLE");
+            Surf();
+            MoveTo(32, 4, 0);
+        });
+    }
+    void EarlyPotions()
+    {
+        // Comparison("basesaves/red/pcpotion.gqs", ()=>{
+        //     ClearText();
+        //     TalkTo(0, 1);
+        //     ChooseMenuItem(0);
+        //         ChooseMenuItem(0);
+        //         ClearText();
+        //         MenuPress(Joypad.A);
+        //         ClearText();
+        //     MenuPress(Joypad.B);
+        //     ClearText();
+        //     MenuPress(Joypad.B);
+        //     MoveTo(7, 1);
+        // }, ()=>{
+        //     ClearText();
+        //     MoveTo(7, 1);
+        // });
+        // Comparison("basesaves/red/martguypotion.gqs", ()=>{
+        //     MoveTo(8, 27);
+        //     TalkTo(5, 24);
+        //     MoveTo(11, 24);
+        //     MoveTo(12, 23);
+        // }, ()=>{
+        //     MoveTo(8, 27);
+        //     MoveTo(11, 24);
+        //     MoveTo(12, 23);
+        // });
+        // Comparison("basesaves/red/treepotion.gqs", ()=>{
+        //     PickupItemAt(14, 4);
+        //     MoveTo(13, 7, 71);
+        // }, ()=>{
+        //     MoveTo(13, 7, 71);
+        // });
+        // Comparison("basesaves/red/extrapotion.gqs", ()=>{
+        //     MoveTo(7, 24);
+        //     PickupItemAt(12, 29);
+        //     MoveTo(1, 21, Action.Up);
+        // }, ()=>{
+        //     MoveTo(7, 22);
+        //     MoveTo(1, 21, Action.Up);
+        // });
+        Comparison("basesaves/red/weedlepotion.gqs", ()=>{
+            PickupItemAt(1, 18);
+            MoveTo(1, 18);
+            ClearText();
+        }, ()=>{
+            TalkTo(2, 18);
+        });
+    }
+    void BrunoMenu()
+    {
+        Comparison("basesaves/red/brunomenu.gqs", ()=>{
+            ClearText();
+            Execute("U U U U U");
+            UseItem("MAX ETHER", "NIDOKING", "HORN DRILL");
+            MoveTo(4, 2);
+            Press(Joypad.Right, Joypad.A);
+        }, ()=>{
+            ClearText();
+            Execute("U");
+            UseItem("MAX ETHER", "NIDOKING", "HORN DRILL");
+            Execute("U U");
+            MoveTo(4, 2);
+            Press(Joypad.Right, Joypad.None, Joypad.A);
+            // Press(Joypad.Right, Joypad.A);
+        });
     }
 
-    public RedComparison() : base() {
-        GenSquirtle();
+    public RedComparison() : base()
+    {
+        BrunoMenu();
         Environment.Exit(0);
     }
 }
