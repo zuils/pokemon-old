@@ -1,4 +1,4 @@
-public partial class RedGlitchless : RedBlueForce {
+public partial class RedGlitchless {
     public void Race(int T=1, int R=1, int S=1, int N=1, bool IT=false) {
         System.Console.Write(T+" "+R+" "+S+" "+N+" ");
         // Scene s = new Scene(this, 160, 160);
@@ -115,7 +115,7 @@ public partial class RedGlitchless : RedBlueForce {
             AdvanceFrames(105); // fade out (todo?)
             HardReset();
 
-            nopal.Execute(this);
+            NoPal.Execute(this);
             Execute(SpacePath("LLLULLUAULALDLDLLDADDADLALLALUUA"));
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
@@ -167,7 +167,7 @@ public partial class RedGlitchless : RedBlueForce {
             AdvanceFrames(105); // fade out (todo?)
             HardReset();
 
-            palhold.Execute(this);
+            PalHold.Execute(this);
             Execute(SpacePath("UUUUUUUUUUUUUUU"+"URUAUUAUUU"+"UUAUU"));
             Press(Joypad.Right);
             ForceEncounter(Action.Right, 1, 0x8888); // todo doesnt work with turnframes
@@ -259,7 +259,7 @@ public partial class RedGlitchless : RedBlueForce {
             AdvanceFrames(105); // fade out (todo?)
             HardReset();
 
-            palhold.Execute(this);
+            PalHold.Execute(this);
             Execute(SpacePath("RRRRRRRRURRUUUUUARRRRRRRRRRRRDDDDDRRRRRRRARUURRUUUUUUUUUURRRRUUUUUUUUUURRRRR"));
             MoveAndSplit(Joypad.Up);
         });
@@ -544,7 +544,7 @@ public partial class RedGlitchless : RedBlueForce {
             AdvanceFrames(105); // fade out (todo?)
             HardReset();
 
-            nopal.Execute(this);
+            NoPal.Execute(this);
             Execute(SpacePath("SDLALLAURUAUUUU")); // 60 cans
             ForceCan();
             MoveTo("VermilionGym", 6, 11);

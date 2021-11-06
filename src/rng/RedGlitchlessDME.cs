@@ -87,7 +87,7 @@ public partial class RedGlitchless {
             AdvanceFrames(105); // fade out
             HardReset();
 
-            nopal.Execute(this);
+            NoPal.Execute(this);
             Execute(SpacePath("LLLULLUAULALDLDLLDADDADLALLALUUA"));
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
@@ -199,7 +199,7 @@ public partial class RedGlitchless {
             AdvanceFrames(105); // fade out
             HardReset();
 
-            palhold.Execute(this);
+            PalHold.Execute(this);
             Execute(SpacePath("RRRRRRRRURRUUUUUARRRRRRRRRRRRDDDDDRRRRRRRARUURRUUUUUUUUUURRRRUUUUUUUUUURRRRR"));
             MoveAndSplit(Joypad.Up);
         });
@@ -454,7 +454,7 @@ public partial class RedGlitchless {
             AdvanceFrames(105); // fade out
             HardReset();
 
-            nopal.Execute(this);
+            NoPal.Execute(this);
             Execute(SpacePath("DLALLAURUUUUU"));
             ForceCan();
             MoveTo("VermilionGym", 4, 11);
