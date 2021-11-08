@@ -1,10 +1,8 @@
 public partial class RedGlitchless {
     public void Race(int T=1, int R=1, int S=1, int N=1, bool IT=false) {
         System.Console.Write(T+" "+R+" "+S+" "+N+" ");
-        // Scene s = new Scene(this, 160, 160);
-        // s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        // s.AddComponent(new RecordingComponent("red-glitchless-race"));
-        // TimerComponent timer=new TimerComponent(0,144,2.0f);
+
+        RecordAndTime("red-glitchless-race");
         RbyTurn.DefaultRoll = 20;
 
         // ClearCache();
@@ -13,7 +11,7 @@ public partial class RedGlitchless {
             Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
         });
 
-        // s.AddComponent(timer);
+        Timer.Start();
 
         ClearCache();
         CacheState("rival1", () => {
@@ -597,10 +595,12 @@ public partial class RedGlitchless {
 
             MoveTo(21, 3, 10);
             MoveTo(8, 18);
+            MoveAndSplit(Joypad.Up);
         });
 
         // ClearCache();
         CacheState("rocktunnel", () => {
+            AfterMoveAndSplit();
             MoveTo("RockTunnel1F", 15, 4);
             UseItem("REPEL");
 
@@ -1299,7 +1299,7 @@ public partial class RedGlitchless {
             AdvanceFrames(164);
         });
 
-        // timer.Running=false;
+        Timer.Stop();
         AdvanceFrames(600);
         Dispose();
     }

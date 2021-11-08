@@ -1,9 +1,6 @@
 public partial class RedGlitchless {
     public void WR() {
-        Scene s = new Scene(this, 160, 160);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("red-glitchless-wr"));
-        TimerComponent timer=new TimerComponent(0,144,2.0f);
+        RecordAndTime("red-glitchless-wr");
         RbyTurn.DefaultRoll = 20;
 
         // ClearCache();
@@ -12,7 +9,7 @@ public partial class RedGlitchless {
             Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
         });
 
-        // s.AddComponent(timer);
+        Timer.Start();
 
         // ClearCache();
         CacheState("rival1", () => {
@@ -140,7 +137,7 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
         });
 
-        ClearCache();
+        // ClearCache();
         CacheState("brock", () => {
             MoveTo("PewterCity",18,35);
             PartySwap("SQUIRTLE", "NIDORANM");
@@ -549,10 +546,12 @@ public partial class RedGlitchless {
 
             MoveTo(21, 3, 10);
             MoveTo(8, 18);
+            MoveAndSplit(Joypad.Up);
         });
 
         // ClearCache();
         CacheState("rocktunnel", () => {
+            AfterMoveAndSplit();
             MoveTo("RockTunnel1F", 15, 4);
             UseItem("REPEL");
 
@@ -1240,7 +1239,7 @@ public partial class RedGlitchless {
             AdvanceFrames(164);
         });
 
-        timer.Running=false;
+        Timer.Stop();
         AdvanceFrames(600);
         Dispose();
     }

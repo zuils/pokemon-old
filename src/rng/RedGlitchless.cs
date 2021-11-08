@@ -6,6 +6,7 @@ public partial class RedGlitchless : RedBlueForce {
 
     public static RbyIntroSequence NoPal=new RbyIntroSequence(RbyStrat.NoPal);
     public static RbyIntroSequence PalHold=new RbyIntroSequence(RbyStrat.PalHold);
+    TimerComponent Timer=new TimerComponent(0,144,2.0f);
 
     public static string SpacePath(string path)
     {
@@ -59,7 +60,17 @@ public partial class RedGlitchless : RedBlueForce {
         ClearTextUntil(Joypad.None, SYM["EnterMap"]);
     }
 
-    public RedGlitchless() : base("roms/pokered.gbc", true) {
+    void RecordAndTime(string movie, bool start = false)
+    {
+        Scene s = new Scene(this, 160, 160);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
+        s.AddComponent(new RecordingComponent(movie));
+        s.AddComponent(Timer);
+        Timer.Running = start;
+    }
+
+    public RedGlitchless() : base("roms/pokered.gbc")
+    {
         SetSpeedupFlags(SpeedupFlags.None);
     }
 }

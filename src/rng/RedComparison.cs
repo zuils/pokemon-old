@@ -21,7 +21,7 @@ public class RedComparison : RedGlitchless {
         right();
 
         tright.Running = false;
-        TimeSpan diff=tright.Duration(this);
+        TimeSpan diff=tright.Duration();
         AdvanceFrames(wait);
 
         s.Dispose();
@@ -36,7 +36,7 @@ public class RedComparison : RedGlitchless {
         left();
 
         tleft.Running = false;
-        diff=diff-tleft.Duration(this);
+        diff=diff-tleft.Duration();
         if(diff.TotalSeconds>0)
             AdvanceFrames((int)(diff.TotalSeconds*59.7));
         AdvanceFrames(wait);
@@ -486,7 +486,7 @@ public class RedComparison : RedGlitchless {
             AdvanceFrames(hof);
 
         tright.Running = false;
-        TimeSpan diff=tright.Duration(this);
+        TimeSpan diff=tright.Duration();
         AdvanceFrames(wait);
         s.Dispose();
 
@@ -503,7 +503,7 @@ public class RedComparison : RedGlitchless {
             AdvanceFrames(hof);
 
         tleft.Running = false;
-        TimeSpan diff1=diff-tleft.Duration(this);
+        TimeSpan diff1=diff-tleft.Duration();
         if(diff1.TotalSeconds>0)
             AdvanceFrames((int)(diff1.TotalSeconds*59.7));
         AdvanceFrames(wait);
@@ -522,7 +522,7 @@ public class RedComparison : RedGlitchless {
             AdvanceFrames(hof);
 
         t3.Running = false;
-        diff=diff-t3.Duration(this);
+        diff=diff-t3.Duration();
         if(diff.TotalSeconds>0)
             AdvanceFrames((int)(diff.TotalSeconds*59.7));
         AdvanceFrames(wait);

@@ -3,8 +3,9 @@ using System.Numerics;
 
 public class TimerComponent : TextComponent {
 
-    public ulong Start;
+    public ulong StartTime;
     public bool Running = true;
+    GameBoy Gb;
 
     public Vector4 RunningColor = new Vector4(97.0f / 255.0f, 200.0f / 255.0f, 135.0f / 255.0f, 255.0f);
     public Vector4 FinishedColor = new Vector4(84.0f / 255.0f, 167.0f / 255.0f, 229.0f / 255.0f, 255.0f);
@@ -13,25 +14,31 @@ public class TimerComponent : TextComponent {
     }
 
     public override void OnInit(GameBoy gb) {
-        Start = gb.EmulatedSamples;
+        StartTime = gb.EmulatedSamples;
+        Gb = gb;
     }
 
-    public TimeSpan Duration(GameBoy gb)
-    {
-        return TimeSpan.FromSeconds((gb.EmulatedSamples - Start) / 2097152.0);
+    public void Start() {
+        if(Gb != null) OnInit(Gb);
+        Running = true;
+    }
+
+    public void Stop() {
+        Running = false;
+    }
+
+    public TimeSpan Duration() {
+        return TimeSpan.FromSeconds((Gb.EmulatedSamples - StartTime) / 2097152.0);
     }
 
     public override void BeginScene(GameBoy gb) {
-        TimeSpan duration = Duration(gb);//TimeSpan.FromSeconds((gb.EmulatedSamples - Start) / 2097152.0);
-        // if(Running) Text = string.Format("{0:ss\\.ff}", duration);
-        if(Running)
-        {
+        TimeSpan duration = Duration();
+        if(Running) {
             if(duration.Hours>0)
                 Text = string.Format("{0:h\\:mm\\:ss\\.ff}", duration);
             else
                 Text = string.Format("{0:mm\\:ss\\.fff}", duration);
         }
-        // if(Running) Text = duration.ToString();
     }
 
     public override void Render(GameBoy gb) {

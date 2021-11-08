@@ -1,20 +1,17 @@
 public partial class RedGlitchless {
     public void DoubleMaxEther() {
-        Scene s = new Scene(this, 160, 160);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
-        s.AddComponent(new RecordingComponent("red-glitchless-doublemaxether"));
-        TimerComponent timer=new TimerComponent(0,144,2.0f);
+        RecordAndTime("red-glitchless-doublemaxether");
         RbyTurn.DefaultRoll = 39;
 
-        ClearCache();
+        // ClearCache();
         CacheState("newgame", () => {
             new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
             Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
         });
 
-        s.AddComponent(timer);
+        Timer.Start();
 
-        ClearCache();
+        // ClearCache();
         CacheState("rival1", () => {
             ClearText(Joypad.A);
             Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
@@ -505,10 +502,12 @@ public partial class RedGlitchless {
 
             MoveTo(21, 3, 10);
             MoveTo(8, 18);
+            MoveAndSplit(Joypad.Up);
         });
 
         // ClearCache();
         CacheState("rocktunnel", () => {
+            AfterMoveAndSplit();
             MoveTo("RockTunnel1F", 15, 4);
             UseItem("REPEL");
 
@@ -1230,7 +1229,7 @@ public partial class RedGlitchless {
             AdvanceFrames(164);
         });
 
-        timer.Running=false;
+        Timer.Stop();
         AdvanceFrames(600);
         Dispose();
     }
