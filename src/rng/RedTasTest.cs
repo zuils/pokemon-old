@@ -85,7 +85,16 @@ public class RedTasTest : RedGlitchless {
     }
     void TestRange()
     {
-        Record("testrange");
+        // Record("testrange");
+        const int x=3;
+        Scene s = new Scene(this, 160*x, 144*x);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160*x, 144*x));
+        SetSpeedupFlags(SpeedupFlags.None);
+        Scene.AddComponent(new RecordingComponent("testrange"));
+        void HP()
+        {
+            Console.WriteLine(CpuReadBE<ushort>("wEnemyMonHP"));
+        }
 
         // LoadState("basesaves/red/psrange2.gqs");
         // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1));
@@ -146,9 +155,28 @@ public class RedTasTest : RedGlitchless {
         // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39));
         // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 1 | Crit));
         // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39 | Crit));
-        AdvanceFrames(300);
 
-        AdvanceFrames(60);
+        // LoadState("basesaves/red/nerd.gqs"); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss)); HP();
+        // LoadState("basesaves/red/nerd.gqs"); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7+8), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss), true, false); HP();
+        // LoadState("basesaves/red/nerd.gqs"); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7+8+7), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("WATER GUN", 1), new RbyTurn("POUND", Miss), true, false); HP();
+        LoadState("basesaves/red/nerd.gqs");
+        CpuWriteBE<ushort>("wEnemyMonHP",13); HP();
+        SaveState("basesaves/red/nerd13.gqs");
+        ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
+        LoadState("basesaves/red/nerd.gqs");
+        CpuWriteBE<ushort>("wEnemyMonHP",12); HP();
+        ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
+        LoadState("basesaves/red/nerd.gqs");
+        CpuWriteBE<ushort>("wEnemyMonHP",13); HP();
+        ForceTurn(new RbyTurn("WATER GUN", 5), null, true, false); HP();
+
+        AdvanceFrames(300);
         Dispose();
     }
     void MistyAI()
@@ -230,7 +258,6 @@ public class RedTasTest : RedGlitchless {
             // else
             //     Console.WriteLine(i + " AI");
 
-            // 63 64 63 66
             // Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
             // A=i;
             // int r;
@@ -250,29 +277,121 @@ public class RedTasTest : RedGlitchless {
             // Console.WriteLine(Moves[A].Name);
         // }
 
-        // var score=new Dictionary<string,int>();
-        // LoadState("basesaves/red/lorelei.gqs");
-        // byte[] state=SaveState();
-        // const int it=1000000;
-        // Console.WriteLine("iterations: "+it);
-        // for(int i=0; i<it; ++i) {
-        //     Hold(Joypad.B, SYM["SelectEnemyMove.done"]);
-        //     score[Moves[A].Name] = score.GetValueOrDefault(Moves[A].Name) + 1;
-        //     LoadState(state);
-        //     AdvanceFrame();
-        //     state=SaveState();
-        //     if(i%1000==999) Console.WriteLine(".");
-        // }
-        // foreach(var e in score)
-        //     Console.WriteLine(e.Key + ": " + e.Value + " (" + 100.0*e.Value/it + "%)");
+
+
+        // move 1: 0-62    -> 63/256
+        // move 2: 63-126  -> 64/256
+        // move 3: 127-189 -> 63/256
+        // move 4: 190-255 -> 66/256
+
+        // Random rng=new Random();
+        int chooseRandomMove = SYM["SelectEnemyMove.chooseRandomMove+0004"];
+        int done = SYM["SelectEnemyMove.done"];
+        int random = SYM["Random_"] + 2;
+        const int max=100;
+        var moves=new int[256];
+        var rolls=new int[max,256];
+        var stats=new int[max,5];
+        var rdivstats=new int[10];
+        rolls.Initialize();
+        LoadState("basesaves/red/lorelei.gqs");
+        byte[] state=SaveState();
+        const int it=1000000;
+        Console.WriteLine("iterations: "+it);
+        for(int i=0; i<it; ++i)
+        {
+            // CpuWriteBE<ushort>("hRandomAdd", (ushort)rng.Next() );
+            int roll=0;
+            int rdiv=-1;
+            while(Hold(Joypad.B, chooseRandomMove, done) == chooseRandomMove)
+            {
+                rolls[roll,A]++;
+                RunFor(1);
+                stats[roll,0]++;
+                if(A<0x3f) stats[roll,1]++;
+                else if(A<0x7f) stats[roll,2]++;
+                else if(A<0xbe) stats[roll,3]++;
+                else stats[roll,4]++;
+                roll++;
+                if(A<0x3f || A>=0xbe)
+                {
+                    Hold(Joypad.B, random);
+                    if(rdiv >= 0)
+                    {
+                        rdivstats[(byte)(A-rdiv)]++;
+                        rdivstats[0]++;
+                    }
+                    rdiv=A;
+                }
+            }
+            moves[A]++;
+            LoadState(state);
+            AdvanceFrame();
+            state=SaveState();
+            if(i%1000==999) Console.WriteLine(".");
+        }
+        for(int r=0; r<max; ++r)
+        {
+            if(stats[r,0]!=0)
+            {
+                Console.WriteLine("ROLL "+(r+1));
+                for(int i=0; i<256; ++i)
+                    if(rolls[r,i]!=0)
+                        Console.WriteLine("  " + i + ": " + rolls[r,i]);
+                Console.WriteLine("  AURORA BEAM: "+stats[r,2] + " (" + 100.0f*stats[r,2]/stats[r,0] + "%)");
+                Console.WriteLine("  REST: "+stats[r,3] + " (" + 100.0f*stats[r,3]/stats[r,0] + "%)");
+                Console.WriteLine("  REROLL: "+stats[r,1]+"+"+stats[r,4]+"="+(stats[r,1]+stats[r,4]) + " (" + 100.0f*(stats[r,1]+stats[r,4])/stats[r,0] + "%)");
+            }
+        }
+        int rdivsum=0;
+        for(int i=1; i<10; ++i)
+        {
+            rdivsum+=rdivstats[i]*i;
+            if(rdivstats[i]>0)
+                Console.WriteLine("RDIV DELTA="+i+": "+rdivstats[i] + " (" + 100.0f*rdivstats[i]/rdivstats[0] + "%)");
+        }
+        Console.WriteLine("RDIV DELTA AVG: "+1.0f*rdivsum/rdivstats[0]);
+        Console.WriteLine();
+        for(int i=0; i<256; ++i)
+            if(moves[i]!=0)
+                Console.WriteLine(Moves[i].Name + ": " + moves[i] + " (" + 100.0f*moves[i]/it + "%)");
 
         // iterations: 1000000
+        // sim1
         // AURORA BEAM: 532773 (53,2773%)
         // REST: 467227 (46,7227%)
-
+        // sim2
+        // AURORA BEAM: 532471 (53,2471%)
+        // REST: 467529 (46,7529%)
 
         AdvanceFrames(60);
         Dispose();
+    }
+    void LoreleiSim()
+    {
+        int aurorabeam = 0;
+        int rest = 0;
+        for(int basehra=0; basehra<256; ++basehra)
+        {
+            for(int baserdiv=0; baserdiv<256; ++baserdiv)
+            {
+                float hra=basehra;
+                float rdiv=baserdiv;
+                while(hra<0x3f || hra>=0xbe) // reroll
+                {
+                    hra = (hra+rdiv)%256;
+                    rdiv = (rdiv+2.5592f)%256;
+                }
+                if(hra<0x7f)
+                    ++aurorabeam;
+                else
+                    ++rest;
+            }
+        }
+        Console.WriteLine("Aurora Beam: " + aurorabeam + " (" + 100.0f*aurorabeam/65536 + "%)");
+        Console.WriteLine("Rest: " + rest + " (" + 100.0f*rest/65536 + "%)");
+        // Aurora Beam: 34897 (53,248596%)
+        // Rest: 30639 (46,751404%)
     }
     void Agatha()
     {
@@ -356,8 +475,9 @@ public class RedTasTest : RedGlitchless {
         SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
     }
 
-    public RedTasTest() : base() {
-        GenSquirtle();
+    public RedTasTest() : base()
+    {
+        LoreleiSim();
         Environment.Exit(0);
     }
 }

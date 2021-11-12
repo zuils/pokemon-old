@@ -1563,8 +1563,24 @@ public class RedComparison : RedGlitchless {
             PickupItemAt(1, 18);
             MoveTo(1, 18);
             ClearText();
+            // ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+        CpuWriteBE<ushort>("wBattleMonAttack",100);
+            ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            MoveTo(1, 17);
         }, ()=>{
             TalkTo(2, 18);
+            // ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+        CpuWriteBE<ushort>("wBattleMonAttack",100);
+            ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            MoveTo(1, 17);
         });
     }
     void BrunoMenu()
@@ -1585,10 +1601,194 @@ public class RedComparison : RedGlitchless {
             // Press(Joypad.Right, Joypad.A);
         });
     }
+    void Missvs2Shot()
+    {
+        Comparison("basesaves/red/nerd13.gqs", ()=>{
+            ForceTurn(new RbyTurn("WATER GUN", 1), new RbyTurn("POUND", 20));
+            ForceTurn(new RbyTurn("POISON STING"), null, true, false);
+        }, ()=>{
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POUND", 20));
+            ForceTurn(new RbyTurn("MEGA PUNCH"), null, true, false);
+        });
+    }
+    void FuchsiaCut()
+    {
+        Comparison("basesaves/red/fuchsiacut.gqs", ()=>{
+            // CutAt(18, 19);
+            MoveTo(18, 20);
+            Press(Joypad.Up);
+            Cut();
+            CutAt(16, 12);
+            MoveTo(18, 4);
+            Press(Joypad.Up);
+        }, ()=>{
+            // CutAt(18, 19);
+            // CutAt(16, 11);
+            MoveTo(18, 4);
+            Press(Joypad.Up);
+        });
+    }
+    void WildEncounter()
+    {
+        // Comparison("basesaves/red/wildrt3.gqs", ()=>{
+        //     MoveTo(27, 9);
+        //     ForceEncounter(Action.Down, 0, 0x8888);
+        //     ClearText();
+        //     RunAway();
+        //     MoveTo(27, 11);
+        // }, ()=>{
+        //     MoveTo(27, 11);
+        // });
+        // Comparison("basesaves/red/wildrt1.gqs", ()=>{
+        //     MoveTo(14, 8);
+        //     ForceEncounter(Action.Up, 1, 0x8888);
+        //     ClearText();
+        //     RunAway();
+        //     MoveTo(14, 5);
+        // }, ()=>{
+        //     MoveTo(14, 5);
+        // });
+        // Comparison("basesaves/red/wildmoon.gqs", ()=>{
+        //     AfterMoveAndSplit();
+        //     MoveTo(24, 3);
+        //     // ForceEncounter(Action.Right, 0, 0x8888); // zubat
+        //     ForceEncounter(Action.Right, 2, 0x8888); // geo
+        //     // ForceEncounter(Action.Right, 5, 0x8888); // paras
+        //     ClearText();
+        //     RunAway();
+        //     MoveTo(26, 3);
+        //     MoveAndSplit(Joypad.Right);
+        // }, ()=>{
+        //     AfterMoveAndSplit();
+        //     MoveTo(26, 3);
+        //     MoveAndSplit(Joypad.Right);
+        // });
+        // Comparison("basesaves/red/wildrt6.gqs", ()=>{
+        //     MoveTo(17, 17);
+        //     ForceEncounter(Action.Down, 1, 0x8888); // pidgey
+        //     // ForceEncounter(Action.Down, 0, 0x8888); // oddish
+        //     // ForceEncounter(Action.Down, 3, 0x8888); // mankey
+        //     ClearText();
+        //     RunAway();
+        //     MoveTo(17, 20);
+        // }, ()=>{
+        //     MoveTo(17, 20);
+        // });
+        Comparison("basesaves/red/wildforest.gqs", ()=>{
+            MoveTo(1, 8);
+            // ForceEncounter(Action.Up, 0, 0x8888); // w
+            ForceEncounter(Action.Up, 1, 0x8888); // k
+            ClearText();
+            RunAway();
+            MoveTo(1, 5);
+        }, ()=>{
+            MoveTo(1, 5);
+        });
+    }
+    void BirdCatch()
+    {
+        Comparison("basesaves/red/birdcatch.gqs", ()=>{
+        // Comparison("basesaves/red/birdcatchrb.gqs", ()=>{
+            // CpuWriteBE<ushort>("wPartyMon1HP",8);
+            MoveTo(27, 9);
+            ForceEncounter(Action.Down, 0, 0x8888);
+            ClearText();
+            ForceTurn(new RbyTurn("TACKLE",20), new RbyTurn("GUST",20));
+            ForceYoloball("POKE BALL");
+            ClearText();
+            No();
+            MoveTo(27, 11);
+        }, ()=>{
+            MoveTo(27, 11);
+        });
+        Comparison("basesaves/red/birdcatchext.gqs", ()=>{
+            Execute(SpacePath("UAUUAURARRRAU"));
+            ForceEncounter(Action.Up, 4, 0x8888);
+            ClearText();
+            ForceYoloball("POKE BALL");
+            ClearText();
+            No();
+            MoveTo(3, 44);
+        }, ()=>{
+            MoveTo(10, 52);
+            MoveTo(10, 47);
+            MoveTo(3, 44);
+        });
+    }
+    void SaveAndQuit()
+    {
+        Comparison("basesaves/red/saveandquit.gqs", ()=>{
+            MoveTo(59, 5, 5);
+            Save();
+            AdvanceFrames(32);
+            AdvanceFrames(105);
+            HardReset();
+            NoPal.Execute(this);
+            Execute("D");
+        }, ()=>{
+            MoveTo(60, 5, 6);
+        });
+    }
+    void LanceMenu()
+    {
+        Comparison("basesaves/red/lancemenu.gqs", ()=>{
+            MoveTo(6,8);
+            UseItem("ELIXER", "NIDOKING");
+            UseItem("SUPER POTION", "NIDOKING");
+            MoveTo(6,7);
+        }, ()=>{
+            MoveTo(6,8);
+            UseItem("SUPER POTION", "NIDOKING");
+            UseItem("ELIXER", "NIDOKING");
+            MoveTo(6,7);
+        });
+    }
+    void Jingles()
+    {
+        // Comparison("basesaves/red/itemhidden.gqs", ()=>{
+        //     PickupItemAt(1, 18);
+        //     MoveTo(1, 18);
+        // }, ()=>{
+        //     MoveTo(1, 18);
+        // });
+        Comparison("basesaves/red/itemhidden2.gqs", ()=>{
+            Execute("L L");
+            PickupItem();
+            Execute("R R");
+        }, ()=>{
+            Execute("L L");
+            Execute("R R");
+        });
+        // Comparison("basesaves/red/itemhiddenzone.gqs", ()=>{
+        //     Execute("U U");
+        //     PickupItem();
+        //     Execute("D D");
+        // }, ()=>{
+        //     LoadState("basesaves/red/itemhidden2.gqs");
+        //     Execute("L L");
+        //     PickupItem();
+        //     Execute("R R");
+        // });
+        // Comparison("basesaves/red/itemball.gqs", ()=>{
+        //     PickupItemAt(12, 29);
+        //     MoveTo(12, 26);
+        // }, ()=>{
+        //     MoveTo(12, 28);
+        //     MoveTo(12, 26);
+        // });
+        // Comparison("basesaves/red/exclamation.gqs", ()=>{
+        //     MoveTo(1, 18);
+        //     ClearText(2);
+        // }, ()=>{
+        //     MoveTo(2, 19, Action.Up);
+        //     Press(Joypad.A);
+        //     ClearText(1);
+        // });
+    }
 
     public RedComparison() : base()
     {
-        BrunoMenu();
+        EarlyPotions();
         Environment.Exit(0);
     }
 }
