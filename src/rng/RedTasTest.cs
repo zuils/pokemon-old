@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Threading;
 
 public class RedTasTest : RedGlitchless {
     void AgathaBug()
@@ -474,10 +475,102 @@ public class RedTasTest : RedGlitchless {
         Save();
         SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
     }
+    static void Simulate(string statepath, Func<RedGlitchless,bool> scenario, int iterations = 1000, int numThreads = 20)
+    {
+        var times = new List<float>();
+        var hps = new List<float>();
+        int done = 0;
+
+        for(int thread = 0; thread < numThreads; ++thread)
+        {
+            new Thread((thread)=>
+            {
+                RedGlitchless gb = new RedGlitchless("roms/pokered.gbc", true);
+                gb.LoadState(statepath);
+                gb.AdvanceFrames((int)thread * iterations / numThreads);
+                byte[] state=gb.SaveState();
+
+                for(int i=0; i<iterations/numThreads; ++i)
+                {
+                    ulong start = gb.EmulatedSamples;
+
+                    bool success = scenario(gb);
+
+                    lock(times) {
+                        if(success) times.Add((gb.EmulatedSamples - start) / 2097152.0f);
+                        hps.Add(gb.BattleMon.HP);
+                    }
+
+                    gb.LoadState(state);
+                    gb.AdvanceFrame();
+                    state=gb.SaveState();
+                }
+                Interlocked.Increment(ref done);
+            }).Start(thread);
+        }
+        int c=0;
+        while(done < numThreads) { ++c;
+            Thread.Sleep(100);
+        } Console.WriteLine(c*0.1f+"s");
+
+        times.Sort();
+        hps.Sort();
+        float Std(List<float> list)
+        {
+            float avg = list.Average();
+            return (float)Math.Sqrt(list.Average(v=>(v-avg)*(v-avg)));
+        }
+        Console.WriteLine("Time Avg=" + times.Average() + " Med=" + times[times.Count/2] + " Std=" + Std(times) + " Min=" + times.Min() + " Max=" + times.Max());
+        Console.WriteLine("HP   Avg=" + hps.Average() + " Med=" + hps[hps.Count/2] + " Std=" + Std(hps) + " Min=" + hps.Min() + " Max=" + hps.Max());
+    }
+    static void NerdVoltorb()
+    {
+        Console.WriteLine("WG + PS");
+        Simulate("basesaves/red/nerdvoltorb.gqs", (gb)=>
+        {
+            gb.ClearText();
+            while(gb.EnemyMon.Species.Name=="VOLTORB" && gb.BattleMon.HP>0)
+            {
+                gb.BattleMenu(0, 0);
+                // if(gb.EnemyMon.HP>10) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
+                if(gb.EnemyMon.HP == 33 || (gb.EnemyMon.HP >= 16 && gb.EnemyMon.HP <= 20)) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
+                gb.ClearText();
+            }
+            return gb.BattleMon.HP>0;
+        });
+        Console.WriteLine("Spam PS");
+        Simulate("basesaves/red/nerdvoltorb.gqs", (gb)=>
+        {
+            gb.ClearText();
+            while(gb.EnemyMon.Species.Name=="VOLTORB" && gb.BattleMon.HP>0)
+            {
+                gb.BattleMenu(0, 0);
+                gb.ChooseMenuItem(3); //ps
+                gb.ClearText();
+            }
+            return gb.BattleMon.HP>0;
+        });
+    }
+    static void TestVariance()
+    {
+        Red gb = new Red();
+        gb.LoadState("basesaves/red/nerdvoltorb19.gqs");
+        // gb.LoadState("basesaves/red/nerdvoltorb19.gqs");
+        Console.WriteLine("a="+gb.CpuRead("hRandomAdd")+" s="+gb.CpuRead("hRandomSub")+" d="+gb.DividerState+" t="+gb.TimeNow);
+        gb.AdvanceFrame(Joypad.B);
+        for(int i=0; i<180; ++i) {
+        gb.AdvanceFrame();
+        Console.WriteLine("a="+gb.CpuRead("hRandomAdd")+" s="+gb.CpuRead("hRandomSub")+" d="+gb.DividerState+" t="+gb.TimeNow);}
+
+        // gb.RunUntil("Joypad");
+        // gb.Inject(Joypad.B);
+        // gb.RunUntil("HandleMenuInput_");
+        // Console.WriteLine("hra="+gb.CpuRead("hRandomAdd"));
+    }
 
     public RedTasTest() : base()
     {
-        LoreleiSim();
+        NerdVoltorb();
         Environment.Exit(0);
     }
 }

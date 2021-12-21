@@ -69,8 +69,7 @@ public partial class RedGlitchless : RedBlueForce {
         Timer.Running = start;
     }
 
-    public RedGlitchless() : base("roms/pokered.gbc")
+    public RedGlitchless(string rom = "roms/pokered.gbc", bool speedup = false) : base(rom, speedup)
     {
-        SetSpeedupFlags(SpeedupFlags.None);
     }
 }
