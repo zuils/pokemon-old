@@ -752,7 +752,7 @@ public class RbyForce : Rby {
                 break;
             case "ItemUsePokeflute":
                 if(!InBattle) ChooseMenuItem(0); // USE
-                ClearText();
+                ClearText(2);
                 if(!InBattle) ClearText();
                 break;
             case "ItemUseVitamin": // Can only be used outside of battle
