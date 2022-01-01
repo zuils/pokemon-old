@@ -6,40 +6,41 @@ using System.Collections.Generic;
 
 public class RedComparison : RedGlitchless {
     public delegate void Scenario();
-    public void Comparison(string name, byte[] state, Scenario left, Scenario right, int wait=300)
+    public void Comparison(string name, byte[] state, Scenario left, Scenario right, int wait = 300)
     {
+        SetSpeedupFlags(SpeedupFlags.None);
         LoadState(state);
 
         Scene s;
         const int r = 1;
 
-        s = new Scene(this, 160*r, 160*r);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160*r, 144*r));
+        s = new Scene(this, 160 * r, 160 * r);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160 * r, 144 * r));
         s.AddComponent(new RecordingComponent("right"));
-        TimerComponent tright=new TimerComponent(0,144*r,2.0f*r);
+        TimerComponent tright = new TimerComponent(0, 144 * r, 2.0f * r);
         s.AddComponent(tright);
 
         right();
 
         tright.Running = false;
-        TimeSpan diff=tright.Duration();
+        TimeSpan diff = tright.Duration();
         AdvanceFrames(wait);
 
         s.Dispose();
         LoadState(state);
 
-        s = new Scene(this, 160*r, 160*r);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160*r, 144*r));
+        s = new Scene(this, 160 * r, 160 * r);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160 * r, 144 * r));
         s.AddComponent(new RecordingComponent("left"));
-        TimerComponent tleft=new TimerComponent(0,144*r,2.0f*r);
+        TimerComponent tleft = new TimerComponent(0, 144 * r, 2.0f * r);
         s.AddComponent(tleft);
 
         left();
 
         tleft.Running = false;
-        diff=diff-tleft.Duration();
-        if(diff.TotalSeconds>0)
-            AdvanceFrames((int)(diff.TotalSeconds*59.7));
+        diff = diff - tleft.Duration();
+        if(diff.TotalSeconds > 0)
+            AdvanceFrames((int)(diff.TotalSeconds * 59.7));
         AdvanceFrames(wait);
 
         s.Dispose();
@@ -51,8 +52,7 @@ public class RedComparison : RedGlitchless {
     }
     public void Comparison(string statepath, Scenario left, Scenario right, int wait=300)
     {
-        LoadState(statepath);
-        byte[] state = SaveState();
+        byte[] state = File.ReadAllBytes(statepath);
         string name = Regex.Match(statepath, @"([^/\\]+)\.gqs").Groups[1].Value;
         Comparison(name, state, left, right, wait);
     }
@@ -296,20 +296,15 @@ public class RedComparison : RedGlitchless {
             s = new Scene(this, 10*sca, 9*sca);
             s.AddComponent(new VideoBufferComponent(0, 0, 10*sca, 9*sca));
             s.AddComponent(new RecordingComponent("right"));
-            // TimerComponent tright=new TimerComponent(0,144*2,2.0f*2);
-            // s.AddComponent(tright);
 
             // MoveTo("IndigoPlateauLobby", 8, 0);
             Execute("U");
             PartySwap("NIDOKING", "PIDGEY");
             Execute("U U");
 
-            // tright.Running = false;
-            // TimeSpan diff=tright.Duration(this);
             AdvanceFrames(300);
 
             s.Dispose();
-            // return;
         }
         Comparison("basesaves/red/birdswap.gqs", ()=>{
             MenuPress(Joypad.B);
@@ -333,15 +328,18 @@ public class RedComparison : RedGlitchless {
     {
         Comparison("basesaves/red/drillbruno.gqs", ()=>{
             TalkTo("BrunosRoom", 5, 2, Action.Right);
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("ROCK THROW",1)); //RAGE BUG
-            ForceTurn(new RbyTurn("BLIZZARD", Crit));
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("RAGE", 20));
+            ForceTurn(new RbyTurn("BLIZZARD"));
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("BLIZZARD", Crit));
+            // ForceTurn(new RbyTurn("HORN DRILL"));
+            // ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("BLIZZARD"));
             ForceTurn(new RbyTurn("HORN DRILL"));
         }, ()=>{
             TalkTo("BrunosRoom", 5, 2, Action.Right);
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("ROCK THROW",1)); //RAGE BUG
+            // ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn(AiItem)); // X Defend
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("RAGE", 20));
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("HORN DRILL"));
@@ -383,7 +381,7 @@ public class RedComparison : RedGlitchless {
     {
         Comparison("basesaves/red/blainesuper.gqs", ()=>{
             ClearText();
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("AGILITY", AiItem));
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn(AiItem));
             ForceTurn(new RbyTurn("HORN DRILL"), new RbyTurn("AGILITY"));
         }, ()=>{
             ClearText();
@@ -440,31 +438,11 @@ public class RedComparison : RedGlitchless {
     void Deposit()
     {
         Comparison("basesaves/red/deposit.gqs", ()=>{
-            // MoveTo("IndigoPlateauLobby", 15, 9);
             MoveTo("IndigoPlateauLobby", 8, 1, Action.Up);
         }, ()=>{
-            // MoveTo("IndigoPlateauLobby", 15, 9);
             TalkTo("IndigoPlateauLobby", 15, 7, Action.Up);
-            ChooseMenuItem(0);
-            ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(1);
-                ChooseMenuItem(0);
-                ClearText();
-                // ChooseMenuItem(1);
-                // ChooseMenuItem(1);
-                // ChooseMenuItem(0);
-                // ClearText();
-                // ChooseMenuItem(1);
-                // ChooseMenuItem(1);
-                // ChooseMenuItem(0);
-                // ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(2);
-                ChooseMenuItem(0);
-                ClearText();
-            MenuPress(Joypad.B);
-            MenuPress(Joypad.B);
+            Deposit("SQUIRTLE", "PARAS");
+            // Deposit("SQUIRTLE", "PIDGEY", "PARAS");
             MoveTo("IndigoPlateauLobby", 8, 1, Action.Up);
         });
     }
@@ -575,7 +553,7 @@ public class RedComparison : RedGlitchless {
             Execute("D"); // after gio (?)
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator
 
@@ -937,7 +915,7 @@ public class RedComparison : RedGlitchless {
             Execute("D"); // after gio (?)
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator
 
@@ -954,7 +932,7 @@ public class RedComparison : RedGlitchless {
             Execute("D"); // after gio (?)
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator
 
@@ -977,7 +955,7 @@ public class RedComparison : RedGlitchless {
             MoveTo(236, 1, 2);
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(3, 2);
             MoveTo(2, 3);
             Execute("D"); // exit elevator
@@ -1003,13 +981,13 @@ public class RedComparison : RedGlitchless {
     void Elevator()
     {
         Comparison("basesaves/red/elevator.gqs", ()=>{
-            // TalkTo(236, 3, 0);
-            // ChooseMenuItem(9);
+            TalkTo(236, 3, 0);
+            ChooseListItem(9);
 
-            MoveTo(236, 3, 1, Action.Up);
-            Execute("A");
-            AdvanceFrames(100, Joypad.Down); // 10f
-            Press(Joypad.A);
+            // MoveTo(236, 3, 1, Action.Up);
+            // Execute("A");
+            // AdvanceFrames(100, Joypad.Down); // 10f
+            // Press(Joypad.A);
 
             MoveTo(2, 3);
             Execute("D"); // exit elevator
@@ -1017,15 +995,16 @@ public class RedComparison : RedGlitchless {
         }, ()=>{
             MoveTo(236, 3, 1, Action.Up);
             Execute("A");
-            AdvanceFrames(92, Joypad.Down); // 9f
+            // AdvanceFrames(92, Joypad.Down); // 9f
             // AdvanceFrames(99, Joypad.Down); // 9f
+            AdvanceFrames(100, Joypad.Down); // 10f
             // AdvanceFrames(108, Joypad.Down); // 11f
             // AdvanceFrames(114, Joypad.Down); // 11f
             Press(Joypad.A);
 
             MoveTo(2, 3);
             Execute("D"); // exit elevator
-            MoveTo(234, 8, 2);
+            // MoveTo(234, 8, 2);
             MoveTo(234, 7, 3);
         });
     }
@@ -1181,7 +1160,7 @@ public class RedComparison : RedGlitchless {
             // ForceTurn(new RbyTurn("THRASH"));
             // ForceTurn(new RbyTurn("THRASH"), new RbyTurn("WATER GUN"));
             // ForceTurn(new RbyTurn("THRASH"), new RbyTurn("BUBBLEBEAM"));
-            // ForceTurn(new RbyTurn("THRASH"), new RbyTurn("WATER GUN", AiItem));
+            // ForceTurn(new RbyTurn("THRASH"), new RbyTurn(AiItem));
 
             // // DIG ROCKET
             // MoveTo("CeruleanCity", 30, 9);
@@ -1217,7 +1196,7 @@ public class RedComparison : RedGlitchless {
             // MISTY
             TalkTo(4, 2);
             ForceTurn(new RbyTurn("THRASH"));
-            ForceTurn(new RbyTurn("THRASH", Crit), new RbyTurn("BUBBLEBEAM", AiItem));
+            ForceTurn(new RbyTurn("THRASH", Crit), new RbyTurn(AiItem));
             // ForceTurnAndSplit(new RbyTurn("THRASH"));
         }, ()=>{
             // Bill menu
@@ -1248,7 +1227,7 @@ public class RedComparison : RedGlitchless {
             // MISTY
             TalkTo(4, 2);
             ForceTurn(new RbyTurn("THRASH"));
-            ForceTurn(new RbyTurn("THRASH", Crit), new RbyTurn("BUBBLEBEAM", AiItem));
+            ForceTurn(new RbyTurn("THRASH", Crit), new RbyTurn(AiItem));
             // ForceTurn(new RbyTurn("THRASH"));
             // MoveTo("CeruleanCity", 36, 19);
             // ForceTurnAndSplit(new RbyTurn("THRASH"));
@@ -1408,18 +1387,25 @@ public class RedComparison : RedGlitchless {
     }
     void BikevsWalk()
     {
-        // Comparison("basesaves/red/biketower.gqs", ()=>{
-        //     UseItem("BICYCLE");
-        //     MoveTo(14, 5);
-        // }, ()=>{
-        //     MoveTo(14, 5);
-        // });
-        // Comparison("basesaves/red/bikekoga.gqs", ()=>{
-        //     UseItem("BICYCLE");
-        //     MoveTo(5, 27);
-        // }, ()=>{
-        //     MoveTo(5, 27);
-        // });
+        Comparison("basesaves/red/biketower.gqs", ()=>{
+            UseItem("BICYCLE");
+            MoveTo(14, 5);
+        }, ()=>{
+            MoveTo(14, 5);
+        });
+        Comparison("basesaves/red/bikekoga.gqs", ()=>{
+            UseItem("BICYCLE");
+            // Press(Joypad.Start, Joypad.Down, Joypad.A, Joypad.Up | Joypad.A); // slot2
+            // Press(Joypad.Start, Joypad.Down, Joypad.A, Joypad.Up, Joypad.Up | Joypad.A); // slot3
+            // ClearText();
+            MoveTo(5, 28);
+            Inject(Joypad.Up);
+            RunUntil("EnterMap");
+        }, ()=>{
+            MoveTo(5, 28);
+            Inject(Joypad.Up);
+            RunUntil("EnterMap");
+        });
         Comparison("basesaves/red/bikeflyhouse.gqs", ()=>{
             MoveTo(27, 17, 4);
             UseItem("BICYCLE");
@@ -1520,46 +1506,39 @@ public class RedComparison : RedGlitchless {
     }
     void EarlyPotions()
     {
-        // Comparison("basesaves/red/pcpotion.gqs", ()=>{
-        //     ClearText();
-        //     TalkTo(0, 1);
-        //     ChooseMenuItem(0);
-        //         ChooseMenuItem(0);
-        //         ClearText();
-        //         MenuPress(Joypad.A);
-        //         ClearText();
-        //     MenuPress(Joypad.B);
-        //     ClearText();
-        //     MenuPress(Joypad.B);
-        //     MoveTo(7, 1);
-        // }, ()=>{
-        //     ClearText();
-        //     MoveTo(7, 1);
-        // });
-        // Comparison("basesaves/red/martguypotion.gqs", ()=>{
-        //     MoveTo(8, 27);
-        //     TalkTo(5, 24);
-        //     MoveTo(11, 24);
-        //     MoveTo(12, 23);
-        // }, ()=>{
-        //     MoveTo(8, 27);
-        //     MoveTo(11, 24);
-        //     MoveTo(12, 23);
-        // });
-        // Comparison("basesaves/red/treepotion.gqs", ()=>{
-        //     PickupItemAt(14, 4);
-        //     MoveTo(13, 7, 71);
-        // }, ()=>{
-        //     MoveTo(13, 7, 71);
-        // });
-        // Comparison("basesaves/red/extrapotion.gqs", ()=>{
-        //     MoveTo(7, 24);
-        //     PickupItemAt(12, 29);
-        //     MoveTo(1, 21, Action.Up);
-        // }, ()=>{
-        //     MoveTo(7, 22);
-        //     MoveTo(1, 21, Action.Up);
-        // });
+        Comparison("basesaves/red/pcpotion.gqs", ()=>{
+            ClearText();
+            TalkTo(0, 1);
+            WithdrawItems("POTION", 1);
+            MoveTo(7, 1);
+        }, ()=>{
+            ClearText();
+            MoveTo(7, 1);
+        });
+        Comparison("basesaves/red/martguypotion.gqs", ()=>{
+            MoveTo(8, 27);
+            TalkTo(5, 24);
+            MoveTo(11, 24);
+            MoveTo(12, 23);
+        }, ()=>{
+            MoveTo(8, 27);
+            MoveTo(11, 24);
+            MoveTo(12, 23);
+        });
+        Comparison("basesaves/red/treepotion.gqs", ()=>{
+            PickupItemAt(14, 4);
+            MoveTo(13, 7, 71);
+        }, ()=>{
+            MoveTo(13, 7, 71);
+        });
+        Comparison("basesaves/red/extrapotion.gqs", ()=>{
+            MoveTo(7, 24);
+            PickupItemAt(12, 29);
+            MoveTo(1, 21, Action.Up);
+        }, ()=>{
+            MoveTo(7, 22);
+            MoveTo(1, 21, Action.Up);
+        });
         Comparison("basesaves/red/weedlepotion.gqs", ()=>{
             PickupItemAt(1, 18);
             MoveTo(1, 18);
@@ -1569,7 +1548,7 @@ public class RedComparison : RedGlitchless {
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
-        CpuWriteBE<ushort>("wBattleMonAttack",100);
+            CpuWriteBE<ushort>("wEnemyMonHP",0);
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             MoveTo(1, 17);
         }, ()=>{
@@ -1579,7 +1558,7 @@ public class RedComparison : RedGlitchless {
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             // ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
-        CpuWriteBE<ushort>("wBattleMonAttack",100);
+            CpuWriteBE<ushort>("wEnemyMonHP",0);
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
             MoveTo(1, 17);
         });
@@ -2084,13 +2063,10 @@ public class RedComparison : RedGlitchless {
     {
         Comparison("basesaves/red/swagmaxether.gqs", ()=>{
             MoveTo(8, 89);
-            AdvanceFrame();
-            Press(Joypad.Down);
-            AdvanceFrames(2);
+            Press(Joypad.None, Joypad.Down, Joypad.None);
             PickupItem();
             MoveTo(7, 85);
         }, ()=>{
-            // MoveTo(8, 89);
             MoveTo(8, 89, Action.Down);
             PickupItem();
             MoveTo(7, 85);
@@ -2198,13 +2174,13 @@ public class RedComparison : RedGlitchless {
         Comparison("basesaves/red/kogastall.gqs", ()=>{
             ClearText();
             // ForceTurnAndSplit(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("SELFDESTRUCT"));
-            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("SELFDESTRUCT", AiItem));
+            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn(AiItem));
             // ForceTurnAndSplit(new RbyTurn("POKE FLUTE"), new RbyTurn("SELFDESTRUCT"));
             ForceTurnAndSplit(new RbyTurn("BUBBLEBEAM"), new RbyTurn("SELFDESTRUCT"));
         }, ()=>{
             ClearText();
-            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("SELFDESTRUCT", AiItem));
-            // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SELFDESTRUCT", AiItem));
+            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn(AiItem));
+            // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn(AiItem));
             ForceTurnAndSplit(new RbyTurn("X SPECIAL"), new RbyTurn("SELFDESTRUCT"));
         });
     }
@@ -2212,18 +2188,7 @@ public class RedComparison : RedGlitchless {
     {
         Comparison("basesaves/red/yolorelei.gqs", ()=>{
             TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
-
-            // PC
-            ChooseMenuItem(0);
-            ClearText();
-            for(int i = 0; i < 3; i++) {
-                ChooseMenuItem(1);
-                ChooseMenuItem(1);
-                ChooseMenuItem(0);
-                ClearText();
-            }
-            MenuPress(Joypad.B);
-            MenuPress(Joypad.B);
+            Deposit("SQUIRTLE", "PIDGEY", "PARAS");
 
             MoveTo("IndigoPlateauLobby", 8, 0);
 
@@ -2233,20 +2198,7 @@ public class RedComparison : RedGlitchless {
             ForceTurn(new RbyTurn("HORN DRILL"));
         }, ()=>{
             TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
-
-            // PC
-            ChooseMenuItem(0);
-            ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(1);
-                ChooseMenuItem(0);
-                ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(2);
-                ChooseMenuItem(0);
-                ClearText();
-            MenuPress(Joypad.B);
-            MenuPress(Joypad.B);
+            Deposit("SQUIRTLE", "PARAS");
 
             MoveTo("IndigoPlateauLobby", 8, 0);
             // PartySwap("NIDOKING", "PIDGEY");
@@ -2289,10 +2241,82 @@ public class RedComparison : RedGlitchless {
             ForceTurn(new RbyTurn("POISON STING", 1), new RbyTurn("SCREECH"));
         });
     }
+    void BC2Caterpie()
+    {
+        RbyTurn.DefaultRoll = 20;
+        Comparison("basesaves/red/bc2caterpieta.gqs", ()=>{
+            ClearText();
+            ForceTurn(new RbyTurn("LEER"), new RbyTurn("STRING SHOT", Miss));
+            ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("HARDEN"));
+            BattleMenu(0, 0);
+            ChooseMenuItem(2); //ha
+            Hold(Joypad.A, SYM["MainInBattleLoop.speedEqual"] + 9);
+            A=0;
+        }, ()=>{
+            ClearText();
+            ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("STRING SHOT", Miss));
+            ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT", Miss));
+            // ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("HARDEN"));
+            BattleMenu(0, 0);
+            ChooseMenuItem(2); //ha
+            Hold(Joypad.A, SYM["MainInBattleLoop.speedEqual"] + 9);
+            A=0;
+        });
+    }
+    void SurfVsWalk()
+    {
+        LoadState("basesaves/red/surfvswalkw.gqs");
+
+        Scene s;
+        const int r = 1;
+
+        s = new Scene(this, 160*r, 160*r);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160*r, 144*r));
+        s.AddComponent(new RecordingComponent("right"));
+        TimerComponent tright = new TimerComponent(0, 144*r, 2.0f*r);
+        s.AddComponent(tright);
+
+            MoveTo(3, 17);
+            MoveTo(3, 14);
+            MoveTo(3, 17);
+            MoveTo(3, 14);
+
+        tright.Running = false;
+        TimeSpan diff = tright.Duration();
+        AdvanceFrames(300);
+
+        s.Dispose();
+        LoadState("basesaves/red/surfvswalks.gqs");
+
+        s = new Scene(this, 160*r, 160*r);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160*r, 144*r));
+        s.AddComponent(new RecordingComponent("left"));
+        TimerComponent tleft = new TimerComponent(0, 144*r, 2.0f*r);
+        s.AddComponent(tleft);
+
+            MoveTo(4, 17);
+            MoveTo(4, 14);
+            MoveTo(4, 17);
+            MoveTo(4, 14);
+
+        tleft.Running = false;
+        diff = diff-tleft.Duration();
+        if(diff.TotalSeconds > 0)
+            AdvanceFrames((int)(diff.TotalSeconds * 59.7));
+        AdvanceFrames(300);
+
+        s.Dispose();
+
+        Console.WriteLine("left:  " + tleft.Text  + "   " + (diff.TotalSeconds<0?"+":"") + -diff.TotalSeconds);
+        Console.WriteLine("right: " + tright.Text + "   " + (diff.TotalSeconds<0?"":"+") + diff.TotalSeconds);
+
+        FFMPEG.RunFFMPEGCommand("-y -i movies/left.mp4 -i movies/right.mp4 -filter_complex hstack movies/surfvswalk.mp4");
+    }
 
     public RedComparison() : base()
     {
-        BlizzRhyhorn();
+        EarlyPotions();
         Environment.Exit(0);
     }
 }

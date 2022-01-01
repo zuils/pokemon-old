@@ -734,9 +734,7 @@ public class YellowTASPidgeFable : YellowForce {
             // GIOVANNI
             MoveTo("ViridianCity", 32, 8);
             TalkTo("ViridianGym", 2, 1);
-            // ForceTurn(new RbyTurn("METRONOME", "AGILITY"), new RbyTurn(AiItem));
-            ForceTurn(new RbyTurn("METRONOME", "AGILITY"), new RbyTurn("DIG",AiItem));//--
-            // ForceTurn(new RbyTurn("BUBBLEBEAM"), new RbyTurn(AiItem));//--
+            ForceTurn(new RbyTurn("METRONOME", "AGILITY"), new RbyTurn(AiItem));
             ForceTurn(new RbyTurn("BUBBLEBEAM", Crit));
             ForceTurn(new RbyTurn("METRONOME", "HORN DRILL"));
             ForceTurn(new RbyTurn("METRONOME", "HORN DRILL"));

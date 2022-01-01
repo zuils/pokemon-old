@@ -8,9 +8,10 @@ public class BlueNidoTas : RedBlueForce {
     //    > Make pathfinding consider turn frames (last moon room/post underground elixer house)
 
     public BlueNidoTas() : base("roms/pokeblue.gbc", true) {
+        ClearCache();
         // NOTE: Record requires ffmpeg.exe to be in PATH, it will output to movies/video.mp4, movies/audio.mp3, stitch the two together and save to movies/blue-tas.mp4
         //       If only a black window shows up, change https://github.com/stringflow/pokemon/blob/main/src/gfx/Renderer.cs#L77 to SDL2RenderContext.
-        Record("blue-tas");
+        // Record("blue-tas");
         //Show();
 
         /*

@@ -2,13 +2,13 @@ public partial class RedGlitchless {
     public void Race(int T=1, int R=1, int S=1, int N=1, bool IT=false) {
         System.Console.Write(T+" "+R+" "+S+" "+N+" ");
 
-        RecordAndTime("red-glitchless-race");
+        // RecordAndTime("red-glitchless-race");
         RbyTurn.DefaultRoll = 20;
 
         // ClearCache();
         CacheState("newgame", () => {
             new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
-            Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
+            Press(Joypad.Down | Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
         });
 
         Timer.Start();
@@ -26,14 +26,7 @@ public partial class RedGlitchless {
 
             // PC potion
             TalkTo(0, 1);
-            ChooseMenuItem(0);
-                ChooseMenuItem(0);
-                ClearText();
-                MenuPress(Joypad.A);
-                ClearText();
-            MenuPress(Joypad.B);
-            ClearText();
-            MenuPress(Joypad.B);
+            WithdrawItems("POTION", 1);
 
             MoveTo("PalletTown", 10, 1); // Oak cutscene
             ClearText();
@@ -551,10 +544,10 @@ public partial class RedGlitchless {
 
             // SURGE
             TalkTo(5, 1);
-            ForceTurn(new RbyTurn("BUBBLEBEAM"), new RbyTurn("SONICBOOM", AiItem));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"), new RbyTurn(AiItem));
             ForceTurn(new RbyTurn("THRASH", ThreeTurn), new RbyTurn("SONICBOOM"));
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("QUICK ATTACK"));
-            ForceTurn(new RbyTurn("THRASH"), new RbyTurn("GROWL", AiItem));
+            ForceTurn(new RbyTurn("THRASH"), new RbyTurn(AiItem));
             ForceTurnAndSplit(new RbyTurn("THRASH"), new RbyTurn("GROWL"));
         });
 
@@ -687,7 +680,7 @@ public partial class RedGlitchless {
             Buy("X ACCURACY", 13, "X SPECIAL", 6, "X SPEED", 3);
 
             TalkTo("CeladonMartElevator", 3, 0);
-            ChooseMenuItem(0);
+            ChooseListItem(0);
 
             MoveTo("CeladonCity", 8, 14);
             UseItem("BICYCLE");
@@ -850,7 +843,7 @@ public partial class RedGlitchless {
             MoveTo(6, 14); // blocked by door? (todo)
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator (todo?)
 
@@ -1190,22 +1183,6 @@ public partial class RedGlitchless {
         // ClearCache();
         CacheState("lorelei", () => {
             AfterMoveAndSplit();
-
-            // TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
-            // PC
-            // ChooseMenuItem(0);
-            // ClearText();
-            //     ChooseMenuItem(1);
-            //     ChooseMenuItem(1);
-            //     ChooseMenuItem(0);
-            //     ClearText();
-            //     ChooseMenuItem(1);
-            //     ChooseMenuItem(2);
-            //     ChooseMenuItem(0);
-            //     ClearText();
-            // MenuPress(Joypad.B);
-            // MenuPress(Joypad.B);
-
             MoveTo("IndigoPlateauLobby", 8, 0);
 
             // LORELEI

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 
 public class RedTasTest : RedGlitchless {
     void AgathaBug()
@@ -74,12 +75,22 @@ public class RedTasTest : RedGlitchless {
 
         LoadState("basesaves/red/wrap.gqs");
 
-        ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("WRAP", 20 | ThreeTurn));
-        ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        // ForceTurn(new RbyTurn(""), new RbyTurn(""));
-        // ForceTurn(new RbyTurn(""), new RbyTurn(""));
+        ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("WRAP", 20 | 5 * Turns));
+        ForceTurn(new RbyTurn());
+        ForceTurn(new RbyTurn());
+        ForceTurn(new RbyTurn());
+        ForceTurn(new RbyTurn());
         ForceTurn(new RbyTurn("LEER", Miss), new RbyTurn("LEER", Miss));
+
+        // LoadState("basesaves/red/wrapy.gqs");
+
+        // ForceTurn(new RbyTurn("GUST", Crit), new RbyTurn("TACKLE", Miss));
+        // ForceTurn(new RbyTurn("GUST", Miss), new RbyTurn("WRAP", 20 | 4 * Turns));
+        // ForceTurn(new RbyTurn());
+        // ForceTurn(new RbyTurn());
+        // ForceTurn(new RbyTurn());
+        // // ForceTurn(new RbyTurn(""), new RbyTurn(""));
+        // ForceTurn(new RbyTurn("GUST", Miss), new RbyTurn("LEER", Miss));
 
         AdvanceFrames(60);
         Dispose();
@@ -186,7 +197,7 @@ public class RedTasTest : RedGlitchless {
 
         LoadState("basesaves/red/misty2.gqs");
 
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM", AiItem));
+        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn(AiItem));
         ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
         ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
 
@@ -198,7 +209,7 @@ public class RedTasTest : RedGlitchless {
         Record("disable");
         LoadState("basesaves/red/disable.gqs");
 
-        ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("DISABLE", 1*Turns, "EARTHQUAKE"));
+        ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("DISABLE", "EARTHQUAKE", 1 * Turns));
         ForceTurn(new RbyTurn("THUNDERBOLT", Miss), new RbyTurn("POISON GAS"));
         ForceTurn(new RbyTurn("EARTHQUAKE"));
 
@@ -401,7 +412,7 @@ public class RedTasTest : RedGlitchless {
         LoadState("basesaves/red/agatha.gqs");
 
         ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("DREAM EATER", Switch));
-        ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("CONFUSE RAY", AiItem));
+        ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn(AiItem));
         ForceTurn(new RbyTurn("EARTHQUAKE"));
 
         AdvanceFrames(60);
@@ -413,7 +424,7 @@ public class RedTasTest : RedGlitchless {
         // Record("test");
 
         new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
-        Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
+        Press(Joypad.Down | Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
 
         ClearText(Joypad.A);
         Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
@@ -424,14 +435,7 @@ public class RedTasTest : RedGlitchless {
 
         // PC potion
         TalkTo(0, 1);
-        ChooseMenuItem(0);
-            ChooseMenuItem(0);
-            ClearText();
-            MenuPress(Joypad.A);
-            ClearText();
-        MenuPress(Joypad.B);
-        ClearText();
-        MenuPress(Joypad.B);
+        WithdrawItems("POTION", 1);
 
         MoveTo("PalletTown", 10, 1); // Oak cutscene
         ClearText();
@@ -475,10 +479,10 @@ public class RedTasTest : RedGlitchless {
         Save();
         SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
     }
-    static void Simulate(string statepath, Func<RedGlitchless,bool> scenario, int iterations = 1000, int numThreads = 20)
+    static void Simulate(string title, string statepath, Func<RedGlitchless,bool> scenario, int iterations = 1000, int numThreads = 20)
     {
-        var times = new List<float>();
-        var hps = new List<float>();
+        Trace.WriteLine(title);
+        (string,List<float>)[] data = { ("Time", new List<float>()), ("HP", new List<float>()) };
         int done = 0;
 
         for(int thread = 0; thread < numThreads; ++thread)
@@ -487,18 +491,19 @@ public class RedTasTest : RedGlitchless {
             {
                 RedGlitchless gb = new RedGlitchless("roms/pokered.gbc", true);
                 gb.LoadState(statepath);
+                int startHP = gb.BattleMon.HP - gb.BattleMon.MaxHP;
                 gb.AdvanceFrames((int)thread * iterations / numThreads);
                 byte[] state=gb.SaveState();
 
                 for(int i=0; i<iterations/numThreads; ++i)
                 {
-                    ulong start = gb.EmulatedSamples;
+                    ulong startTime = gb.EmulatedSamples;
 
                     bool success = scenario(gb);
 
-                    lock(times) {
-                        if(success) times.Add((gb.EmulatedSamples - start) / 2097152.0f);
-                        hps.Add(gb.BattleMon.HP);
+                    lock(data) {
+                        if(success) data[0].Item2.Add((gb.EmulatedSamples - startTime) / 2097152.0f);
+                        data[1].Item2.Add(gb.BattleMon.HP - gb.BattleMon.MaxHP - startHP);
                     }
 
                     gb.LoadState(state);
@@ -508,47 +513,55 @@ public class RedTasTest : RedGlitchless {
                 Interlocked.Increment(ref done);
             }).Start(thread);
         }
-        int c=0;
-        while(done < numThreads) { ++c;
+        float c = 0;
+        while(done < numThreads) {
             Thread.Sleep(100);
-        } Console.WriteLine(c*0.1f+"s");
+            c += 0.1f;
+        }
+        Console.WriteLine(c + "s");
 
-        times.Sort();
-        hps.Sort();
         float Std(List<float> list)
         {
             float avg = list.Average();
             return (float)Math.Sqrt(list.Average(v=>(v-avg)*(v-avg)));
         }
-        Console.WriteLine("Time Avg=" + times.Average() + " Med=" + times[times.Count/2] + " Std=" + Std(times) + " Min=" + times.Min() + " Max=" + times.Max());
-        Console.WriteLine("HP   Avg=" + hps.Average() + " Med=" + hps[hps.Count/2] + " Std=" + Std(hps) + " Min=" + hps.Min() + " Max=" + hps.Max());
+        foreach((string name, List<float> list) in data)
+        {
+            list.Sort();
+            Trace.WriteLine(name +
+                "\n\tAverage: " + list.Average() +
+                "\n\tMedian:  " + list[list.Count/2] +
+                "\n\tStdev:   " + Std(list) +
+                "\n\tMin:     " + list.Min() +
+                "\n\tMax:     " + list.Max()
+            );
+        }
+        Trace.WriteLine("");
     }
     static void NerdVoltorb()
     {
-        Console.WriteLine("WG + PS");
-        Simulate("basesaves/red/nerdvoltorb.gqs", (gb)=>
+        Simulate("WG + PS", "basesaves/red/nerdvoltorb.gqs", (gb)=>
         {
             gb.ClearText();
-            while(gb.EnemyMon.Species.Name=="VOLTORB" && gb.BattleMon.HP>0)
+            while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
             {
                 gb.BattleMenu(0, 0);
                 // if(gb.EnemyMon.HP>10) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
                 if(gb.EnemyMon.HP == 33 || (gb.EnemyMon.HP >= 16 && gb.EnemyMon.HP <= 20)) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
                 gb.ClearText();
             }
-            return gb.BattleMon.HP>0;
+            return gb.BattleMon.HP > 0;
         });
-        Console.WriteLine("Spam PS");
-        Simulate("basesaves/red/nerdvoltorb.gqs", (gb)=>
+        Simulate("Spam PS", "basesaves/red/nerdvoltorb.gqs", (gb)=>
         {
             gb.ClearText();
-            while(gb.EnemyMon.Species.Name=="VOLTORB" && gb.BattleMon.HP>0)
+            while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
             {
                 gb.BattleMenu(0, 0);
                 gb.ChooseMenuItem(3); //ps
                 gb.ClearText();
             }
-            return gb.BattleMon.HP>0;
+            return gb.BattleMon.HP > 0;
         });
     }
     static void TestVariance()
@@ -567,10 +580,204 @@ public class RedTasTest : RedGlitchless {
         // gb.RunUntil("HandleMenuInput_");
         // Console.WriteLine("hra="+gb.CpuRead("hRandomAdd"));
     }
+    static void BC2Caterpie()
+    {
+        Action<RedGlitchless> Metapod = (gb)=>
+        {
+            while(gb.EnemyMon.Species.Name == "METAPOD" && gb.BattleMon.HP > 0 && gb.EnemyMon.HP > 0)
+            {
+                gb.BattleMenu(0, 0);
+                gb.ChooseMenuItem(2); //ha
+                gb.ClearText();
+            }
+        };
+        Func<RedGlitchless,bool> Leer_HA = (gb)=>
+        {
+            gb.ClearText();
+            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
+            {
+                gb.BattleMenu(0, 0);
+                if(gb.EnemyMon.DefenseModifider == 7)
+                    gb.ChooseMenuItem(0); //leer
+                else if(gb.EnemyMon.HP > 17)
+                    gb.ChooseMenuItem(2); //ha
+                else
+                    gb.ChooseMenuItem(1); //tackle
+                gb.ClearText();
+            }
+            Metapod(gb);
+            return gb.BattleMon.HP > 0;
+        };
+        Func<RedGlitchless,bool> HA_Tackle = (gb)=>
+        {
+            gb.ClearText();
+            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
+            {
+                gb.BattleMenu(0, 0);
+                if(gb.EnemyMon.HP > 10)
+                    gb.ChooseMenuItem(2); //ha
+                else
+                    gb.ChooseMenuItem(1); //tackle
+                gb.ClearText();
+            }
+            Metapod(gb);
+            return gb.BattleMon.HP > 0;
+        };
+        Func<RedGlitchless,bool> Tackle_HA = (gb)=>
+        {
+            gb.ClearText();
+            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
+            {
+                gb.BattleMenu(0, 0);
+                if(gb.EnemyMon.HP == 28)
+                    gb.ChooseMenuItem(1); //tackle
+                else
+                    gb.ChooseMenuItem(2); //ha
+                gb.ClearText();
+            }
+            Metapod(gb);
+            return gb.BattleMon.HP > 0;
+        };
+
+        Simulate("Leer + HA (cursor on HA)", "basesaves/red/bc2caterpieha30.gqs", Leer_HA);
+        Simulate("HA + Tackle (cursor on HA)", "basesaves/red/bc2caterpieha30.gqs", HA_Tackle);
+        Simulate("\n\n\nLeer + HA (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", Leer_HA);
+        Simulate("HA + Tackle (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", HA_Tackle);
+        Simulate("Tackle + HA (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", Tackle_HA);
+    }
+    void TestXAcc()
+    {
+        LoadState("basesaves/red/xacc.gqs");
+        RecordAndTime("test", true);
+        ClearText();
+        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("TACKLE", Miss));
+        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("TACKLE", Miss));
+        MoveSwap("THRASH", "BUBBLEBEAM");
+        ForceTurn(new RbyTurn("HORN DRILL"));
+        ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSION", Miss));
+        ForceTurn(new RbyTurn("HORN DRILL"));
+        Timer.Stop();
+        AdvanceFrames(60);
+        // ClearText();
+        Dispose();
+    }
+    void Metronome()
+    {
+        // LoadState("basesaves/red/metronome.gqs");
+        LoadState("basesaves/red/metronome2.gqs");
+        Record("test");
+        ClearText();
+        ForceTurn(new RbyTurn("METRONOME", "GUILLOTINE"), new RbyTurn("TACKLE", Miss));
+        ForceTurn(new RbyTurn("METRONOME", "RAZOR LEAF"), new RbyTurn("TACKLE", Miss));
+        ForceTurn(new RbyTurn("METRONOME", "HYPER BEAM", Crit), new RbyTurn("TACKLE", Miss));
+        AdvanceFrames(60);
+        Dispose();
+    }
+    void TestPress()
+    {
+        // LoadState("basesaves/red/moonmenu.gqs");
+        // LoadState("basesaves/red/xacc.gqs");
+        LoadState("basesaves/red/pickupitem.gqs");
+        Record("test");
+
+        // SetOptions(Fast | Off | Set);
+        // OpenStartMenu();
+        // ChooseMenuItem(4 + StartMenuOffset());
+        // Press(Joypad.Down, Joypad.None, Joypad.Down, Joypad.Right);
+
+        // MoveTo(12, 9);
+        // UseItem("RARE CANDY", "NIDORANM");
+        // RunUntil("Evolution_PartyMonLoop.done");
+        // UseItem("TM12", "NIDORINO", "TACKLE");
+        // UseItem("MOON STONE", "NIDORINO");
+        // UseItem("TM01", "NIDOKING", "LEER");
+
+        // MoveTo(12, 9);
+        // ItemSwap("POTION", "RARE CANDY");
+        // UseItem("RARE CANDY", "NIDORANM");
+        // RunUntil("Evolution_PartyMonLoop.done");
+
+        // ClearText();
+        // MoveSwap("HORN DRILL", "THUNDERBOLT");
+        // ForceTurn(new RbyTurn("HORN DRILL"));
+
+        OpenStartMenu();
+        PickupItem();
+
+        AdvanceFrames(60);
+        Dispose();
+    }
+    void Deposit()
+    {
+        LoadState("basesaves/red/pc.gqs");
+        Record("test");
+        TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);;
+        Deposit("SQUIRTLE", "PIDGEY", "NIDOKING");
+        DepositItems("X SPECIAL", 3, "HM01", 1, "SUPER POTION", 0);
+        Withdraw("SQUIRTLE", "NIDOKING");
+        WithdrawItems("X SPECIAL", 2, "SUPER POTION", -1, "POTION", 1, "HM01", 1);
+        Deposit("PARAS", "SQUIRTLE");
+        MoveTo(14, 8);
+
+        // LoadState("basesaves/red/pcy.gqs");
+        // Record("test");
+        // TalkTo(13, 4);
+        // Deposit("NIDORANM");
+        // DepositItems("POTION", 1);
+        // Withdraw("NIDORANM");
+        // WithdrawItems("POTION", 0);
+        // Deposit("PIKACHU");
+        // MoveTo(12, 4);
+
+        // LoadState("basesaves/red/pcpotion.gqs");
+        // RecordAndTime("test",true);
+        // ClearText();
+        // TalkTo(0, 1);
+        // WithdrawItems("POTION", 1);
+        // DepositItems("POTION", 0);
+        // MoveTo(7, 1);
+        // Timer.Stop();
+
+        // LoadState("basesaves/red/pcpotiony.gqs");
+        // RecordAndTime("test",true);
+        // TalkTo(0, 1);
+        // WithdrawItems("POTION", 1);
+        // DepositItems("POTION", 0);
+        // MoveTo(7, 1);
+        // Timer.Stop();
+
+        AdvanceFrames(60);
+        Dispose();
+    }
+    void Shopping()
+    {
+        LoadState("basesaves/red/shopping.gqs");
+        RecordAndTime("test", true);
+
+        Press(Joypad.A);
+        ClearText();
+        Buy("X ACCURACY", 12);
+        CloseMenu();
+
+        Timer.Stop();
+        AdvanceFrames(60);
+        Dispose();
+    }
+    static public void DebugStack(GameBoy gb, int n = 16)
+    {
+        for(int i = 0; i <= n; i += 2)
+        {
+            int addr = gb.CpuReadLE<ushort>(gb.SP + i);
+            if(addr > 0x4000)
+                addr |= gb.CpuRead("hLoadedROMBank") << 16;
+            Console.WriteLine(i + " " + (gb.SYM.Contains(addr) ? gb.SYM[addr] : addr.ToString("x")));
+        }
+    }
 
     public RedTasTest() : base()
+    // public RedTasTest() : base("roms/pokeyellow.gbc")
     {
-        NerdVoltorb();
+        Deposit();
         Environment.Exit(0);
     }
 }

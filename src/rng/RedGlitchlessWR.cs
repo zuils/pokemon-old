@@ -1,12 +1,12 @@
 public partial class RedGlitchless {
     public void WR() {
-        RecordAndTime("red-glitchless-wr");
+        // RecordAndTime("red-glitchless-wr");
         RbyTurn.DefaultRoll = 20;
 
-        // ClearCache();
+        ClearCache();
         CacheState("newgame", () => {
             new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
-            Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
+            Press(Joypad.Down | Joypad.A, Joypad.Left, Joypad.Down, Joypad.Right, Joypad.Start, Joypad.A); // Options
         });
 
         Timer.Start();
@@ -634,7 +634,7 @@ public partial class RedGlitchless {
             Buy("X ACCURACY", 11, "X SPECIAL", 7, "X SPEED", 3);
 
             TalkTo("CeladonMartElevator", 3, 0);
-            ChooseMenuItem(0);
+            ChooseListItem(0);
 
             MoveTo("CeladonCity", 8, 14);
             UseItem("BICYCLE");
@@ -783,7 +783,7 @@ public partial class RedGlitchless {
             TalkTo(6, 13, Action.Up);
             MoveTo(6, 13);
             ClearText();
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FOCUS ENERGY", AiItem)); // guard spec
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn(AiItem)); // Guard Spec
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("BUBBLEBEAM"));
@@ -796,7 +796,7 @@ public partial class RedGlitchless {
             MoveTo(6, 14); // blocked by door? (todo)
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator (todo?)
 
@@ -872,7 +872,7 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
-            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("SELFDESTRUCT", AiItem)); // x attack
+            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn(AiItem)); // X Attack
             ForceTurnAndSplit(new RbyTurn("X SPECIAL"), new RbyTurn("SELFDESTRUCT"));
         });
 
@@ -1055,9 +1055,7 @@ public partial class RedGlitchless {
             ClearText();
 
             MoveTo(7, 90);
-            AdvanceFrame();
-            Press(Joypad.Right);
-            AdvanceFrames(2);
+            Press(Joypad.None, Joypad.Right, Joypad.None);
             PickupItem(); // max ether
 
             MoveTo(7, 85, Action.Up);
@@ -1136,18 +1134,7 @@ public partial class RedGlitchless {
         CacheState("lorelei", () => {
             AfterMoveAndSplit();
             TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
-
-            // PC
-            ChooseMenuItem(0);
-            ClearText();
-            for(int i = 0; i < 3; i++) {
-                ChooseMenuItem(1);
-                ChooseMenuItem(1);
-                ChooseMenuItem(0);
-                ClearText();
-            }
-            MenuPress(Joypad.B);
-            MenuPress(Joypad.B);
+            Deposit("SQUIRTLE", "PIDGEY", "PARAS");
 
             MoveTo("IndigoPlateauLobby", 8, 0);
 

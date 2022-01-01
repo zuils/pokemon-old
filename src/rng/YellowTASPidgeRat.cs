@@ -9,7 +9,7 @@ public class YellowTASPidgeRat : YellowForce {
     //    > Make pathfinding consider turn frames (last moon room/post underground elixer house)
 
     public YellowTASPidgeRat() : base(true) {
-        Show();
+        // Show();
         ClearCache();
         // Record("yellowPidgeottoRaticateTest");
 

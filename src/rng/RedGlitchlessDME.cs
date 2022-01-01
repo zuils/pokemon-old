@@ -1,17 +1,17 @@
 public partial class RedGlitchless {
-    public void DoubleMaxEther() {
-        RecordAndTime("red-glitchless-doublemaxether");
+    public void DoubleMaxEther(bool silphBar = true) {
+        // RecordAndTime("red-glitchless-doublemaxether");
         RbyTurn.DefaultRoll = 39;
 
         // ClearCache();
         CacheState("newgame", () => {
             new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
-            Press(Joypad.Down, Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
+            Press(Joypad.Down | Joypad.A, Joypad.Left, Joypad.Down, Joypad.Left, Joypad.B, Joypad.A); // Options
         });
 
         Timer.Start();
 
-        // ClearCache();
+        ClearCache();
         CacheState("rival1", () => {
             ClearText(Joypad.A);
             Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
@@ -590,7 +590,7 @@ public partial class RedGlitchless {
             Buy("X ACCURACY", 11, "X SPECIAL", 5, "X SPEED", 3);
 
             TalkTo("CeladonMartElevator", 3, 0);
-            ChooseMenuItem(0);
+            ChooseListItem(0);
 
             MoveTo("CeladonCity", 8, 14);
             UseItem("BICYCLE");
@@ -704,69 +704,69 @@ public partial class RedGlitchless {
 
             PickupItemAt("SilphCo5F", 12, 3);
 
+            if(silphBar) {
+                // ARBOK TRAINER
+                TalkTo(8, 16);
+                ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("LEER"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
 
-            /*// ARBOK TRAINER
-            TalkTo(8, 16);
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("LEER"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
+                PickupItemAt(21, 16);
+                TalkTo(7, 13);
+                TalkTo("SilphCo3F", 17, 9);
 
-            PickupItemAt(21, 16);
-            TalkTo(7, 13);
-            TalkTo("SilphCo3F", 17, 9);
+                // SILPH RIVAL
+                MoveTo("SilphCo7F", 3, 2, Action.Left);
+                ClearText();
+                ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+                ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("BUBBLEBEAM"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
 
-            // SILPH RIVAL
-            MoveTo("SilphCo7F", 3, 2, Action.Left);
-            ClearText();
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
-            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("BUBBLEBEAM"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
+                MoveTo(5, 7, Action.Right);
+                UseItem("ELIXER", "NIDOKING");
 
-            MoveTo(5, 7, Action.Right);
-            UseItem("ELIXER", "NIDOKING");
+                // SILPH ROCKET
+                TalkTo("SilphCo11F", 3, 16);
+                ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FOCUS ENERGY"));
+                ForceTurn(new RbyTurn("BUBBLEBEAM"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+            }
+            else {
+                // ARBOK TRAINER
+                TalkTo(8, 16);
+                ForceTurn(new RbyTurn("THRASH"), new RbyTurn("LEER"));
+                ForceTurn(new RbyTurn("THRASH"));
 
-            // SILPH ROCKET
-            TalkTo("SilphCo11F", 3, 16);
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FOCUS ENERGY"));
-            ForceTurn(new RbyTurn("BUBBLEBEAM"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));*/
+                PickupItemAt(21, 16);
+                TalkTo(7, 13);
+                TalkTo("SilphCo3F", 17, 9);
 
+                // SILPH RIVAL
+                MoveTo("SilphCo7F", 3, 2, Action.Left);
+                ClearText();
+                ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+                ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
 
-            // ARBOK TRAINER
-            TalkTo(8, 16);
-            ForceTurn(new RbyTurn("THRASH"), new RbyTurn("LEER"));
-            ForceTurn(new RbyTurn("THRASH"));
+                MoveTo(5, 7, Action.Right);
 
-            PickupItemAt(21, 16);
-            TalkTo(7, 13);
-            TalkTo("SilphCo3F", 17, 9);
-
-            // SILPH RIVAL
-            MoveTo("SilphCo7F", 3, 2, Action.Left);
-            ClearText();
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
-            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-
-            MoveTo(5, 7, Action.Right);
-
-            // SILPH ROCKET
-            TalkTo("SilphCo11F", 3, 16);
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FOCUS ENERGY"));
-            ForceTurn(new RbyTurn("BUBBLEBEAM"));
-            ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("CONFUSION"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-            ForceTurn(new RbyTurn("HORN DRILL"));
-
+                // SILPH ROCKET
+                TalkTo("SilphCo11F", 3, 16);
+                ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FOCUS ENERGY"));
+                ForceTurn(new RbyTurn("BUBBLEBEAM"));
+                ForceTurn(new RbyTurn("ELIXER", "NIDOKING"), new RbyTurn("CONFUSION"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+                ForceTurn(new RbyTurn("HORN DRILL"));
+            }
 
             // SILPH GIOVANNI
             TalkTo(6, 13, Action.Up);
@@ -785,7 +785,7 @@ public partial class RedGlitchless {
             MoveTo(6, 14); // blocked by door?
 
             TalkTo(236, 3, 0);
-            ChooseMenuItem(9);
+            ChooseListItem(9);
             MoveTo(2, 3);
             Execute("D"); // exit elevator
 
@@ -1041,9 +1041,7 @@ public partial class RedGlitchless {
             ClearText();
 
             MoveTo(7, 90);
-            AdvanceFrame();
-            Press(Joypad.Right);
-            AdvanceFrames(2);
+            Press(Joypad.None, Joypad.Right, Joypad.None);
             PickupItem(); // max ether
 
             MoveTo(7, 85, Action.Up);
@@ -1122,20 +1120,7 @@ public partial class RedGlitchless {
         CacheState("lorelei", () => {
             AfterMoveAndSplit();
             TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
-
-            // PC
-            ChooseMenuItem(0);
-            ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(1);
-                ChooseMenuItem(0);
-                ClearText();
-                ChooseMenuItem(1);
-                ChooseMenuItem(2);
-                ChooseMenuItem(0);
-                ClearText();
-            MenuPress(Joypad.B);
-            MenuPress(Joypad.B);
+            Deposit("SQUIRTLE", "PARAS");
 
             MoveTo("IndigoPlateauLobby", 8, 0);
             PartySwap("NIDOKING", "PIDGEY");

@@ -1,9 +1,10 @@
 public class SCTTas : RedBlueForce {
 
     public SCTTas() : base("roms/pokered.gbc", true) {
+        ClearCache();
         // This is an implementation of the tauros section of MrWint's movie (http://tasvideos.org/7131S.html)
         // For documentation of the code, please check the blue nido file.
-        Record("red-sct");
+        // Record("red-sct");
 
         CacheState("bk2", () => {
             PlayBizhawkMovie("bizhawk/red-sct.bk2", 187398);

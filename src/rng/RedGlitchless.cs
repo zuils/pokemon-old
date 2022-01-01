@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 
 public partial class RedGlitchless : RedBlueForce {
-
-    public static RbyIntroSequence NoPal=new RbyIntroSequence(RbyStrat.NoPal);
-    public static RbyIntroSequence PalHold=new RbyIntroSequence(RbyStrat.PalHold);
-    TimerComponent Timer=new TimerComponent(0,144,2.0f);
+    public static RbyIntroSequence NoPal = new RbyIntroSequence(RbyStrat.NoPal);
+    public static RbyIntroSequence PalHold = new RbyIntroSequence(RbyStrat.PalHold);
+    public TimerComponent Timer = new TimerComponent(0,144,2.0f);
 
     public static string SpacePath(string path)
     {
@@ -60,8 +59,9 @@ public partial class RedGlitchless : RedBlueForce {
         ClearTextUntil(Joypad.None, SYM["EnterMap"]);
     }
 
-    void RecordAndTime(string movie, bool start = false)
+    public void RecordAndTime(string movie, bool start = false)
     {
+        SetSpeedupFlags(SpeedupFlags.None);
         Scene s = new Scene(this, 160, 160);
         s.AddComponent(new VideoBufferComponent(0, 0, 160, 144));
         s.AddComponent(new RecordingComponent(movie));
@@ -69,7 +69,11 @@ public partial class RedGlitchless : RedBlueForce {
         Timer.Running = start;
     }
 
-    public RedGlitchless(string rom = "roms/pokered.gbc", bool speedup = false) : base(rom, speedup)
+    public RedGlitchless(string rom = "roms/pokered.gbc", bool speedup = true) : base(rom, speedup)
+    {
+    }
+
+    public RedGlitchless(bool speedup) : base("roms/pokered.gbc", speedup)
     {
     }
 }
