@@ -1695,7 +1695,7 @@ public class RedComparison : RedGlitchless {
             MoveTo(3, 44);
         });
     }
-    void SaveAndQuit()
+    void SaveAndQuit2()
     {
         Comparison("basesaves/red/saveandquit.gqs", ()=>{
             MoveTo(59, 5, 5);
@@ -2313,10 +2313,24 @@ public class RedComparison : RedGlitchless {
 
         FFMPEG.RunFFMPEGCommand("-y -i movies/left.mp4 -i movies/right.mp4 -filter_complex hstack movies/surfvswalk.mp4");
     }
+    void SixtyCans()
+    {
+        Comparison("basesaves/red/manip/cans.gqs", ()=>{
+            Execute(SpacePath("DALLLAURUUUUUA"));
+            ClearText();
+            TalkTo(3, 11, Action.Left);
+            MoveTo(4, 9);
+        }, ()=>{
+            Execute(SpacePath("SDALLLAURAUUUUUA"));
+            ClearText();
+            TalkTo(7, 11, Action.Right);
+            MoveTo(4, 9);
+        });
+    }
 
     public RedComparison() : base()
     {
-        EarlyPotions();
+        SixtyCans();
         Environment.Exit(0);
     }
 }

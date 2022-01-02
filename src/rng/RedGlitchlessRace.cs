@@ -100,13 +100,9 @@ public partial class RedGlitchless {
             MoveTo("ViridianCity", 27, 18);
 
             MoveTo("ViridianCity", 7, 18, Action.Left);
+            SaveAndQuit();
 
-            Save();
-            AdvanceFrames(29); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
-
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("LLLULLUAULALDLDLLDADDADLALLALUUA"));
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
@@ -153,12 +149,9 @@ public partial class RedGlitchless {
 
             // Backup bird
             MoveTo(1, 14);
-            Save();
-            AdvanceFrames(29); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
+            SaveAndQuit();
 
-            PalHold.Execute(this);
+            PalHold.Execute(this, true);
             Execute(SpacePath("UUUUUUUUUUUUUUU"+"URUAUUAUUU"+"UUAUU"));
             Press(Joypad.Right);
             ForceEncounter(Action.Right, 1, 0x8888); // todo doesnt work with turnframes
@@ -245,12 +238,9 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("TACKLE"));
 
             MoveTo(27, 11);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
+            SaveAndQuit();
 
-            PalHold.Execute(this);
+            PalHold.Execute(this, true);
             Execute(SpacePath("RRRRRRRRURRUUUUUARRRRRRRRRRRRDDDDDRRRRRRRARUURRUUUUUUUUUURRRRUUUUUUUUUURRRRR"));
             MoveAndSplit(Joypad.Up);
         });
@@ -530,12 +520,9 @@ public partial class RedGlitchless {
 
             // Manip
             MoveTo(15,19);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
+            SaveAndQuit();
 
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("SDLALLAURUAUUUU")); // 60 cans
             ForceCan();
             MoveTo("VermilionGym", 6, 11);

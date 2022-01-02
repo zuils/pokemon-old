@@ -59,6 +59,13 @@ public partial class RedGlitchless : RedBlueForce {
         ClearTextUntil(Joypad.None, SYM["EnterMap"]);
     }
 
+    public void SaveAndQuit()
+    {
+        Save();
+        RunUntil(SYM["SaveSAV.save"] + 0x3);
+        HardReset(true);
+    }
+
     public void RecordAndTime(string movie, bool start = false)
     {
         SetSpeedupFlags(SpeedupFlags.None);

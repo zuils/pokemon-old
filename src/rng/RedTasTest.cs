@@ -773,11 +773,29 @@ public class RedTasTest : RedGlitchless {
             Console.WriteLine(i + " " + (gb.SYM.Contains(addr) ? gb.SYM[addr] : addr.ToString("x")));
         }
     }
+    void FadeOut()
+    {
+        LoadState("basesaves/red/fadeout.gqs");
+        RecordAndTime("test", true);
+        Execute("L");
+        Save();
+
+        AdvanceFrames(24);
+        NoPal.Execute(this, true);
+
+        // AdvanceFrames(29);
+        // AdvanceFrames(105);
+        // NoPal.Execute(this);
+
+        Execute("L");
+        Timer.Stop();
+        AdvanceFrames(100);
+        Dispose();
+    }
 
     public RedTasTest() : base()
-    // public RedTasTest() : base("roms/pokeyellow.gbc")
     {
-        Deposit();
+        FadeOut();
         Environment.Exit(0);
     }
 }

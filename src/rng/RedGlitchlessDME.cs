@@ -78,20 +78,15 @@ public partial class RedGlitchless {
             MoveTo("ViridianCity", 27, 18);
 
             MoveTo("ViridianCity", 7, 18, Action.Left);
+            SaveAndQuit();
 
-            Save();
-            AdvanceFrames(29); // saving
-            AdvanceFrames(105); // fade out
-            HardReset();
-
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("LLLULLUAULALDLDLLDADDADLALLALUUA"));
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
             ClearText();
             Yes();
             Press(Joypad.None, Joypad.A, Joypad.Start); // nido nickname
-            // Press(Joypad.None, Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // nido nickname
             RunUntil("EnterMap");
         });
 
@@ -191,12 +186,9 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("HORN ATTACK"));
 
             MoveTo(27, 11);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out
-            HardReset();
+            SaveAndQuit();
 
-            PalHold.Execute(this);
+            PalHold.Execute(this, true);
             Execute(SpacePath("RRRRRRRRURRUUUUUARRRRRRRRRRRRDDDDDRRRRRRRARUURRUUUUUUUUUURRRRUUUUUUUUUURRRRR"));
             MoveAndSplit(Joypad.Up);
         });
@@ -446,12 +438,9 @@ public partial class RedGlitchless {
 
             // Manip
             MoveTo(15,19);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out
-            HardReset();
+            SaveAndQuit();
 
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("DLALLAURUUUUU"));
             ForceCan();
             MoveTo("VermilionGym", 4, 11);

@@ -3,7 +3,7 @@ public partial class RedGlitchless {
         // RecordAndTime("red-glitchless-wr");
         RbyTurn.DefaultRoll = 20;
 
-        ClearCache();
+        // ClearCache();
         CacheState("newgame", () => {
             new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
             Press(Joypad.Down | Joypad.A, Joypad.Left, Joypad.Down, Joypad.Right, Joypad.Start, Joypad.A); // Options
@@ -11,15 +11,13 @@ public partial class RedGlitchless {
 
         Timer.Start();
 
-        // ClearCache();
+        ClearCache();
         CacheState("rival1", () => {
             ClearText(Joypad.A);
             Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
-            // Press(Joypad.A); for(int i=0; i<10; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
 
             ClearText(Joypad.A);
             Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name rival
-            // Press(Joypad.A); for(int i=0; i<10; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
             ClearText(Joypad.A); // Journey begins!
 
             MoveTo("PalletTown", 10, 1); // Oak cutscene
@@ -28,11 +26,8 @@ public partial class RedGlitchless {
             TalkTo(7, 3);
             Yes();
             ClearText();
-                Yes();
-                Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
-                // if(s>=0) Yes(); else No(); // skip naming
-                // if(s==0) Press(Joypad.None); // miss name
-                // for(int i=0; i<s; ++i) Press(Joypad.None, Joypad.A); if(s>=0) Press(Joypad.Start); // 2-10 char name
+            Yes();
+            Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
             ForceGiftDVs(0xaaaa);
             ClearText(); // Squirtle received
 
@@ -91,22 +86,15 @@ public partial class RedGlitchless {
             MoveTo("ViridianCity", 27, 18);
 
             MoveTo("ViridianCity", 7, 18, Action.Left);
+            SaveAndQuit();
 
-            Save();
-            AdvanceFrames(29); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
-
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("LLLULLUAULALDLDLLDADDADLALLALUUA"));
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
             ClearText();
-                Yes();
-                Press(Joypad.None, Joypad.A, Joypad.Start); // nido nickname
-                // if(n>=0) Yes(); else No(); // skip naming
-                // if(n==0) Press(Joypad.None); // miss name
-                // for(int i=0; i<n; ++i) Press(Joypad.None, Joypad.A); if(n>=0) Press(Joypad.Start); // 2-10 char name
+            Yes();
+            Press(Joypad.None, Joypad.A, Joypad.Start); // nido nickname
             RunUntil("EnterMap");
         });
 
@@ -210,12 +198,9 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("HORN ATTACK", Crit));
 
             MoveTo(27, 11);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
+            SaveAndQuit();
 
-            PalHold.Execute(this);
+            PalHold.Execute(this, true);
             Execute(SpacePath("RRRRRRRRURRUUUUUARRRRRRRRRRRRDDDDDRRRRRRRARUURRUUUUUUUUUURRRRUUUUUUUUUURRRRR"));
             MoveAndSplit(Joypad.Up);
         });
@@ -488,12 +473,9 @@ public partial class RedGlitchless {
 
             // Manip
             MoveTo(15,19);
-            Save();
-            AdvanceFrames(32); // saving
-            AdvanceFrames(105); // fade out (todo?)
-            HardReset();
+            SaveAndQuit();
 
-            NoPal.Execute(this);
+            NoPal.Execute(this, true);
             Execute(SpacePath("DLALLAURUUUUU"));
             ForceCan();
             MoveTo("VermilionGym", 4, 11);

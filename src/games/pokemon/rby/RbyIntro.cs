@@ -304,8 +304,8 @@ public class RbyIntroSequence : List<RbyStrat> {
         Add(RbyStrat.Continue);
     }
 
-    public void Execute(Rby gb) {
-        ExecuteUntilIGT(gb);
+    public void Execute(Rby gb, bool fade = false) {
+        ExecuteUntilIGT(gb, fade);
         ExecuteAfterIGT(gb);
     }
 
@@ -313,8 +313,8 @@ public class RbyIntroSequence : List<RbyStrat> {
         return LastIndexOf(this.Where(x => (x >= RbyStrat.Title0 && x <= RbyStrat.Title7Scroll) || (x == RbyStrat.Title)).Last());
     }
 
-    public void ExecuteUntilIGT(Rby gb) {
-        gb.HardReset(false);
+    public void ExecuteUntilIGT(Rby gb, bool fade = false) {
+        gb.HardReset(fade);
         int lastTitleSkip = IndexOfLastTitleSkip();
         for(int i = 0; i <= lastTitleSkip; i++) {
             this[i].Execute(gb);
