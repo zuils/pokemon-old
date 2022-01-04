@@ -35,9 +35,9 @@ public partial class RedGlitchless {
 
             // RIVAL1
             ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("GROWL", Miss));
-            ForceTurn(new RbyTurn("TACKLE",10), new RbyTurn("TACKLE", Miss));
-            ForceTurn(new RbyTurn("TACKLE",10), new RbyTurn("GROWL", Miss));
-            ForceTurn(new RbyTurn("TACKLE",10), new RbyTurn("TACKLE"));
+            ForceTurn(new RbyTurn("TACKLE", 10), new RbyTurn("TACKLE", Miss));
+            ForceTurn(new RbyTurn("TACKLE", 10), new RbyTurn("GROWL", Miss));
+            ForceTurn(new RbyTurn("TACKLE", 10), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("TACKLE"));
             ClearText();
             MoveTo(5, 11);
@@ -46,9 +46,9 @@ public partial class RedGlitchless {
         // ClearCache();
         CacheState("nidoran", () => {
             Execute("D");
-            MoveTo("Route1",11,24);
-            MoveTo("Route1",13,14);
-            MoveTo("Route1",14,8);
+            MoveTo("Route1", 11, 24);
+            MoveTo("Route1", 13, 14);
+            MoveTo("Route1", 14, 8);
             ForceEncounter(Action.Up, 3, 0x0000);
             ClearText();
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TAIL WHIP"));
@@ -58,19 +58,19 @@ public partial class RedGlitchless {
             MoveTo("ViridianCity", 29, 19);
             ClearText(); // Receive parcel
 
-            MoveTo("Route1",8,6);
-            MoveTo("Route1",9,14);
-            MoveTo("Route1",16,22);
-            MoveTo("Route1",16,24);
-            MoveTo("Route1",16,26);
-            MoveTo("Route1",14,26);
-            MoveTo("Route1",14,28);
-            MoveTo("Route1",10,28);
+            MoveTo("Route1", 8, 6);
+            MoveTo("Route1", 9, 14);
+            MoveTo("Route1", 16, 22);
+            MoveTo("Route1", 16, 24);
+            MoveTo("Route1", 16, 26);
+            MoveTo("Route1", 14, 26);
+            MoveTo("Route1", 14, 28);
+            MoveTo("Route1", 10, 28);
 
             TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
 
-            MoveTo("Route1",11,24);
-            MoveTo("Route1",13,14);
+            MoveTo("Route1", 11, 24);
+            MoveTo("Route1", 13, 14);
             MoveTo("ViridianCity", 21, 30);
 
             TalkTo("ViridianMart", 1, 5);
@@ -116,7 +116,7 @@ public partial class RedGlitchless {
 
         // ClearCache();
         CacheState("brock", () => {
-            MoveTo("PewterCity",18,35);
+            MoveTo("PewterCity", 18, 35);
             PartySwap("SQUIRTLE", "NIDORANM");
 
             TalkTo("PewterMart", 1, 5);
@@ -259,6 +259,8 @@ public partial class RedGlitchless {
         // ClearCache();
         CacheState("bridge", () => {
             AfterMoveAndSplit();
+            MoveNpc("CeruleanCity", 15, 18, Action.Down); // good npc
+            MoveTo("CeruleanCity", 14, 18);
             TalkTo("CeruleanPokecenter", 3, 2);
             Yes();
             ClearText(); // healed at center
@@ -426,8 +428,8 @@ public partial class RedGlitchless {
         // ClearCache();
         CacheState("surge", () => {
             TalkTo("VermilionMart", 1, 5);
-            Sell("TM34",1,"NUGGET",1);
-            Buy("REPEL",6,"PARLYZ HEAL",3);
+            Sell("TM34", 1, "NUGGET", 1);
+            Buy("REPEL", 6, "PARLYZ HEAL", 3);
 
             // Cut menu
             MoveTo("VermilionCity", 15, 17, Action.Down);
@@ -437,7 +439,7 @@ public partial class RedGlitchless {
             Cut();
 
             // Manip
-            MoveTo(15,19);
+            MoveTo(15, 19);
             SaveAndQuit();
 
             NoPal.Execute(this, true);
@@ -566,7 +568,7 @@ public partial class RedGlitchless {
             ChooseMenuItem(1); // get soda pop
             ClearText();
 
-            TalkTo(5,5);
+            TalkTo(5, 5);
             Yes();
             ChooseMenuItem(0); // trade soda pop
             ClearText();
@@ -655,7 +657,7 @@ public partial class RedGlitchless {
             // ROCKET #2
             MoveTo(10, 9);
             ClearText();
-            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("TACKLE",  Miss));
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("TACKLE", Miss));
             ForceTurn(new RbyTurn("HORN DRILL"));
             ForceTurn(new RbyTurn("HORN DRILL"));
 
@@ -724,8 +726,7 @@ public partial class RedGlitchless {
                 ForceTurn(new RbyTurn("BUBBLEBEAM"));
                 ForceTurn(new RbyTurn("HORN DRILL"));
                 ForceTurn(new RbyTurn("HORN DRILL"));
-            }
-            else {
+            } else {
                 // ARBOK TRAINER
                 TalkTo(8, 16);
                 ForceTurn(new RbyTurn("THRASH"), new RbyTurn("LEER"));
@@ -865,10 +866,11 @@ public partial class RedGlitchless {
 
             TalkTo("WardensHouse", 2, 3);
             MoveTo("FuchsiaCity", 27, 28);
+            MoveNpc("PalletTown", 3, 8, Action.Left); // good npc
             Fly("PalletTown");
 
             // Surf menu
-            MoveTo(3, 17, Action.Right); // todo fix npc troll
+            MoveTo(4, 17, Action.Right);
             UseItem("SUPER REPEL");
             ItemSwap("HELIX FOSSIL", "X SPEED");
             UseItem("HM03", "SQUIRTLE");

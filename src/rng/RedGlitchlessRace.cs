@@ -1,6 +1,6 @@
 public partial class RedGlitchless {
-    public void Race(int T=1, int R=1, int S=1, int N=1, bool IT=false) {
-        System.Console.Write(T+" "+R+" "+S+" "+N+" ");
+    public void Race(int T = 1, int R = 1, int S = 1, int N = 1, bool IT = false) {
+        System.Console.Write(T + " " + R + " " + S + " " + N + " ");
 
         // RecordAndTime("red-glitchless-race");
         RbyTurn.DefaultRoll = 20;
@@ -17,11 +17,11 @@ public partial class RedGlitchless {
         CacheState("rival1", () => {
             ClearText(Joypad.A);
             // Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name self
-            Press(Joypad.A); for(int i=0; i<T; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
+            Press(Joypad.A); for(int i = 0; i < T; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
 
             ClearText(Joypad.A);
             // Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start); // Name rival
-            Press(Joypad.A); for(int i=0; i<R; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
+            Press(Joypad.A); for(int i = 0; i < R; ++i) Press(Joypad.None, Joypad.A); Press(Joypad.Start); // 2-10 char name
             ClearText(Joypad.A); // Journey begins!
 
             // PC potion
@@ -34,11 +34,11 @@ public partial class RedGlitchless {
             TalkTo(7, 3);
             Yes();
             ClearText();
-                // Yes();
-                // Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
-                if(S>=0) Yes(); else No(); // skip naming
-                if(S==0) Press(Joypad.None); // miss name
-                for(int i=0; i<S; ++i) Press(Joypad.None, Joypad.A); if(S>=0) Press(Joypad.Start); // 2-10 char name
+            // Yes();
+            // Press(Joypad.None, Joypad.A, Joypad.Start); // Name Squirtle
+            if(S >= 0) Yes(); else No(); // skip naming
+            if(S == 0) Press(Joypad.None); // miss name
+            for(int i = 0; i < S; ++i) Press(Joypad.None, Joypad.A); if(S >= 0) Press(Joypad.Start); // 2-10 char name
             ForceGiftDVs(0xC0a4);
             ClearText(); // Squirtle received
 
@@ -61,15 +61,15 @@ public partial class RedGlitchless {
         CacheState("nidoran", () => {
             Execute("D"); // pathfinding doesnt like standing there (todo)
 
-            MoveTo("Route1",8,30);
+            MoveTo("Route1", 8, 30);
             ForceEncounter(Action.Up, 8, 0x8888);
             ClearText();
             RunAway();
 
-            MoveTo("Route1",11,24);
-            MoveTo("Route1",13,14);
+            MoveTo("Route1", 11, 24);
+            MoveTo("Route1", 13, 14);
 
-            MoveTo("Route1",14,14);
+            MoveTo("Route1", 14, 14);
             ForceEncounter(Action.Up, 1, 0x8888);
             ClearText();
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
@@ -80,19 +80,20 @@ public partial class RedGlitchless {
             MoveTo("ViridianCity", 29, 19);
             ClearText(); // Receive parcel
 
-            MoveTo("Route1",8,6);
-            MoveTo("Route1",9,14);
-            MoveTo("Route1",16,22);
-            MoveTo("Route1",16,24);
-            MoveTo("Route1",16,26);
-            MoveTo("Route1",10,26);
-            MoveTo("Route1",10,28);
+            MoveTo("Route1", 8, 6);
+            MoveTo("Route1", 9, 14);
+            MoveTo("Route1", 16, 22);
+            MoveTo("Route1", 16, 24);
+            MoveTo("Route1", 16, 26);
+            MoveTo("Route1", 10, 26);
+            MoveTo("Route1", 10, 28);
 
             TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
 
-            MoveTo("Route1",11,24);
-            MoveTo("Route1",13,14);
-            MoveTo("Route1",15,12); // todo simulate npc troll
+            MoveTo("Route1", 11, 24);
+            MoveNpc(15, 13, Action.Left); // npc troll
+            MoveTo("Route1", 13, 14);
+            MoveTo("Route1", 15, 4);
             MoveTo("ViridianCity", 21, 30);
 
             TalkTo("ViridianMart", 1, 5);
@@ -107,11 +108,11 @@ public partial class RedGlitchless {
             ForceEncounter(Action.Up, 3, 0xffef);
             ForceYoloball("POKE BALL");
             ClearText();
-                // Yes();
-                // Press(Joypad.None, Joypad.A, Joypad.Start); // nido nickname
-                if(N>=0) Yes(); else No(); // skip naming
-                if(N==0) Press(Joypad.None); // miss name
-                for(int i=0; i<N; ++i) Press(Joypad.None, Joypad.A); if(N>=0) Press(Joypad.Start); // 2-10 char name
+            // Yes();
+            // Press(Joypad.None, Joypad.A, Joypad.Start); // nido nickname
+            if(N >= 0) Yes(); else No(); // skip naming
+            if(N == 0) Press(Joypad.None); // miss name
+            for(int i = 0; i < N; ++i) Press(Joypad.None, Joypad.A); if(N >= 0) Press(Joypad.Start); // 2-10 char name
             RunUntil("EnterMap");
         });
 
@@ -119,7 +120,7 @@ public partial class RedGlitchless {
         CacheState("forest", () => {
             MoveTo(13, 10, 52); // no extended
             MoveTo(10, 46);
-            
+
             MoveTo("ViridianForest", 26, 42); // safe path
             MoveTo(26, 34);
             MoveTo(27, 32);
@@ -152,7 +153,7 @@ public partial class RedGlitchless {
             SaveAndQuit();
 
             PalHold.Execute(this, true);
-            Execute(SpacePath("UUUUUUUUUUUUUUU"+"URUAUUAUUU"+"UUAUU"));
+            Execute(SpacePath("UUUUUUUUUUUUUUU" + "URUAUUAUUU" + "UUAUU"));
             Press(Joypad.Right);
             ForceEncounter(Action.Right, 1, 0x8888); // todo doesnt work with turnframes
             ForceYoloball("POKE BALL");
@@ -224,7 +225,7 @@ public partial class RedGlitchless {
 
             ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("HORN ATTACK"));
-            
+
             ForceTurn(new RbyTurn("HORN ATTACK", Crit), new RbyTurn("HARDEN"));
             ForceTurn(new RbyTurn("HORN ATTACK"));
 
@@ -311,7 +312,7 @@ public partial class RedGlitchless {
             Yes();
             ClearText(); // helix fossil picked up
 
-            MoveTo(3,7);
+            MoveTo(3, 7);
             ForceEncounter(Action.Right, 1, 0x0000);
             ClearText();
             ForceTurn(new RbyTurn("WATER GUN"));
@@ -434,7 +435,7 @@ public partial class RedGlitchless {
             TalkTo("CeruleanPokecenter", 3, 2);
             Yes();
             ClearText(); // healed at center
-            
+
             if(IT) {
                 Save(); // time penalty
                 TalkTo("BikeShop", 6, 3);
@@ -508,7 +509,7 @@ public partial class RedGlitchless {
         // ClearCache();
         CacheState("surge", () => {
             TalkTo("VermilionMart", 1, 5);
-            Buy("REPEL",6,"PARLYZ HEAL",4);
+            Buy("REPEL", 6, "PARLYZ HEAL", 4);
 
             // Cut menu
             MoveTo("VermilionCity", 15, 17, Action.Down);
@@ -519,7 +520,7 @@ public partial class RedGlitchless {
             Cut();
 
             // Manip
-            MoveTo(15,19);
+            MoveTo(15, 19);
             SaveAndQuit();
 
             NoPal.Execute(this, true);
@@ -642,7 +643,7 @@ public partial class RedGlitchless {
 
             // Shopping
             TalkTo("CeladonMart2F", 7, 3);
-            Sell("TM34",1,"NUGGET",2);
+            Sell("TM34", 1, "NUGGET", 2);
             Buy("TM07", 1);
             TalkTo("CeladonMart2F", 5, 4);
             Buy("SUPER REPEL", 7, "SUPER POTION", 3, "REVIVE", 2);
@@ -654,7 +655,7 @@ public partial class RedGlitchless {
             ChooseMenuItem(1); // get soda pop
             ClearText();
 
-            TalkTo(5,5);
+            TalkTo(5, 5);
             Yes();
             ChooseMenuItem(0); // trade soda pop
             ClearText();
@@ -928,10 +929,11 @@ public partial class RedGlitchless {
 
             TalkTo("WardensHouse", 2, 3);
             MoveTo("FuchsiaCity", 27, 28);
+            MoveNpc("PalletTown", 3, 8, Action.Down); // npc troll
             Fly("PalletTown");
 
             // Surf menu
-            MoveTo(3, 17, Action.Right); // todo fix npc troll
+            MoveTo(3, 17, Action.Right);
             UseItem("SUPER REPEL");
             // ItemSwap("HM01", "X SPEED");
             UseItem("HM03", "SQUIRTLE");
@@ -1057,7 +1059,7 @@ public partial class RedGlitchless {
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
-            ForceTurnAndSplit(new RbyTurn("BLIZZARD",30));
+            ForceTurnAndSplit(new RbyTurn("BLIZZARD", 30));
         });
 
         // ClearCache();

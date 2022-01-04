@@ -792,10 +792,37 @@ public class RedTasTest : RedGlitchless {
         AdvanceFrames(100);
         Dispose();
     }
+    void NpcTroll()
+    {
+        // LoadState("basesaves/red/npctroll.gqs");
+        // LoadState("basesaves/red/npctrollpal.gqs");
+        LoadState("basesaves/red/npctrollceru.gqs");
+        Record("test");
+
+        // MoveNpc(0, 3, 8, Action.Down);
+        // Fly("PalletTown");
+        // MoveTo(4, 17, Action.Right);
+
+        // Fly("PalletTown");
+        // MoveNpc(12, 5, 24, Action.Right);
+        // MoveNpc(12, 15, 13, Action.Left);
+        // MoveTo(12, 14, 14);
+        // MoveTo(12, 14, 5);
+
+        MoveNpc(3, 15, 18, Action.Down);
+        MoveNpc(3, 9, 21, Action.Up);
+        MoveNpc(64, 3, 1, Action.Up);
+        MoveNpc(64, 4, 3, Action.Left);
+        MoveTo(3, 14, 18);
+        TalkTo("CeruleanPokecenter", 3, 2);
+
+        AdvanceFrames(100);
+        Dispose();
+    }
 
     public RedTasTest() : base()
     {
-        FadeOut();
+        NpcTroll();
         Environment.Exit(0);
     }
 }
