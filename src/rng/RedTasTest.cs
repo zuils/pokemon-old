@@ -18,38 +18,41 @@ public class RedTasTest : RedGlitchless {
         {
             int pc = PC;
             if(pc > 0x4000) pc |= CpuRead("hLoadedROMBank") << 16;
-            string pcs = SYM.Contains(pc) ? SYM[pc] : String.Format("{0:x4}",pc);
+            string pcs = SYM.Contains(pc) ? SYM[pc] : String.Format("{0:x4}", pc);
 
-            int sp=CpuReadLE<ushort>(SP);
+            int sp = CpuReadLE<ushort>(SP);
             if(sp > 0x4000) sp |= CpuRead("hLoadedROMBank") << 16;
-            string sps = String.Format("{0:x4}",sp) + (SYM.Contains(sp) ? " ("+SYM[sp]+")" : "");
+            string sps = String.Format("{0:x4}", sp) + (SYM.Contains(sp) ? " (" + SYM[sp] + ")" : "");
 
-            return "instruction: " + pcs + "  stack: " + sps + "  ly:"+(int)CpuRead(0xff44);
+            return "instruction: " + pcs + "  stack: " + sps + "  ly:" + (int) CpuRead(0xff44);
         }
 
 
         LoadState("basesaves/red/agathabug_test.gqs");
 
-        for(int k=0; k<30; ++k) {
-            const int maxhist=100;
-            string[] hist=new string[maxhist];
-            int j=0;
-            string ins=GetLine();
-            while(!ins.Contains("NULL+0040")) {
+        for(int k = 0; k < 30; ++k)
+        {
+            const int maxhist = 100;
+            string[] hist = new string[maxhist];
+            int j = 0;
+            string ins = GetLine();
+            while(!ins.Contains("NULL+0040"))
+            {
                 RunFor(1);
-                ins=GetLine();
-                hist[j]=ins;
-                j=(j+1)%maxhist;
+                ins = GetLine();
+                hist[j] = ins;
+                j = (j + 1) % maxhist;
             }
 
-            for(int i=j; i<maxhist; ++i )
+            for(int i = j; i < maxhist; ++i)
                 Console.WriteLine(hist[i]);
-            for(int i=0; i<j; ++i )
+            for(int i = 0; i < j; ++i)
                 Console.WriteLine(hist[i]);
 
             // RunUntil(SYM["RandomizeDamage.loop"] + 0x0);
 
-            for(int i=0; i<100; ++i) {
+            for(int i = 0; i < 100; ++i)
+            {
                 RunFor(1);
                 Console.WriteLine(GetLine());
             }
@@ -61,7 +64,7 @@ public class RedTasTest : RedGlitchless {
         Record("bide");
         LoadState("basesaves/red/bide.gqs");
 
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE", 3*Turns));
+        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE", 3 * Turns));
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
         // ForceTurn(new RbyTurn("BUBBLE"));
@@ -98,9 +101,9 @@ public class RedTasTest : RedGlitchless {
     void TestRange()
     {
         // Record("testrange");
-        const int x=3;
-        Scene s = new Scene(this, 160*x, 144*x);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160*x, 144*x));
+        const int x = 3;
+        Scene s = new Scene(this, 160 * x, 144 * x);
+        s.AddComponent(new VideoBufferComponent(0, 0, 160 * x, 144 * x));
         SetSpeedupFlags(SpeedupFlags.None);
         Scene.AddComponent(new RecordingComponent("testrange"));
         void HP()
@@ -169,23 +172,23 @@ public class RedTasTest : RedGlitchless {
         // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39 | Crit));
 
         // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7), new RbyTurn("POUND", Miss)); HP();
         // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss)); HP();
         // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7+8), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8), new RbyTurn("POUND", Miss)); HP();
         // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss), true, false); HP();
         // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1+7+8+7), new RbyTurn("POUND", Miss)); HP();
+        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8 + 7), new RbyTurn("POUND", Miss)); HP();
         // ForceTurn(new RbyTurn("WATER GUN", 1), new RbyTurn("POUND", Miss), true, false); HP();
         LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP",13); HP();
+        CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
         SaveState("basesaves/red/nerd13.gqs");
         ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
         LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP",12); HP();
+        CpuWriteBE<ushort>("wEnemyMonHP", 12); HP();
         ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
         LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP",13); HP();
+        CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
         ForceTurn(new RbyTurn("WATER GUN", 5), null, true, false); HP();
 
         AdvanceFrames(300);
@@ -197,9 +200,9 @@ public class RedTasTest : RedGlitchless {
 
         LoadState("basesaves/red/misty2.gqs");
 
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn(AiItem));
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
-        ForceTurn(new RbyTurn("THRASH",1), new RbyTurn("BUBBLEBEAM"));
+        ForceTurn(new RbyTurn("THRASH", 1), new RbyTurn(AiItem));
+        ForceTurn(new RbyTurn("THRASH", 1), new RbyTurn("BUBBLEBEAM"));
+        ForceTurn(new RbyTurn("THRASH", 1), new RbyTurn("BUBBLEBEAM"));
 
         AdvanceFrames(60);
         Dispose();
@@ -213,8 +216,8 @@ public class RedTasTest : RedGlitchless {
         ForceTurn(new RbyTurn("THUNDERBOLT", Miss), new RbyTurn("POISON GAS"));
         ForceTurn(new RbyTurn("EARTHQUAKE"));
 
-        // RbyTurn.defaultRoll=20;
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("DISABLE", 8*Turns, "EARTHQUAKE"));
+        // RbyTurn.defaultRoll = 20;
+        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("DISABLE", 8 * Turns, "EARTHQUAKE"));
         // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("HEADBUTT", Crit));
         // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSION"));
 
@@ -238,7 +241,7 @@ public class RedTasTest : RedGlitchless {
         Record("furyattack");
         LoadState("basesaves/red/furyattack.gqs");
 
-        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4*Turns));
+        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4 * Turns));
 
         AdvanceFrames(60);
         Dispose();
@@ -247,46 +250,46 @@ public class RedTasTest : RedGlitchless {
     {
         // Record("moverng");
 
-        // int i=0;
-        // for(int i=0; i<256; ++i) {
-            // LoadState("basesaves/red/agatha.gqs");
-            // LoadState("basesaves/red/blackbelt.gqs");
-            // LoadState("basesaves/red/champ.gqs");
-            // LoadState("basesaves/red/lorelei.gqs");
-            // AdvanceFrames(7);
+        // for(int i = 0; i < 256; ++i)
+        // {
+        //     LoadState("basesaves/red/agatha.gqs");
+        //     LoadState("basesaves/red/blackbelt.gqs");
+        //     LoadState("basesaves/red/champ.gqs");
+        //     LoadState("basesaves/red/lorelei.gqs");
+        //     AdvanceFrames(7);
 
 
 
-            // Hold(Joypad.B, SYM["Random"]);
-            // int addr = CpuReadLE<ushort>(SP);
-            // if(addr > 0x4000) addr |= CpuRead("hLoadedROMBank") << 16;
-            // string address = SYM[addr];
-            // Console.WriteLine(address);
+        //     Hold(Joypad.B, SYM["Random"]);
+        //     int addr = CpuReadLE<ushort>(SP);
+        //     if(addr > 0x4000) addr |= CpuRead("hLoadedROMBank") << 16;
+        //     string address = SYM[addr];
+        //     Console.WriteLine(address);
 
-            // Hold(Joypad.B, SYM["TrainerAI.getpointer+0006"]);
-            // A=i;
-            // if(ClearText(Joypad.B, 1, SYM["ExecuteEnemyMove"], SYM["MainInBattleLoop.AIActionUsedPlayerFirst"])==SYM["ExecuteEnemyMove"])
-            //     Console.WriteLine(i + " skip");
-            // else
-            //     Console.WriteLine(i + " AI");
+        //     Hold(Joypad.B, SYM["TrainerAI.getpointer+0006"]);
+        //     A = i;
+        //     if(ClearText(Joypad.B, 1, SYM["ExecuteEnemyMove"], SYM["MainInBattleLoop.AIActionUsedPlayerFirst"]) == SYM["ExecuteEnemyMove"])
+        //         Console.WriteLine(i + " skip");
+        //     else
+        //         Console.WriteLine(i + " AI");
 
-            // Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
-            // A=i;
-            // int r;
-            // while((r=Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"], SYM["SelectEnemyMove.moveChosen"], SYM["SelectEnemyMove.done"]))!=SYM["SelectEnemyMove.done"])
-            // {
-            //     if(r==SYM["SelectEnemyMove.chooseRandomMove+0004"]) Console.WriteLine("chooseRandomMove "+A);
-            //     if(r==SYM["SelectEnemyMove.moveChosen"]) Console.WriteLine("moveChosen "+B);
-            //     RunFor(1);
-            // }
-            // Console.WriteLine("done " + Moves[A].Name + "\n");
+        //     Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
+        //     A = i;
+        //     int r;
+        //     while((r = Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"], SYM["SelectEnemyMove.moveChosen"], SYM["SelectEnemyMove.done"])) != SYM["SelectEnemyMove.done"])
+        //     {
+        //         if(r == SYM["SelectEnemyMove.chooseRandomMove+0004"]) Console.WriteLine("chooseRandomMove " + A);
+        //         if(r == SYM["SelectEnemyMove.moveChosen"]) Console.WriteLine("moveChosen " + B);
+        //         RunFor(1);
+        //     }
+        //     Console.WriteLine("done " + Moves[A].Name + "\n");
 
-            // Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
-            // A=i;
-            // Hold(Joypad.B, SYM["SelectEnemyMove.moveChosen"]);
-            // Console.WriteLine(B);
-            // Hold(Joypad.B, SYM["SelectEnemyMove.done"]);
-            // Console.WriteLine(Moves[A].Name);
+        //     Hold(Joypad.B, SYM["SelectEnemyMove.chooseRandomMove+0004"]);
+        //     A = i;
+        //     Hold(Joypad.B, SYM["SelectEnemyMove.moveChosen"]);
+        //     Console.WriteLine(B);
+        //     Hold(Joypad.B, SYM["SelectEnemyMove.done"]);
+        //     Console.WriteLine(Moves[A].Name);
         // }
 
 
@@ -296,77 +299,77 @@ public class RedTasTest : RedGlitchless {
         // move 3: 127-189 -> 63/256
         // move 4: 190-255 -> 66/256
 
-        // Random rng=new Random();
+        // Random rng = new Random();
         int chooseRandomMove = SYM["SelectEnemyMove.chooseRandomMove+0004"];
         int done = SYM["SelectEnemyMove.done"];
         int random = SYM["Random_"] + 2;
-        const int max=100;
-        var moves=new int[256];
-        var rolls=new int[max,256];
-        var stats=new int[max,5];
-        var rdivstats=new int[10];
+        const int max = 100;
+        var moves = new int[256];
+        var rolls = new int[max, 256];
+        var stats = new int[max, 5];
+        var rdivstats = new int[10];
         rolls.Initialize();
         LoadState("basesaves/red/lorelei.gqs");
-        byte[] state=SaveState();
-        const int it=1000000;
-        Console.WriteLine("iterations: "+it);
-        for(int i=0; i<it; ++i)
+        byte[] state = SaveState();
+        const int it = 1000000;
+        Console.WriteLine("iterations: " + it);
+        for(int i = 0; i < it; ++i)
         {
-            // CpuWriteBE<ushort>("hRandomAdd", (ushort)rng.Next() );
-            int roll=0;
-            int rdiv=-1;
+            // CpuWriteBE<ushort>("hRandomAdd", (ushort) rng.Next());
+            int roll = 0;
+            int rdiv = -1;
             while(Hold(Joypad.B, chooseRandomMove, done) == chooseRandomMove)
             {
-                rolls[roll,A]++;
+                rolls[roll, A]++;
                 RunFor(1);
-                stats[roll,0]++;
-                if(A<0x3f) stats[roll,1]++;
-                else if(A<0x7f) stats[roll,2]++;
-                else if(A<0xbe) stats[roll,3]++;
-                else stats[roll,4]++;
+                stats[roll, 0]++;
+                if(A < 0x3f) stats[roll, 1]++;
+                else if(A < 0x7f) stats[roll, 2]++;
+                else if(A < 0xbe) stats[roll, 3]++;
+                else stats[roll, 4]++;
                 roll++;
-                if(A<0x3f || A>=0xbe)
+                if(A < 0x3f || A >= 0xbe)
                 {
                     Hold(Joypad.B, random);
                     if(rdiv >= 0)
                     {
-                        rdivstats[(byte)(A-rdiv)]++;
+                        rdivstats[(byte) (A - rdiv)]++;
                         rdivstats[0]++;
                     }
-                    rdiv=A;
+                    rdiv = A;
                 }
             }
             moves[A]++;
             LoadState(state);
             AdvanceFrame();
-            state=SaveState();
-            if(i%1000==999) Console.WriteLine(".");
+            state = SaveState();
+            if(i % 1000 == 999) Console.WriteLine(".");
         }
-        for(int r=0; r<max; ++r)
+        for(int r = 0; r < max; ++r)
         {
-            if(stats[r,0]!=0)
+            if(stats[r, 0] != 0)
             {
-                Console.WriteLine("ROLL "+(r+1));
-                for(int i=0; i<256; ++i)
-                    if(rolls[r,i]!=0)
-                        Console.WriteLine("  " + i + ": " + rolls[r,i]);
-                Console.WriteLine("  AURORA BEAM: "+stats[r,2] + " (" + 100.0f*stats[r,2]/stats[r,0] + "%)");
-                Console.WriteLine("  REST: "+stats[r,3] + " (" + 100.0f*stats[r,3]/stats[r,0] + "%)");
-                Console.WriteLine("  REROLL: "+stats[r,1]+"+"+stats[r,4]+"="+(stats[r,1]+stats[r,4]) + " (" + 100.0f*(stats[r,1]+stats[r,4])/stats[r,0] + "%)");
+                Console.WriteLine("ROLL " + (r + 1));
+                for(int i = 0; i < 256; ++i)
+                    if(rolls[r, i] != 0)
+                        Console.WriteLine("  " + i + ": " + rolls[r, i]);
+                Console.WriteLine("  AURORA BEAM: " + stats[r, 2] + " (" + 100.0f * stats[r, 2] / stats[r, 0] + "%)");
+                Console.WriteLine("  REST: " + stats[r, 3] + " (" + 100.0f * stats[r, 3] / stats[r, 0] + "%)");
+                Console.WriteLine("  REROLL: " + stats[r, 1] + "+" + stats[r, 4] + "=" + (stats[r, 1] + stats[r, 4]) + " (" + 100.0f * (stats[r, 1] + stats[r, 4]) / stats[r, 0] + "%)");
             }
         }
-        int rdivsum=0;
-        for(int i=1; i<10; ++i)
+        int rdivsum = 0;
+        for(int i = 1; i < 10; ++i)
         {
-            rdivsum+=rdivstats[i]*i;
-            if(rdivstats[i]>0)
-                Console.WriteLine("RDIV DELTA="+i+": "+rdivstats[i] + " (" + 100.0f*rdivstats[i]/rdivstats[0] + "%)");
+            rdivsum += rdivstats[i] * i;
+            if(rdivstats[i] > 0)
+                Console.WriteLine("RDIV DELTA=" + i + ": " + rdivstats[i] + " (" + 100.0f * rdivstats[i] / rdivstats[0] + "%)");
         }
-        Console.WriteLine("RDIV DELTA AVG: "+1.0f*rdivsum/rdivstats[0]);
+        Console.WriteLine("RDIV DELTA AVG: " + 1.0f * rdivsum / rdivstats[0]);
         Console.WriteLine();
-        for(int i=0; i<256; ++i)
-            if(moves[i]!=0)
-                Console.WriteLine(Moves[i].Name + ": " + moves[i] + " (" + 100.0f*moves[i]/it + "%)");
+        for(int i = 0; i < 256; ++i)
+            if(moves[i] != 0)
+                Console.WriteLine(Moves[i].Name + ": " + moves[i] + " (" + 100.0f * moves[i] / it + "%)");
 
         // iterations: 1000000
         // sim1
@@ -383,25 +386,25 @@ public class RedTasTest : RedGlitchless {
     {
         int aurorabeam = 0;
         int rest = 0;
-        for(int basehra=0; basehra<256; ++basehra)
+        for(int basehra = 0; basehra < 256; ++basehra)
         {
-            for(int baserdiv=0; baserdiv<256; ++baserdiv)
+            for(int baserdiv = 0; baserdiv < 256; ++baserdiv)
             {
-                float hra=basehra;
-                float rdiv=baserdiv;
-                while(hra<0x3f || hra>=0xbe) // reroll
+                float hra = basehra;
+                float rdiv = baserdiv;
+                while(hra < 0x3f || hra >= 0xbe) // reroll
                 {
-                    hra = (hra+rdiv)%256;
-                    rdiv = (rdiv+2.5592f)%256;
+                    hra = (hra + rdiv) % 256;
+                    rdiv = (rdiv + 2.5592f) % 256;
                 }
-                if(hra<0x7f)
+                if(hra < 0x7f)
                     ++aurorabeam;
                 else
                     ++rest;
             }
         }
-        Console.WriteLine("Aurora Beam: " + aurorabeam + " (" + 100.0f*aurorabeam/65536 + "%)");
-        Console.WriteLine("Rest: " + rest + " (" + 100.0f*rest/65536 + "%)");
+        Console.WriteLine("Aurora Beam: " + aurorabeam + " (" + 100.0f * aurorabeam / 65536 + "%)");
+        Console.WriteLine("Rest: " + rest + " (" + 100.0f * rest / 65536 + "%)");
         // Aurora Beam: 34897 (53,248596%)
         // Rest: 30639 (46,751404%)
     }
@@ -420,7 +423,7 @@ public class RedTasTest : RedGlitchless {
     }
     void GenSquirtle()
     {
-        ushort dvs=0x8777;
+        ushort dvs = 0x8777;
         // Record("test");
 
         new RbyIntroSequence(RbyStrat.NoPal, RbyStrat.GfSkip, RbyStrat.Hop0, RbyStrat.Title0).Execute(this);
@@ -455,11 +458,11 @@ public class RedTasTest : RedGlitchless {
         ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("TACKLE"));
         ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
         ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
-        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
-        ForceTurn(new RbyTurn("TACKLE",1), new RbyTurn("GROWL", Miss));
+        ForceTurn(new RbyTurn("TACKLE", 1), new RbyTurn("GROWL", Miss));
+        ForceTurn(new RbyTurn("TACKLE", 1), new RbyTurn("GROWL", Miss));
         ClearText();
 
-        MoveTo("Route1",14,14);
+        MoveTo("Route1", 14, 14);
         ForceEncounter(Action.Up, 1, 0x8888);
         ClearText();
         ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
@@ -479,68 +482,70 @@ public class RedTasTest : RedGlitchless {
         Save();
         SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
     }
-    static void Simulate(string title, string statepath, Func<RedGlitchless,bool> scenario, int iterations = 1000, int numThreads = 20)
+    static void Simulate(string title, string statepath, Func<RedGlitchless, bool> scenario, int iterations = 1000, int numThreads = 20)
     {
         Trace.WriteLine(title);
-        (string,List<float>)[] data = { ("Time", new List<float>()), ("HP", new List<float>()) };
+        (string, List<float>)[] data = { ("Time", new List<float>()), ("HP", new List<float>()) };
         int done = 0;
 
         for(int thread = 0; thread < numThreads; ++thread)
         {
-            new Thread((thread)=>
+            new Thread((thread) =>
             {
                 RedGlitchless gb = new RedGlitchless("roms/pokered.gbc", true);
                 gb.LoadState(statepath);
                 int startHP = gb.BattleMon.HP - gb.BattleMon.MaxHP;
-                gb.AdvanceFrames((int)thread * iterations / numThreads);
-                byte[] state=gb.SaveState();
+                gb.AdvanceFrames((int) thread * iterations / numThreads);
+                byte[] state = gb.SaveState();
 
-                for(int i=0; i<iterations/numThreads; ++i)
+                for(int i = 0; i < iterations / numThreads; ++i)
                 {
                     ulong startTime = gb.EmulatedSamples;
 
                     bool success = scenario(gb);
 
-                    lock(data) {
+                    lock(data)
+                    {
                         if(success) data[0].Item2.Add((gb.EmulatedSamples - startTime) / 2097152.0f);
                         data[1].Item2.Add(gb.BattleMon.HP - gb.BattleMon.MaxHP - startHP);
                     }
 
                     gb.LoadState(state);
                     gb.AdvanceFrame();
-                    state=gb.SaveState();
+                    state = gb.SaveState();
                 }
                 Interlocked.Increment(ref done);
             }).Start(thread);
         }
         float c = 0;
-        while(done < numThreads) {
+        while(done < numThreads)
+        {
             Thread.Sleep(100);
             c += 0.1f;
         }
         Console.WriteLine(c + "s");
 
-        float Std(List<float> list)
-        {
-            float avg = list.Average();
-            return (float)Math.Sqrt(list.Average(v=>(v-avg)*(v-avg)));
-        }
         foreach((string name, List<float> list) in data)
         {
             list.Sort();
             Trace.WriteLine(name +
                 "\n\tAverage: " + list.Average() +
-                "\n\tMedian:  " + list[list.Count/2] +
-                "\n\tStdev:   " + Std(list) +
+                "\n\tMedian:  " + list[list.Count / 2] +
+                "\n\tStdev:   " + Stdev(list) +
                 "\n\tMin:     " + list.Min() +
                 "\n\tMax:     " + list.Max()
             );
         }
         Trace.WriteLine("");
     }
+    static float Stdev(List<float> list)
+    {
+        float avg = list.Average();
+        return (float) Math.Sqrt(list.Average(v => (v - avg) * (v - avg)));
+    }
     static void NerdVoltorb()
     {
-        Simulate("WG + PS", "basesaves/red/nerdvoltorb.gqs", (gb)=>
+        Simulate("WG + PS", "basesaves/red/nerdvoltorb.gqs", (gb) =>
         {
             gb.ClearText();
             while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
@@ -552,7 +557,7 @@ public class RedTasTest : RedGlitchless {
             }
             return gb.BattleMon.HP > 0;
         });
-        Simulate("Spam PS", "basesaves/red/nerdvoltorb.gqs", (gb)=>
+        Simulate("Spam PS", "basesaves/red/nerdvoltorb.gqs", (gb) =>
         {
             gb.ClearText();
             while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
@@ -569,11 +574,13 @@ public class RedTasTest : RedGlitchless {
         Red gb = new Red();
         gb.LoadState("basesaves/red/nerdvoltorb19.gqs");
         // gb.LoadState("basesaves/red/nerdvoltorb19.gqs");
-        Console.WriteLine("a="+gb.CpuRead("hRandomAdd")+" s="+gb.CpuRead("hRandomSub")+" d="+gb.DividerState+" t="+gb.TimeNow);
+        Console.WriteLine("a=" + gb.CpuRead("hRandomAdd") + " s=" + gb.CpuRead("hRandomSub") + " d=" + gb.DividerState + " t=" + gb.TimeNow);
         gb.AdvanceFrame(Joypad.B);
-        for(int i=0; i<180; ++i) {
-        gb.AdvanceFrame();
-        Console.WriteLine("a="+gb.CpuRead("hRandomAdd")+" s="+gb.CpuRead("hRandomSub")+" d="+gb.DividerState+" t="+gb.TimeNow);}
+        for(int i = 0; i < 180; ++i)
+        {
+            gb.AdvanceFrame();
+            Console.WriteLine("a=" + gb.CpuRead("hRandomAdd") + " s=" + gb.CpuRead("hRandomSub") + " d=" + gb.DividerState + " t=" + gb.TimeNow);
+        }
 
         // gb.RunUntil("Joypad");
         // gb.Inject(Joypad.B);
@@ -582,7 +589,7 @@ public class RedTasTest : RedGlitchless {
     }
     static void BC2Caterpie()
     {
-        Action<RedGlitchless> Metapod = (gb)=>
+        Action<RedGlitchless> Metapod = (gb) =>
         {
             while(gb.EnemyMon.Species.Name == "METAPOD" && gb.BattleMon.HP > 0 && gb.EnemyMon.HP > 0)
             {
@@ -591,7 +598,7 @@ public class RedTasTest : RedGlitchless {
                 gb.ClearText();
             }
         };
-        Func<RedGlitchless,bool> Leer_HA = (gb)=>
+        Func<RedGlitchless, bool> Leer_HA = (gb) =>
         {
             gb.ClearText();
             while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
@@ -608,7 +615,7 @@ public class RedTasTest : RedGlitchless {
             Metapod(gb);
             return gb.BattleMon.HP > 0;
         };
-        Func<RedGlitchless,bool> HA_Tackle = (gb)=>
+        Func<RedGlitchless, bool> HA_Tackle = (gb) =>
         {
             gb.ClearText();
             while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
@@ -623,7 +630,7 @@ public class RedTasTest : RedGlitchless {
             Metapod(gb);
             return gb.BattleMon.HP > 0;
         };
-        Func<RedGlitchless,bool> Tackle_HA = (gb)=>
+        Func<RedGlitchless, bool> Tackle_HA = (gb) =>
         {
             gb.ClearText();
             while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
@@ -711,7 +718,7 @@ public class RedTasTest : RedGlitchless {
     {
         LoadState("basesaves/red/pc.gqs");
         Record("test");
-        TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);;
+        TalkTo("IndigoPlateauLobby", 15, 8, Action.Up);
         Deposit("SQUIRTLE", "PIDGEY", "NIDOKING");
         DepositItems("X SPECIAL", 3, "HM01", 1, "SUPER POTION", 0);
         Withdraw("SQUIRTLE", "NIDOKING");
@@ -730,7 +737,7 @@ public class RedTasTest : RedGlitchless {
         // MoveTo(12, 4);
 
         // LoadState("basesaves/red/pcpotion.gqs");
-        // RecordAndTime("test",true);
+        // RecordAndTime("test", true);
         // ClearText();
         // TalkTo(0, 1);
         // WithdrawItems("POTION", 1);
@@ -739,7 +746,7 @@ public class RedTasTest : RedGlitchless {
         // Timer.Stop();
 
         // LoadState("basesaves/red/pcpotiony.gqs");
-        // RecordAndTime("test",true);
+        // RecordAndTime("test", true);
         // TalkTo(0, 1);
         // WithdrawItems("POTION", 1);
         // DepositItems("POTION", 0);
@@ -794,21 +801,21 @@ public class RedTasTest : RedGlitchless {
     }
     void NpcTroll()
     {
-        // LoadState("basesaves/red/npctroll.gqs");
-        // LoadState("basesaves/red/npctrollpal.gqs");
-        LoadState("basesaves/red/npctrollceru.gqs");
         Record("test");
 
-        // MoveNpc(0, 3, 8, Action.Down);
-        // Fly("PalletTown");
-        // MoveTo(4, 17, Action.Right);
+        LoadState("basesaves/red/npctrollpal.gqs");
+        MoveNpc(0, 3, 8, Action.Down);
+        Fly("PalletTown");
+        MoveTo(4, 17, Action.Right);
 
-        // Fly("PalletTown");
-        // MoveNpc(12, 5, 24, Action.Right);
-        // MoveNpc(12, 15, 13, Action.Left);
-        // MoveTo(12, 14, 14);
-        // MoveTo(12, 14, 5);
+        LoadState("basesaves/red/npctrollpal.gqs");
+        Fly("PalletTown");
+        MoveNpc(12, 5, 24, Action.Right);
+        MoveNpc(12, 15, 13, Action.Left);
+        MoveTo(12, 14, 14);
+        MoveTo(12, 14, 5);
 
+        LoadState("basesaves/red/npctrollceru.gqs");
         MoveNpc(3, 15, 18, Action.Down);
         MoveNpc(3, 9, 21, Action.Up);
         MoveNpc(64, 3, 1, Action.Up);
@@ -816,13 +823,125 @@ public class RedTasTest : RedGlitchless {
         MoveTo(3, 14, 18);
         TalkTo("CeruleanPokecenter", 3, 2);
 
+        LoadState("basesaves/red/npctrollvermi.gqs");
+        MoveNpc(5, 19, 7, Action.Right);
+        MoveTo(5, 21, 4);
+        MoveTo(5, 21, 5);
+        MoveNpc(5, 19, 7, Action.Right);
+        MoveTo(5, 21, 10);
+
+        LoadState("basesaves/red/npctrollvermi.gqs");
+        MoveNpc(5, 19, 7, Action.Right);
+        MoveTo(5, 19, 6);
+        MoveNpc(5, 19, 7, Action.Left);
+        MoveTo(5, 19, 12);
+
         AdvanceFrames(100);
         Dispose();
+    }
+    void Cans()
+    {
+        RecordAndTime("test");
+
+        bool FirstLockOpened() { return CheckEventFlag(0x161); }
+        // bool SecondLockOpened() { return CheckEventFlag(0x160); }
+        void CheckCan(byte id, Action dir = Action.None)
+        {
+            TalkTo(1 + (id / 3) * 2, 7 + (id % 3) * 2, dir);
+        }
+        void ForceSecondCan(byte id, Action dir = Action.None)
+        {
+            CpuWrite("wSecondLockTrashCanIndex", id);
+            CheckCan(id, dir);
+        }
+
+        System.Action Cans123 = () => {
+            CheckCan(2, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(5, Action.Up); return; }
+            CheckCan(8, Action.Right);
+            if(FirstLockOpened()) { ForceSecondCan(5); return; }
+            CheckCan(4, Action.Left);
+            if(FirstLockOpened()) { ForceSecondCan(7); return; }
+            CheckCan(6, Action.Right);
+            if(FirstLockOpened()) { ForceSecondCan(3); return; }
+            CheckCan(0, Action.Down);
+            if(FirstLockOpened()) { ForceSecondCan(0); return; }
+            CheckCan(10, Action.Down);
+            if(FirstLockOpened()) { ForceSecondCan(13, Action.Right); return; }
+            CheckCan(12, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(13); return; }
+            CheckCan(14, Action.Down);
+            if(FirstLockOpened()) { ForceSecondCan(13); return; }
+        };
+
+        System.Action Cans128 = () => {
+            CheckCan(2, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(5, Action.Up); return; }
+            CheckCan(8, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(5, Action.Left); return; }
+            CheckCan(14, Action.Right);
+            if(FirstLockOpened()) { ForceSecondCan(13, Action.Right); return; }
+            CheckCan(10, Action.Left);
+            if(FirstLockOpened()) { ForceSecondCan(13); return; }
+            CheckCan(12, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(13); return; }
+            CheckCan(6, Action.Up);
+            if(FirstLockOpened()) { ForceSecondCan(7); return; }
+            CheckCan(4, Action.Left);
+            if(FirstLockOpened()) { ForceSecondCan(7); return; }
+            CheckCan(0, Action.Down);
+            if(FirstLockOpened()) { ForceSecondCan(0); return; }
+        };
+
+        List<float> list = new List<float>();
+        for(byte can1 = 0; can1 <= 14; can1 += 2)
+        {
+            LoadState("basesaves/red/cans.gqs");
+            Timer.Start();
+            MoveTo(12, 19);
+            CpuWrite("wFirstLockTrashCanIndex", can1);
+            // Cans123();
+            Cans128();
+            MoveTo(5, 2, Action.Up);
+            Timer.Stop();
+            Trace.WriteLine(can1 + ": " + Timer.Duration().TotalSeconds);
+            list.Add((float)Timer.Duration().TotalSeconds);
+        }
+        list.Sort();
+        Trace.WriteLine(
+            "\nAverage: " + list.Average() +
+            "\nMedian:  " + list[list.Count / 2] +
+            "\nStdev:   " + Stdev(list) +
+            "\nMin:     " + list.Min() +
+            "\nMax:     " + list.Max()
+        );
+
+        AdvanceFrames(100);
+        Dispose();
+    }
+    bool CheckEventFlag(int flag)
+    {
+        int offs = flag / 8;
+        int bit = flag % 8;
+        return (Map.Game.CpuRead(SYM["wEventFlags"] + offs) & (1 << bit)) > 0;
+        // return (CpuRead(SYM["wEventFlags"] + offs) & (1 << bit)) > 0;
+    }
+    public void Pathfinding()
+    {
+        // Console.WriteLine("this:" + GetHashCode() + " Game:" + Map.Game.GetHashCode());
+        // Console.WriteLine("EVENT_BEAT_VERMILION_GYM_TRAINER_0 " + CheckEventFlag(0x162));
+        Record("test");
+
+        LoadState("basesaves/red/pathfinding3.gqs");
+        MoveTo(4, 4);
+
+        LoadState("basesaves/red/champanims_redbar.gqs");
+        // Dispose();
     }
 
     public RedTasTest() : base()
     {
-        NpcTroll();
-        Environment.Exit(0);
+        Pathfinding();
+        // Environment.Exit(0);
     }
 }
