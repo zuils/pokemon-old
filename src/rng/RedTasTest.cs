@@ -62,12 +62,12 @@ public class RedTasTest : RedGlitchless {
     void Bide()
     {
         Record("bide");
-        LoadState("basesaves/red/bide.gqs");
+        LoadState("basesaves/red/bide2.gqs");
 
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE", 3 * Turns));
+        RbyTurn.DefaultRoll = 1;
+        ForceTurn(new RbyTurn("BUBBLE", SideEffect), new RbyTurn("BIDE", 2 * Turns));
+        ForceTurn(new RbyTurn("BUBBLE", SideEffect), new RbyTurn("BIDE"));
         ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
-        ForceTurn(new RbyTurn("BUBBLE"), new RbyTurn("BIDE"));
-        // ForceTurn(new RbyTurn("BUBBLE"));
 
         AdvanceFrames(60);
         Dispose();
