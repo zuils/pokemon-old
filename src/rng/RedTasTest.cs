@@ -482,93 +482,6 @@ public class RedTasTest : RedGlitchless {
         Save();
         SaveState($"basesaves/red/manip/nido{dvs:X4}.gqs");
     }
-    static void Simulate(string title, string statepath, Func<RedGlitchless, bool> scenario, int iterations = 1000, int numThreads = 20)
-    {
-        Trace.WriteLine(title);
-        (string, List<float>)[] data = { ("Time", new List<float>()), ("HP", new List<float>()) };
-        int done = 0;
-
-        for(int thread = 0; thread < numThreads; ++thread)
-        {
-            new Thread((thread) =>
-            {
-                RedGlitchless gb = new RedGlitchless("roms/pokered.gbc", true);
-                gb.LoadState(statepath);
-                int startHP = gb.BattleMon.HP - gb.BattleMon.MaxHP;
-                gb.AdvanceFrames((int) thread * iterations / numThreads);
-                byte[] state = gb.SaveState();
-
-                for(int i = 0; i < iterations / numThreads; ++i)
-                {
-                    ulong startTime = gb.EmulatedSamples;
-
-                    bool success = scenario(gb);
-
-                    lock(data)
-                    {
-                        if(success) data[0].Item2.Add((gb.EmulatedSamples - startTime) / 2097152.0f);
-                        data[1].Item2.Add(gb.BattleMon.HP - gb.BattleMon.MaxHP - startHP);
-                    }
-
-                    gb.LoadState(state);
-                    gb.AdvanceFrame();
-                    state = gb.SaveState();
-                }
-                Interlocked.Increment(ref done);
-            }).Start(thread);
-        }
-        float c = 0;
-        while(done < numThreads)
-        {
-            Thread.Sleep(100);
-            c += 0.1f;
-        }
-        Console.WriteLine(c + "s");
-
-        foreach((string name, List<float> list) in data)
-        {
-            list.Sort();
-            Trace.WriteLine(name +
-                "\n\tAverage: " + list.Average() +
-                "\n\tMedian:  " + list[list.Count / 2] +
-                "\n\tStdev:   " + Stdev(list) +
-                "\n\tMin:     " + list.Min() +
-                "\n\tMax:     " + list.Max()
-            );
-        }
-        Trace.WriteLine("");
-    }
-    static float Stdev(List<float> list)
-    {
-        float avg = list.Average();
-        return (float) Math.Sqrt(list.Average(v => (v - avg) * (v - avg)));
-    }
-    static void NerdVoltorb()
-    {
-        Simulate("WG + PS", "basesaves/red/nerdvoltorb.gqs", (gb) =>
-        {
-            gb.ClearText();
-            while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                // if(gb.EnemyMon.HP>10) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
-                if(gb.EnemyMon.HP == 33 || (gb.EnemyMon.HP >= 16 && gb.EnemyMon.HP <= 20)) gb.ChooseMenuItem(1); else gb.ChooseMenuItem(3); //wg+ps
-                gb.ClearText();
-            }
-            return gb.BattleMon.HP > 0;
-        });
-        Simulate("Spam PS", "basesaves/red/nerdvoltorb.gqs", (gb) =>
-        {
-            gb.ClearText();
-            while(gb.EnemyMon.Species.Name == "VOLTORB" && gb.BattleMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                gb.ChooseMenuItem(3); //ps
-                gb.ClearText();
-            }
-            return gb.BattleMon.HP > 0;
-        });
-    }
     static void TestVariance()
     {
         Red gb = new Red();
@@ -586,71 +499,6 @@ public class RedTasTest : RedGlitchless {
         // gb.Inject(Joypad.B);
         // gb.RunUntil("HandleMenuInput_");
         // Console.WriteLine("hra="+gb.CpuRead("hRandomAdd"));
-    }
-    static void BC2Caterpie()
-    {
-        Action<RedGlitchless> Metapod = (gb) =>
-        {
-            while(gb.EnemyMon.Species.Name == "METAPOD" && gb.BattleMon.HP > 0 && gb.EnemyMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                gb.ChooseMenuItem(2); //ha
-                gb.ClearText();
-            }
-        };
-        Func<RedGlitchless, bool> Leer_HA = (gb) =>
-        {
-            gb.ClearText();
-            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                if(gb.EnemyMon.DefenseModifider == 7)
-                    gb.ChooseMenuItem(0); //leer
-                else if(gb.EnemyMon.HP > 17)
-                    gb.ChooseMenuItem(2); //ha
-                else
-                    gb.ChooseMenuItem(1); //tackle
-                gb.ClearText();
-            }
-            Metapod(gb);
-            return gb.BattleMon.HP > 0;
-        };
-        Func<RedGlitchless, bool> HA_Tackle = (gb) =>
-        {
-            gb.ClearText();
-            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                if(gb.EnemyMon.HP > 10)
-                    gb.ChooseMenuItem(2); //ha
-                else
-                    gb.ChooseMenuItem(1); //tackle
-                gb.ClearText();
-            }
-            Metapod(gb);
-            return gb.BattleMon.HP > 0;
-        };
-        Func<RedGlitchless, bool> Tackle_HA = (gb) =>
-        {
-            gb.ClearText();
-            while(gb.EnemyMon.Species.Name == "CATERPIE" && gb.BattleMon.HP > 0)
-            {
-                gb.BattleMenu(0, 0);
-                if(gb.EnemyMon.HP == 28)
-                    gb.ChooseMenuItem(1); //tackle
-                else
-                    gb.ChooseMenuItem(2); //ha
-                gb.ClearText();
-            }
-            Metapod(gb);
-            return gb.BattleMon.HP > 0;
-        };
-
-        Simulate("Leer + HA (cursor on HA)", "basesaves/red/bc2caterpieha30.gqs", Leer_HA);
-        Simulate("HA + Tackle (cursor on HA)", "basesaves/red/bc2caterpieha30.gqs", HA_Tackle);
-        Simulate("\n\n\nLeer + HA (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", Leer_HA);
-        Simulate("HA + Tackle (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", HA_Tackle);
-        Simulate("Tackle + HA (cursor on Tackle)", "basesaves/red/bc2caterpieta30.gqs", Tackle_HA);
     }
     void TestXAcc()
     {
@@ -770,7 +618,7 @@ public class RedTasTest : RedGlitchless {
         AdvanceFrames(60);
         Dispose();
     }
-    static public void DebugStack(GameBoy gb, int n = 16)
+    public static void DebugStack(GameBoy gb, int n = 16)
     {
         for(int i = 0; i <= n; i += 2)
         {
@@ -893,7 +741,7 @@ public class RedTasTest : RedGlitchless {
             if(FirstLockOpened()) { ForceSecondCan(0); return; }
         };
 
-        List<float> list = new List<float>();
+        List<double> list = new List<double>();
         for(byte can1 = 0; can1 <= 14; can1 += 2)
         {
             LoadState("basesaves/red/cans.gqs");
@@ -905,16 +753,9 @@ public class RedTasTest : RedGlitchless {
             MoveTo(5, 2, Action.Up);
             Timer.Stop();
             Trace.WriteLine(can1 + ": " + Timer.Duration().TotalSeconds);
-            list.Add((float)Timer.Duration().TotalSeconds);
+            list.Add(Timer.Duration().TotalSeconds);
         }
-        list.Sort();
-        Trace.WriteLine(
-            "\nAverage: " + list.Average() +
-            "\nMedian:  " + list[list.Count / 2] +
-            "\nStdev:   " + Stdev(list) +
-            "\nMin:     " + list.Min() +
-            "\nMax:     " + list.Max()
-        );
+        SimulationUtils.PrintResults("", list);
 
         AdvanceFrames(100);
         Dispose();
