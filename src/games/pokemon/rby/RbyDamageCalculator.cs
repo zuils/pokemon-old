@@ -30,7 +30,8 @@ public partial class Rby {
         damage += 2;
         if(stab) damage = damage * 3 / 2;
         damage = damage * move.Game.GetTypeEffectiveness(move.Type, defender.Species.Type1) / 10;
-        damage = damage * move.Game.GetTypeEffectiveness(move.Type, defender.Species.Type2) / 10;
+        if(defender.Species.Type1 != defender.Species.Type2)
+            damage = damage * move.Game.GetTypeEffectiveness(move.Type, defender.Species.Type2) / 10;
 
         if(damage == 0) {
             return 0;

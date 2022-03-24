@@ -256,6 +256,7 @@ public partial class GameBoy : IDisposable {
     // Loads the emulator state given by a buffer.
     public void LoadState(byte[] buffer) {
         Libgambatte.gambatte_loadstate(Handle, buffer, buffer.Length);
+        BufferSamples = 0;
     }
 
     // Helper function that reads the buffer directly from disk.

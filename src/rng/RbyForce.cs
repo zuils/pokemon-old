@@ -537,12 +537,16 @@ public class RbyForce : Rby {
             return;
         }
 
+        if(CurrentMenuType == MenuType.Mart || CurrentMenuType == MenuType.PC) {
+            CloseMenu();
+        }
+
         if(CurrentMenuType != MenuType.None) {
             MenuPress(Joypad.B);
-        } else if(CurrentMenuType != MenuType.StartMenu) {
+        } else {
             MenuPress(Joypad.Start);
-            CurrentMenuType = MenuType.StartMenu;
         }
+        CurrentMenuType = MenuType.StartMenu;
     }
 
     public void CloseMenu(Joypad direction = Joypad.None) {
@@ -577,7 +581,7 @@ public class RbyForce : Rby {
         CurrentMenuType = MenuType.Party;
     }
 
-    private void OpenBag() {
+    protected void OpenBag() {
         if(CurrentMenuType == MenuType.Bag) return;
         OpenStartMenu();
 

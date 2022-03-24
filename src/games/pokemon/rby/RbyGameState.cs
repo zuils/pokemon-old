@@ -86,6 +86,14 @@ public partial class Rby {
         }
     }
 
+    public RbyTrainer EnemyTrainer {
+        get { return Map.Trainers[CpuRead("wSpriteIndex") - 1]; }
+    }
+
+    public RbyTrainerClass EnemyTrainerClass {
+        get { return TrainerClasses[CpuRead("wTrainerClass") + 200]; }
+    }
+
     public RbyPokemon BoxMon(int index) {
         return ReadPartyStruct(From(SYM["wBoxMons"] + index * (SYM["wBoxMon2"] - SYM["wBoxMon1"])));
     }
