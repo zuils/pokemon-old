@@ -1,5 +1,7 @@
-public partial class RedGlitchless {
-    public void DoubleMaxEther(bool silphBar = true) {
+public class RedGlitchlessDME : RedBlueComparisons
+{
+    public RedGlitchlessDME(bool silphBar = true)
+    {
         // RecordAndTime("red-glitchless-doublemaxether");
         RbyTurn.DefaultRoll = 39;
 

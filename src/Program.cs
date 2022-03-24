@@ -21,7 +21,7 @@ class Program {
         // new YellowTASPidgeFable();
 
         new RedTasTest();
-        new RedComparison();
-        new RedGlitchless().WR();
+        new RedComparisons();
+        new RedGlitchlessWR();
     }
 }

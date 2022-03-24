@@ -1,5 +1,7 @@
-public partial class RedGlitchless {
-    public void WR() {
+public class RedGlitchlessWR : RedBlueComparisons
+{
+    public RedGlitchlessWR()
+    {
         // RecordAndTime("red-glitchless-wr");
         RbyTurn.DefaultRoll = 20;
 

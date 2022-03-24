@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 
-public class RedTasTest : RedGlitchless {
+public class RedTasTest : RedBlueComparisons
+{
     void AgathaBug()
     {
         LoadState("basesaves/red/agathabug.gqs");
@@ -238,10 +239,17 @@ public class RedTasTest : RedGlitchless {
     }
     void FuryAttack()
     {
+        // LoadState("basesaves/red/furyattack.gqs");
         Record("furyattack");
-        LoadState("basesaves/red/furyattack.gqs");
 
-        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4 * Turns));
+        // ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 30 | Crit | 4 * Turns));
+        for(int i = 0; i < 10; ++i) {
+        LoadState("basesaves/red/furyattack2.gqs");
+        CpuWriteBE<ushort>("wPartyMon1HP", 50);
+        ClearText();
+        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("FURY ATTACK", 20 | new Random().Next(2,5+1) * Turns));
+        AdvanceFrames(120);
+        }
 
         AdvanceFrames(60);
         Dispose();
@@ -779,10 +787,21 @@ public class RedTasTest : RedGlitchless {
         LoadState("basesaves/red/champanims_redbar.gqs");
         // Dispose();
     }
+    void MirrorMove()
+    {
+        Record("mirrormove");
+        LoadState("basesaves/red/champanims_redbar.gqs");
+        ClearText();
+        ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
+        ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("SKY ATTACK", Miss));
+        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("MIRROR MOVE", Miss));
+        ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("MIRROR MOVE"));
+    }
 
     public RedTasTest() : base()
     {
-        Pathfinding();
-        // Environment.Exit(0);
+        // Pathfinding();
+        FuryAttack();
+        Environment.Exit(0);
     }
 }

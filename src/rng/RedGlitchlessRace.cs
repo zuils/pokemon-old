@@ -1,5 +1,7 @@
-public partial class RedGlitchless {
-    public void Race(int T = 1, int R = 1, int S = 1, int N = 1, bool IT = false) {
+public class RedGlitchlessRace : RedBlueComparisons
+{
+    public RedGlitchlessRace(int T = 1, int R = 1, int S = 1, int N = 1, bool IT = false)
+    {
         System.Console.Write(T + " " + R + " " + S + " " + N + " ");
 
         // RecordAndTime("red-glitchless-race");
