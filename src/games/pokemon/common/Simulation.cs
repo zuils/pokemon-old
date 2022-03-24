@@ -38,7 +38,7 @@ public class Simulation<Gb> where Gb : GameBoy
             if(name == "Time")
                 Track(name, (gb, s) => { return s != false ? (double?) gb.EmulatedSamples / 2097152.0 : null; });
             else if(name == "HP" && typeof(Gb).IsSubclassOf(typeof(Rby)))
-                Track(name, (gb, s) => { return ((Rby)(object)gb).BattleMon.HP - ((Rby)(object)gb).BattleMon.MaxHP; });
+                Track(name, (gb, s) => { return ((Rby) (object) gb).BattleMon.HP - ((Rby) (object) gb).BattleMon.MaxHP; });
             else if(name == "Success")
                 Track(name, (gb, s) => { return s == true ? 1 : 0; });
         }
@@ -60,33 +60,34 @@ public class Simulation<Gb> where Gb : GameBoy
 
         Gb[] gbs = MultiThread.MakeThreads<Gb>(NumThreads);
         var w = Stopwatch.StartNew();
-        MultiThread.For(NumThreads, gbs, (gb, thread) => {
-                gb.LoadState(StatePath);
-                gb.AdvanceFrames((int) thread * Iterations / NumThreads);
-                byte[] state = gb.SaveState();
+        MultiThread.For(NumThreads, gbs, (gb, thread) =>
+        {
+            gb.LoadState(StatePath);
+            gb.AdvanceFrames((int) thread * Iterations / NumThreads);
+            byte[] state = gb.SaveState();
 
-                for(int i = 0; i < Iterations / NumThreads; ++i)
+            for(int i = 0; i < Iterations / NumThreads; ++i)
+            {
+                double[] start = new double[Variables.Count];
+                for(int v = 0; v < Variables.Count; ++v)
+                    start[v] = (double) Variables[v].Item2(gb, null);
+
+                bool success = scenario(gb);
+
+                lock(data)
                 {
-                    double[] start = new double[Variables.Count];
                     for(int v = 0; v < Variables.Count; ++v)
-                        start[v] = (double) Variables[v].Item2(gb, null);
-
-                    bool success = scenario(gb);
-
-                    lock(data)
                     {
-                        for(int v = 0; v < Variables.Count; ++v)
-                        {
-                            double? end = Variables[v].Item2(gb, success);
-                            if(end != null)
-                                data[v].Add((double)end - start[v]);
-                        }
+                        double? end = Variables[v].Item2(gb, success);
+                        if(end != null)
+                            data[v].Add((double) end - start[v]);
                     }
-
-                    gb.LoadState(state);
-                    gb.AdvanceFrame();
-                    state = gb.SaveState();
                 }
+
+                gb.LoadState(state);
+                gb.AdvanceFrame();
+                state = gb.SaveState();
+            }
         });
 
         Console.WriteLine(w.Elapsed.TotalSeconds + "s");

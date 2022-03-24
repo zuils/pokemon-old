@@ -51,14 +51,15 @@ public class RbyPokemon {
     public bool ThrashingAbout { get { return (BattleStatus1 & 0x02) > 0; } }         // e.g. Thrash, Pedal Dance
     public bool AttackingMultipleTimes { get { return (BattleStatus1 & 0x04) > 0; } } // e.g. Double Kick, Fury Attack
     public bool Flinched { get { return (BattleStatus1 & 0x08) > 0; } }
-    public bool ChargingUp { get { return (BattleStatus1 & 0x10) > 0; } }             // e.g. Solar Beam, fly
+    public bool ChargingUp { get { return (BattleStatus1 & 0x10) > 0; } set { SetFlag(ref BattleStatus1, 0x10, value); } } // e.g. Solar Beam
     public bool UsingTrappingMove { get { return (BattleStatus1 & 0x20) > 0; } }      // e.g. Wrap, Fire Spin
     public bool Invulnerable { get { return (BattleStatus1 & 0x40) > 0; } }           // e.g. Fly/Dig
     public bool Confused { get { return (BattleStatus1 & 0x80) > 0; } }
 
-    public bool XAccuracyEffect { get { return (BattleStatus2 & 0x01) > 0; } }
+    void SetFlag(ref byte flags, byte flag, bool set) { if(set) flags |= flag; else flags = (byte)(flags & ~flag); }
+    public bool XAccuracyEffect { get { return (BattleStatus2 & 0x01) > 0; } set { SetFlag(ref BattleStatus2, 0x01, value); } }
     public bool ProtectedByMist { get { return (BattleStatus2 & 0x02) > 0; } }
-    public bool FocusEnergyEffect { get { return (BattleStatus2 & 0x04) > 0; } }
+    public bool FocusEnergyEffect { get { return (BattleStatus2 & 0x04) > 0; } set { SetFlag(ref BattleStatus2, 0x04, value); } }
     public bool SubstituteActive { get { return (BattleStatus2 & 0x10) > 0; } }
     public bool Recharging { get { return (BattleStatus2 & 0x20) > 0; } }
     public bool UsingRage { get { return (BattleStatus2 & 0x40) > 0; } }
@@ -132,6 +133,10 @@ public class RbyPokemon {
 
     public override string ToString() {
         return string.Format("L{0} {1} DVs {2:X4}", Level, Species.Name, DVs);
+    }
+
+    public RbyPokemon Clone() {
+        return (RbyPokemon) MemberwiseClone();
     }
 
     public static implicit operator RbySpecies(RbyPokemon pokemon) { return pokemon.Species; }
