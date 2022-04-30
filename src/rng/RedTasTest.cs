@@ -101,96 +101,126 @@ public class RedTasTest : RedBlueComparisons
     }
     void TestRange()
     {
-        // Record("testrange");
-        const int x = 3;
-        Scene s = new Scene(this, 160 * x, 144 * x);
-        s.AddComponent(new VideoBufferComponent(0, 0, 160 * x, 144 * x));
-        SetSpeedupFlags(SpeedupFlags.None);
-        Scene.AddComponent(new RecordingComponent("testrange"));
+        Record("testrange");
         void HP()
         {
             Console.WriteLine(CpuReadBE<ushort>("wEnemyMonHP"));
         }
 
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1 | Crit));
-        // LoadState("basesaves/red/psrange2.gqs");
-        // ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39 | Crit));
+        void PSRange()
+        {
+            LoadState("basesaves/red/psrange2.gqs");
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1));
+            LoadState("basesaves/red/psrange2.gqs");
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39));
+            LoadState("basesaves/red/psrange2.gqs");
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 1 | Crit));
+            LoadState("basesaves/red/psrange2.gqs");
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("POISON STING", 39 | Crit));
+        }
 
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1 | Crit));
-        // LoadState("basesaves/red/vileplume.gqs");
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39 | Crit));
+        void Vileplume()
+        {
+            LoadState("basesaves/red/vileplume.gqs");
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1));
+            LoadState("basesaves/red/vileplume.gqs");
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39));
+            LoadState("basesaves/red/vileplume.gqs");
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 1 | Crit));
+            LoadState("basesaves/red/vileplume.gqs");
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("PETAL DANCE", 39 | Crit));
+        }
 
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1 | Crit));
-        // LoadState("basesaves/red/kadabar.gqs");
-        // ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39 | Crit));
+        void Kadabar()
+        {
+            LoadState("basesaves/red/kadabar.gqs");
+            ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1));
+            LoadState("basesaves/red/kadabar.gqs");
+            ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39));
+            LoadState("basesaves/red/kadabar.gqs");
+            ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 1 | Crit));
+            LoadState("basesaves/red/kadabar.gqs");
+            ForceTurn(new RbyTurn("POISON STING"), new RbyTurn("CONFUSION", 39 | Crit));
+        }
 
+        void Champ()
+        {
+            LoadState("basesaves/red/champrange.gqs");
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1));
+            LoadState("basesaves/red/champrange.gqs");
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39));
+            LoadState("basesaves/red/champrange.gqs");
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1 | Crit));
+            LoadState("basesaves/red/champrange.gqs");
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39 | Crit));
+        }
 
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 1 | Crit));
-        // LoadState("basesaves/red/champrange.gqs");
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("SKY ATTACK", 39 | Crit));
-
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39));
-        // ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1 | Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39 | Crit));
+        void Lance()
+        {
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39));
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP", 1 | Crit));
+            ForceTurn(new RbyTurn("EARTHQUAKE"), new RbyTurn("HYDRO PUMP", 39 | Crit));
+        }
 
         // ForceTurn(new RbyTurn("LEER"), new RbyTurn("QUICK ATTACK", 39 | Crit));
 
-        // ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("HAZE"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
-        // ForceTurn(new RbyTurn("THUNDERBOLT", Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE"));
-        // ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("BITE", 1));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 1 | Crit));
-        // ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39 | Crit));
+        void Agatha()
+        {
+            ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("HAZE"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"), new RbyTurn("CONFUSE RAY"));
+            ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
+            ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
+            ForceTurn(new RbyTurn("THUNDERBOLT", Hitself), new RbyTurn("CONFUSE RAY"));
+            ForceTurn(new RbyTurn("THUNDERBOLT", Crit));
+            ForceTurn(new RbyTurn("EARTHQUAKE"));
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("BITE", 1));
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39));
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 1 | Crit));
+            ForceTurn(new RbyTurn("EARTHQUAKE", Miss), new RbyTurn("BITE", 39 | Crit));
+        }
 
-        // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7), new RbyTurn("POUND", Miss)); HP();
-        // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss)); HP();
-        // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8), new RbyTurn("POUND", Miss)); HP();
-        // ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss), true, false); HP();
-        // LoadState("basesaves/red/nerd.gqs"); HP();
-        // ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8 + 7), new RbyTurn("POUND", Miss)); HP();
-        // ForceTurn(new RbyTurn("WATER GUN", 1), new RbyTurn("POUND", Miss), true, false); HP();
-        LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
-        SaveState("basesaves/red/nerd13.gqs");
-        ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
-        LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP", 12); HP();
-        ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
-        LoadState("basesaves/red/nerd.gqs");
-        CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
-        ForceTurn(new RbyTurn("WATER GUN", 5), null, true, false); HP();
+        void Nerd()
+        {
+            LoadState("basesaves/red/nerd.gqs"); HP();
+            ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7), new RbyTurn("POUND", Miss)); HP();
+            ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss)); HP();
+            LoadState("basesaves/red/nerd.gqs"); HP();
+            ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8), new RbyTurn("POUND", Miss)); HP();
+            ForceTurn(new RbyTurn("WATER GUN", 5), new RbyTurn("POUND", Miss), true, false); HP();
+            LoadState("basesaves/red/nerd.gqs"); HP();
+            ForceTurn(new RbyTurn("MEGA PUNCH", 1 + 7 + 8 + 7), new RbyTurn("POUND", Miss)); HP();
+            ForceTurn(new RbyTurn("WATER GUN", 1), new RbyTurn("POUND", Miss), true, false); HP();
+
+            LoadState("basesaves/red/nerd.gqs");
+            CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
+            SaveState("basesaves/red/nerd13.gqs");
+            ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
+            LoadState("basesaves/red/nerd.gqs");
+            CpuWriteBE<ushort>("wEnemyMonHP", 12); HP();
+            ForceTurn(new RbyTurn("WATER GUN", 1), null, true, false); HP();
+            LoadState("basesaves/red/nerd.gqs");
+            CpuWriteBE<ushort>("wEnemyMonHP", 13); HP();
+            ForceTurn(new RbyTurn("WATER GUN", 5), null, true, false); HP();
+
+            LoadState("basesaves/red/nerdkoffing.gqs");
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("SMOG", 1));
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("SMOG", 39));
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("SMOG", 1 | Crit));
+            ForceTurn(new RbyTurn("MEGA PUNCH", Miss), new RbyTurn("SMOG", 39 | Crit));
+        }
+
+        PSRange();
+        Vileplume();
+        Kadabar();
+        Champ();
+        Lance();
+        Agatha();
+        Nerd();
 
         AdvanceFrames(300);
         Dispose();
@@ -772,20 +802,23 @@ public class RedTasTest : RedBlueComparisons
     {
         int offs = flag / 8;
         int bit = flag % 8;
-        return (Map.Game.CpuRead(SYM["wEventFlags"] + offs) & (1 << bit)) > 0;
-        // return (CpuRead(SYM["wEventFlags"] + offs) & (1 << bit)) > 0;
+        return (CpuRead(SYM["wEventFlags"] + offs) & (1 << bit)) > 0;
     }
     public void Pathfinding()
     {
-        // Console.WriteLine("this:" + GetHashCode() + " Game:" + Map.Game.GetHashCode());
-        // Console.WriteLine("EVENT_BEAT_VERMILION_GYM_TRAINER_0 " + CheckEventFlag(0x162));
         Record("test");
 
         LoadState("basesaves/red/pathfinding3.gqs");
         MoveTo(4, 4);
 
+        LoadState("basesaves/red/pathfinding4.gqs");
+        PickupItemAt(234, 2, 12);
+
+        LoadState("basesaves/red/postsilphgio.gqs");
+        ClearText();
+        TalkTo(236, 3, 0);
+
         LoadState("basesaves/red/champanims_redbar.gqs");
-        // Dispose();
     }
     void MirrorMove()
     {
@@ -800,8 +833,7 @@ public class RedTasTest : RedBlueComparisons
 
     public RedTasTest() : base()
     {
-        // Pathfinding();
-        FuryAttack();
+        Pathfinding();
         Environment.Exit(0);
     }
 }

@@ -131,7 +131,7 @@ public static class RbyStratFunctions {
                 gb.RunUntil(0x100);
                 break;
             case RbyStrat.PalHold:
-                gb.Hold(Joypad.Up, 0x100);
+                gb.Hold(Joypad.Left, 0x100);
                 break;
             case RbyStrat.PalAB:
                 gb.RunUntil(BiosJoypad);

@@ -66,6 +66,24 @@ public class Comparison
         if(video && record) FFMPEG.RunFFMPEGCommand("-y " + movies + "-filter_complex hstack=inputs=" + scenarios.Length + " movies/" + name + ".mp4");
     }
 
+    public void Compare(string name, byte[] state, Scenario[] scenarios, bool video = true, bool record = true, int wait = 300, int ratio = 1)
+    {
+        byte[][] states = new byte[scenarios.Length][];
+        for(int i = 0; i < scenarios.Length; ++i) states[i] = state;
+        Compare(name, states, scenarios, video, record, wait, ratio);
+    }
+
+    public void Compare(string name, string statepath, Scenario[] scenarios, bool video = true, bool record = true, int wait = 300, int ratio = 1)
+    {
+        Compare(name, File.ReadAllBytes(statepath), scenarios, video, record, wait, ratio);
+    }
+
+    public void Compare(string statepath, Scenario[] scenarios, bool video = true, bool record = true, int wait = 300, int ratio = 1)
+    {
+        string name = Regex.Match(statepath, @"([^/\\]+)\.gqs").Groups[1].Value;
+        Compare(name, statepath, scenarios, video, record, wait, ratio);
+    }
+
     public void Compare(string name, byte[] leftstate, byte[] rightstate, Scenario left, Scenario right, bool video = true, bool record = true, int wait = 300, int ratio = 1)
     {
         Compare(name, new byte[][] { leftstate, rightstate }, new Scenario[] { left, right }, video, record, wait, ratio);
@@ -81,10 +99,15 @@ public class Comparison
         Compare(name, state, state, left, right, video, record, wait, ratio);
     }
 
+    public void Compare(string name, string statepath, Scenario left, Scenario right, bool video = true, bool record = true, int wait = 300, int ratio = 1)
+    {
+        Compare(name, File.ReadAllBytes(statepath), left, right, video, record, wait, ratio);
+    }
+
     public void Compare(string statepath, Scenario left, Scenario right, bool video = true, bool record = true, int wait = 300, int ratio = 1)
     {
         string name = Regex.Match(statepath, @"([^/\\]+)\.gqs").Groups[1].Value;
-        Compare(name, File.ReadAllBytes(statepath), left, right, video, record, wait, ratio);
+        Compare(name, statepath, left, right, video, record, wait, ratio);
     }
 }
 
@@ -139,7 +162,7 @@ public class RedBlueComparisons : RedBlueForce
         do
         {
             RunFor(1);
-            RunUntil(SYM["JoypadOverworld"]);
+            RunUntil("JoypadOverworld");
         } while((CpuRead("wd730") & 0xa0) > 0);
     }
 
