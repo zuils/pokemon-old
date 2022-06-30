@@ -25,7 +25,6 @@ public class YellowTASPidgeRat : YellowForce {
             ClearText();
             MoveTo(51,25,27);
             ForceEncounter(Action.Up, 9, 0xF097);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             MenuPress(Joypad.A);
@@ -105,7 +104,6 @@ public class YellowTASPidgeRat : YellowForce {
 
             MoveTo(32,11);
             ForceEncounter(Action.Right, 7, 0xF08F);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             MenuPress(Joypad.A);
@@ -151,9 +149,8 @@ public class YellowTASPidgeRat : YellowForce {
         //Record("yellowTASMisty");
 
         CacheState("misty", () => {
-            MoveTo("CeruleanGym", 4, 10);
             // MISTY MINION
-            MoveTo(5, 3);
+            MoveTo("CeruleanGym", 5, 3);
             ClearText();
             ForceTurn(new RbyTurn("HYPER FANG", Crit), new RbyTurn("TAIL WHIP", Miss));
             ForceTurn(new RbyTurn("HYPER FANG", Crit), new RbyTurn("TAIL WHIP", Miss));

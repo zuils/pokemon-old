@@ -1,8 +1,8 @@
-public class RedGlitchlessRace : RedBlueComparisons
+public class RedGlitchlessRace : RedBlueForceComparisons
 {
     public RedGlitchlessRace(int T = 1, int R = 1, int S = 1, int N = 1, bool IT = false)
     {
-        System.Console.Write(T + " " + R + " " + S + " " + N + " ");
+        // System.Console.Write(T + " " + R + " " + S + " " + N + " ");
 
         // RecordAndTime("red-glitchless-race");
         RbyTurn.DefaultRoll = 20;
@@ -63,7 +63,6 @@ public class RedGlitchlessRace : RedBlueComparisons
         CacheState("nidoran", () => {
             MoveTo("Route1", 8, 30);
             ForceEncounter(Action.Up, 8, 0x8888);
-            ClearText();
             RunAway();
 
             MoveTo("Route1", 11, 24);
@@ -268,7 +267,6 @@ public class RedGlitchlessRace : RedBlueComparisons
             Execute(SpacePath("RRUUURARRRDDRRRRRUARURARRDDDDDDDDALLLLDDDDDDDADDLLLALLLLLLLLLLLLALLLLLLUUUUAUUALUUUUUUU"));
 
             ForceEncounter(Action.Up, 5, 0x8888); // paras
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             No();
@@ -446,14 +444,13 @@ public class RedGlitchlessRace : RedBlueComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
+            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("KARATE CHOP", Crit));
             ForceTurn(new RbyTurn("THRASH", Crit));
             ForceTurn(new RbyTurn("THRASH"));
 
-            MoveTo("CeruleanGym", 4, 10);
-
             // GOLDEEN GIRL
-            MoveTo(5, 3);
+            MoveTo("CeruleanGym", 5, 3);
             ClearText();
             ForceTurn(new RbyTurn("THRASH", Crit));
 
@@ -691,6 +688,8 @@ public class RedGlitchlessRace : RedBlueComparisons
             UseItem("SUPER REPEL");
             UseItem("TM48", "NIDOKING", "THRASH"); //early drill
             UseItem("TM07", "NIDOKING", "MEGA PUNCH");
+            // UseItem("TM48", "NIDOKING", "MEGA PUNCH"); //early drill
+            // UseItem("TM07", "NIDOKING", "THRASH");
             ItemSwap("S.S.TICKET", "X ACCURACY");
             UseItem("HM02", "PIDGEY");
             Fly("LavenderTown");
@@ -889,6 +888,7 @@ public class RedGlitchlessRace : RedBlueComparisons
 
             // JUGGLER 1
             TalkTo("FuchsiaGym", 7, 8);
+            // MoveSwap("HORN DRILL", "EARTHQUAKE");
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));

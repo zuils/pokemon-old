@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
 
-public class RedTasTest : RedBlueComparisons
+public class RedTasTest : RedBlueForceComparisons
 {
     void AgathaBug()
     {
@@ -18,11 +18,11 @@ public class RedTasTest : RedBlueComparisons
         string GetLine()
         {
             int pc = PC;
-            if(pc > 0x4000) pc |= CpuRead("hLoadedROMBank") << 16;
+            if(pc >= 0x4000) pc |= CpuRead("hLoadedROMBank") << 16;
             string pcs = SYM.Contains(pc) ? SYM[pc] : String.Format("{0:x4}", pc);
 
             int sp = CpuReadLE<ushort>(SP);
-            if(sp > 0x4000) sp |= CpuRead("hLoadedROMBank") << 16;
+            if(sp >= 0x4000) sp |= CpuRead("hLoadedROMBank") << 16;
             string sps = String.Format("{0:x4}", sp) + (SYM.Contains(sp) ? " (" + SYM[sp] + ")" : "");
 
             return "instruction: " + pcs + "  stack: " + sps + "  ly:" + (int) CpuRead(0xff44);
@@ -290,17 +290,17 @@ public class RedTasTest : RedBlueComparisons
 
         // for(int i = 0; i < 256; ++i)
         // {
-        //     LoadState("basesaves/red/agatha.gqs");
-        //     LoadState("basesaves/red/blackbelt.gqs");
-        //     LoadState("basesaves/red/champ.gqs");
-        //     LoadState("basesaves/red/lorelei.gqs");
+        //     LoadState("basesaves/red/agathaai.gqs");
+        //     LoadState("basesaves/red/blackbeltai.gqs");
+        //     LoadState("basesaves/red/champai.gqs");
+        //     LoadState("basesaves/red/loreleiai1.gqs");
         //     AdvanceFrames(7);
 
 
 
         //     Hold(Joypad.B, SYM["Random"]);
         //     int addr = CpuReadLE<ushort>(SP);
-        //     if(addr > 0x4000) addr |= CpuRead("hLoadedROMBank") << 16;
+        //     if(addr >= 0x4000) addr |= CpuRead("hLoadedROMBank") << 16;
         //     string address = SYM[addr];
         //     Console.WriteLine(address);
 
@@ -347,7 +347,7 @@ public class RedTasTest : RedBlueComparisons
         var stats = new int[max, 5];
         var rdivstats = new int[10];
         rolls.Initialize();
-        LoadState("basesaves/red/lorelei.gqs");
+        LoadState("basesaves/red/loreleiai1.gqs");
         byte[] state = SaveState();
         const int it = 1000000;
         Console.WriteLine("iterations: " + it);
@@ -656,14 +656,30 @@ public class RedTasTest : RedBlueComparisons
         AdvanceFrames(60);
         Dispose();
     }
-    public static void DebugStack(GameBoy gb, int n = 16)
+    public static void DebugStack(GameBoy gb, int n = 20)
     {
-        for(int i = 0; i <= n; i += 2)
+        int addr = gb.PC;
+        if(addr >= 0x4000) addr |= gb.CpuRead("hLoadedROMBank") << 16;
+        Console.WriteLine(gb.SYM.Contains(addr) ? gb.SYM[addr] : $"{addr:x5}");
+
+        for(int i = 0; gb.SP + i <= 0xdfff; i += 2)
         {
-            int addr = gb.CpuReadLE<ushort>(gb.SP + i);
-            if(addr > 0x4000)
-                addr |= gb.CpuRead("hLoadedROMBank") << 16;
-            Console.WriteLine(i + " " + (gb.SYM.Contains(addr) ? gb.SYM[addr] : addr.ToString("x")));
+            string line = "";
+            addr = gb.CpuReadLE<ushort>(gb.SP + i);
+            if(addr < 3) continue;
+            if(addr < 0x4000)
+            {
+                if(gb.ROM[addr - 3] == 0xcd && gb.SYM.Contains(addr)) line += " " + gb.SYM[addr];
+            }
+            else
+            {
+                for(int b = 1; b <= 0x2b; ++b)
+                {
+                    int addr2 = addr | b << 16;
+                    if(gb.ROM[addr2 - 3] == 0xcd && gb.SYM.Contains(addr2)) line += $" {addr2:x5} {gb.SYM[addr2]}";
+                }
+            }
+            if(line != "") Console.WriteLine($"{i,2} {gb.SP + i:x4} {addr:x4}{line}");
         }
     }
     void FadeOut()
@@ -818,12 +834,12 @@ public class RedTasTest : RedBlueComparisons
         ClearText();
         TalkTo(236, 3, 0);
 
-        LoadState("basesaves/red/champanims_redbar.gqs");
+        LoadState("basesaves/red/champ.gqs");
     }
     void MirrorMove()
     {
         Record("mirrormove");
-        LoadState("basesaves/red/champanims_redbar.gqs");
+        LoadState("basesaves/red/champ.gqs");
         ClearText();
         ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("SKY ATTACK"));
         ForceTurn(new RbyTurn("BLIZZARD", Miss), new RbyTurn("SKY ATTACK", Miss));

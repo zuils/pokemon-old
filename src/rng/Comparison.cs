@@ -111,7 +111,7 @@ public class Comparison
     }
 }
 
-public class RedBlueComparisons : RedBlueForce
+public class RbyForceComparisons : RbyForce
 {
     public static RbyIntroSequence NoPal = new RbyIntroSequence(RbyStrat.NoPal);
     public static RbyIntroSequence PalHold = new RbyIntroSequence(RbyStrat.PalHold);
@@ -196,11 +196,25 @@ public class RedBlueComparisons : RedBlueForce
         Timer.Running = start;
     }
 
-    public RedBlueComparisons(string rom = "roms/pokered.gbc", bool speedup = true) : base(rom, speedup)
+    public RbyForceComparisons(string rom, SpeedupFlags speedupFlags) : base(rom, speedupFlags)
+    {
+    }
+}
+
+public class RedBlueForceComparisons : RbyForceComparisons
+{
+    public RedBlueForceComparisons(string rom = "roms/pokered.gbc", bool speedup = true) : base(rom, speedup ? SpeedupFlags.All : SpeedupFlags.None)
     {
     }
 
-    public RedBlueComparisons(bool speedup) : base("roms/pokered.gbc", speedup)
+    public RedBlueForceComparisons(bool speedup) : this("roms/pokered.gbc", speedup)
+    {
+    }
+}
+
+public class YellowForceComparisons : RbyForceComparisons
+{
+    public YellowForceComparisons(bool speedup = true) : base("roms/pokeyellow.gbc", speedup ? SpeedupFlags.NoVideo | SpeedupFlags.NoSound : SpeedupFlags.None)
     {
     }
 }

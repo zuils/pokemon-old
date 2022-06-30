@@ -25,7 +25,6 @@ public class YellowTASPidgeFable : YellowForce {
             ClearText();
             MoveTo(51,25,27);
             ForceEncounter(Action.Up, 9, 0xF097);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             MenuPress(Joypad.A);
@@ -106,7 +105,6 @@ public class YellowTASPidgeFable : YellowForce {
             // Clefairy and Mega Punch
             MoveTo(61,28,6);
             ForceEncounter(Action.Right, 9, 0xFCEF);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             Yes();
@@ -161,9 +159,8 @@ public class YellowTASPidgeFable : YellowForce {
             Yes();
             ClearText(); // healed at center
 
-            MoveTo("CeruleanGym", 4, 10);
             // MISTY MINION
-            MoveTo(5, 3);
+            MoveTo("CeruleanGym", 5, 3);
             ClearText();
             ForceTurn(new RbyTurn("MEGA PUNCH"), new RbyTurn("TAIL WHIP", Miss));
             ForceTurn(new RbyTurn("MEGA PUNCH"), new RbyTurn("TAIL WHIP", Miss));

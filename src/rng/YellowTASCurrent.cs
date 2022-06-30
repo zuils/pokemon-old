@@ -49,7 +49,6 @@ public class YellowTASCurrent : YellowForce {
 
         MoveTo(1,9);
         ForceEncounter(Action.Up, 4, 0xffff);
-        ClearText();
         ForceYoloball("POKE BALL");
         ClearText();
         No(); // pidgey caught
@@ -124,7 +123,6 @@ public class YellowTASCurrent : YellowForce {
 
         MoveTo("Route4", 72, 14);
         ForceEncounter(Action.Right, 9, 0x0000);
-        ClearText();
         ForceYoloball("POKE BALL");
         ClearText();
         No(); // sandshrew caught

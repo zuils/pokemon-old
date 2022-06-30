@@ -1,4 +1,4 @@
-public class RedGlitchlessDME : RedBlueComparisons
+public class RedGlitchlessDME : RedBlueForceComparisons
 {
     public RedGlitchlessDME(bool silphBar = true)
     {
@@ -96,7 +96,6 @@ public class RedGlitchlessDME : RedBlueComparisons
             MoveNpc("ViridianCity", 17, 5, Action.Right);
             Execute(SpacePath("DRRUUURRRRRRRRRRRRRRRRRRRRRURUUUUUURUUUULUUUUUUAUUUUUUUUUUUUULLLUUUUUUUUUUURR"));
             ForceEncounter(Action.Right, 4, 0x8cfa);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             No(); // pidgey caught
@@ -216,7 +215,6 @@ public class RedGlitchlessDME : RedBlueComparisons
             Execute(SpacePath("RRUUURARRRDDRRRRRUARURARRDDDDDDDDALLLLDDDDDDDADDLLLALLLLLLLLLLLLALLLLLLUUUUAUUALUUUUUUU"));
 
             ForceEncounter(Action.Up, 5, 0x0000); // paras
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             No();
@@ -371,13 +369,12 @@ public class RedGlitchlessDME : RedBlueComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
+            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"));
             ForceTurn(new RbyTurn("THRASH"));
-
-            MoveTo("CeruleanGym", 4, 10);
 
             // GOLDEEN GIRL
-            MoveTo(5, 3);
+            MoveTo("CeruleanGym", 5, 3);
             ClearText();
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("PECK"));
             ForceTurn(new RbyTurn("THRASH"));
@@ -621,6 +618,7 @@ public class RedGlitchlessDME : RedBlueComparisons
 
             // CHANNELER 1
             TalkTo("PokemonTower4F", 15, 7);
+            // MoveSwap("THRASH", "ROCK SLIDE");
             ForceTurn(new RbyTurn("ROCK SLIDE"));
             ForceTurn(new RbyTurn("ROCK SLIDE"));
 
@@ -832,6 +830,7 @@ public class RedGlitchlessDME : RedBlueComparisons
 
             // JUGGLER 1
             TalkTo("FuchsiaGym", 7, 8);
+            // MoveSwap("HORN DRILL", "EARTHQUAKE");
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));

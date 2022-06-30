@@ -1,4 +1,4 @@
-class BlueCEA : RedBlueComparisons
+class BlueCEA : RedBlueForceComparisons
 {
     void Afo7()
     {
@@ -285,7 +285,6 @@ class BlueCEA : RedBlueComparisons
             MoveTo("Route1", 13, 14);
             MoveTo("Route1", 15, 8);
             ForceEncounter(Action.Up, 1, 0x8888);
-            ClearText();
             RunAway();
             MoveTo("Route1", 15, 4);
 

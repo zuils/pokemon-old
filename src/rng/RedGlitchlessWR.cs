@@ -1,4 +1,4 @@
-public class RedGlitchlessWR : RedBlueComparisons
+public class RedGlitchlessWR : RedBlueForceComparisons
 {
     public RedGlitchlessWR()
     {
@@ -72,7 +72,6 @@ public class RedGlitchlessWR : RedBlueComparisons
             MoveTo("Route1", 11, 28);
             MoveTo("Route1", 11, 34);
             ForceEncounter(Action.Down, 3, 0x8888);
-            ClearText();
             RunAway();
 
             TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
@@ -104,7 +103,6 @@ public class RedGlitchlessWR : RedBlueComparisons
         CacheState("forest", () => {
             Execute(SpacePath("DRRRRUUURRRRRRRRRRRRRRRRRRRURRUUUUUUUUUUUUUUUUUUUUUUUUUULUUUUULLLUUUUUUARRARRSUU"));
             ForceEncounter(Action.Up, 4, 0x8888);
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             No(); // pidgey caught
@@ -229,7 +227,6 @@ public class RedGlitchlessWR : RedBlueComparisons
             Execute(SpacePath("RRUUURARRRDDRRRRRUARURARRDDDDDDDDALLLLDDDDDDDADDLLLALLLLLLLLLLLLALLLLLLUUUUAUUALUUUUUUU"));
 
             ForceEncounter(Action.Up, 5, 0x8888); // paras
-            ClearText();
             ForceYoloball("POKE BALL");
             ClearText();
             No();
@@ -271,7 +268,6 @@ public class RedGlitchlessWR : RedBlueComparisons
 
             MoveTo(11, 4);
             ForceEncounter(Action.Left, 0, 0x0000);
-            ClearText();
             RunAway();
             MoveTo(3, 7);
             ForceEncounter(Action.Right, 1, 0x0000);
@@ -396,14 +392,13 @@ public class RedGlitchlessWR : RedBlueComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
+            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("KARATE CHOP", Crit));
             ForceTurn(new RbyTurn("THRASH"));
             ForceTurn(new RbyTurn("THRASH"));
 
-            MoveTo("CeruleanGym", 4, 10);
-
             // GOLDEEN GIRL
-            MoveTo(5, 3);
+            MoveTo("CeruleanGym", 5, 3);
             ClearText();
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("PECK"));
             ForceTurn(new RbyTurn("THRASH"));
@@ -656,6 +651,7 @@ public class RedGlitchlessWR : RedBlueComparisons
 
             // CHANNELER 1
             TalkTo("PokemonTower4F", 15, 7);
+            // MoveSwap("THRASH", "ROCK SLIDE");
             ForceTurn(new RbyTurn("ROCK SLIDE"));
             ForceTurn(new RbyTurn("ROCK SLIDE"));
 
@@ -834,6 +830,7 @@ public class RedGlitchlessWR : RedBlueComparisons
 
             // JUGGLER 1
             TalkTo("FuchsiaGym", 7, 8);
+            // MoveSwap("HORN DRILL", "EARTHQUAKE");
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE", Crit));
@@ -1012,6 +1009,7 @@ public class RedGlitchlessWR : RedBlueComparisons
             ClearText();
             ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("AGILITY"));
             ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("AGILITY"));
+            // MoveSwap("EARTHQUAKE", "HORN DRILL");
             ForceTurn(new RbyTurn("BLIZZARD"), new RbyTurn("AGILITY"));
             ForceTurn(new RbyTurn("BLIZZARD"));
             ForceTurn(new RbyTurn("HORN DRILL"));
