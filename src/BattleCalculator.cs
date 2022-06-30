@@ -16,6 +16,10 @@ public class BattleCalculator : Red
 
     bool AvgOnly = false;
     double LockThreshold = 0.0001;
+    bool Print = true;
+
+    Func<Info, string> DeterminePlayerMove;
+    Func<Info, bool?> FightDone;
 
     class Turn
     {
@@ -68,7 +72,7 @@ public class BattleCalculator : Red
             + (count != 39 ? "x" + count + "" : "")
             // + " (" + info.Player.HP.ToString() + "-" + info.Enemy.HP.ToString() + ")"
             ;
-        Trace.WriteLine(str);
+        if(Print) Trace.WriteLine(str);
     }
 
     static double Crit(RbyPokemon poke, string move)
@@ -88,42 +92,43 @@ public class BattleCalculator : Red
         poke.UnmodifiedSpeed = poke.Speed = spd;
         poke.UnmodifiedSpecial = poke.Special = spc;
     }
-    static void AttackStage(RbyPokemon poke, int stage)
+    static void AttackStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.AttackModifider = (byte) Math.Clamp(poke.AttackModifider + stage, 1, 13);
         poke.Attack = GetModifiedStat(poke.UnmodifiedAttack, poke.AttackModifider);
-        ApplyBadgeBoosts(poke);
     }
-    static void DefenseStage(RbyPokemon poke, int stage)
+    static void DefenseStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.DefenseModifider = (byte) Math.Clamp(poke.DefenseModifider + stage, 1, 13);
         poke.Defense = GetModifiedStat(poke.UnmodifiedDefense, poke.DefenseModifider);
-        ApplyBadgeBoosts(poke);
     }
-    static void SpeedStage(RbyPokemon poke, int stage)
+    static void SpeedStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.SpeedModifider = (byte) Math.Clamp(poke.SpeedModifider + stage, 1, 13);
         poke.Speed = GetModifiedStat(poke.UnmodifiedSpeed, poke.SpeedModifider);
-        ApplyBadgeBoosts(poke);
     }
-    static void SpecialStage(RbyPokemon poke, int stage)
+    static void SpecialStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.SpecialModifider = (byte) Math.Clamp(poke.SpecialModifider + stage, 1, 13);
         poke.Special = GetModifiedStat(poke.UnmodifiedSpecial, poke.SpecialModifider);
-        ApplyBadgeBoosts(poke);
     }
-    static void AccuracyStage(RbyPokemon poke, int stage)
+    static void AccuracyStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.AccuracyModifider = (byte) Math.Clamp(poke.AccuracyModifider + stage, 1, 13);
-        ApplyBadgeBoosts(poke);
     }
-    static void EvasionStage(RbyPokemon poke, int stage)
+    static void EvasionStage(RbyPokemon poke, int stage, Info info)
     {
+        if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.EvasionModifider = (byte) Math.Clamp(poke.EvasionModifider + stage, 1, 13);
-        ApplyBadgeBoosts(poke);
     }
     static void ApplyBadgeBoosts(RbyPokemon poke)
     {
+        // do we have badges...
         poke.Attack = (ushort) (poke.Attack * 9 / 8);
         poke.Defense = (ushort) (poke.Defense * 9 / 8);
         poke.Speed = (ushort) (poke.Speed * 9 / 8);
@@ -251,13 +256,13 @@ public class BattleCalculator : Red
             if(move == "X ACCURACY")
                 next.Attacker.XAccuracyEffect = true;
             else if(move == "X ATTACK")
-                AttackStage(next.Attacker, 1);
+                AttackStage(next.Attacker, 1, next);
             else if(move == "X DEFEND")
-                DefenseStage(next.Attacker, 1);
+                DefenseStage(next.Attacker, 1, next);
             else if(move == "X SPEED")
-                SpeedStage(next.Attacker, 1);
+                SpeedStage(next.Attacker, 1, next);
             else if(move == "X SPECIAL")
-                SpecialStage(next.Attacker, 1);
+                SpecialStage(next.Attacker, 1, next);
             else if(move == "POTION")
                 Heal(next.Attacker, 20);
             else if(move == "SUPER POTION")
@@ -282,15 +287,15 @@ public class BattleCalculator : Red
                     next.Defender.HP = 0;
             }
             else if(effect == RbyEffect.AttackDown1)
-                AttackStage(next.Defender, -1);
+                AttackStage(next.Defender, -1, next);
             else if(effect == RbyEffect.DefenseDown1)
-                DefenseStage(next.Defender, -1);
+                DefenseStage(next.Defender, -1, next);
             else if(effect == RbyEffect.SpeedDown1)
-                SpeedStage(next.Defender, -1);
+                SpeedStage(next.Defender, -1, next);
             else if(effect == RbyEffect.SpecialDown1)
-                SpecialStage(next.Defender, -1);
+                SpecialStage(next.Defender, -1, next);
             else if(effect == RbyEffect.AccuracyDown1)
-                AccuracyStage(next.Defender, -1);
+                AccuracyStage(next.Defender, -1, next);
             else if(effect == RbyEffect.FocusEnergy)
                 next.Attacker.FocusEnergyEffect = true;
             else if(effect == RbyEffect.Charge)
@@ -324,7 +329,7 @@ public class BattleCalculator : Red
             }
             else if(effect != RbyEffect.SwitchAndTeleport)
             {
-                Debug.Warning("Unimplemented effect " + move);
+                if(Print) Debug.Warning("Unimplemented effect " + move);
                 CriticalCheck(p, info);
                 return;
             }
@@ -357,7 +362,7 @@ public class BattleCalculator : Red
             || (Moves[info.Move].Effect == RbyEffect.Charge && !info.Attacker.ChargingUp))
             phit = p;
         else
-            phit = p * Moves[info.Move].Accuracy / 256; //stats downs ai, sand
+            phit = p * Moves[info.Move].Accuracy / 256; // 25% ai miss, sand
         double pmiss = p - phit;
         if(phit > 0)
             PreMoveEffects(phit, info);
@@ -574,49 +579,21 @@ public class BattleCalculator : Red
         info.CurrentEnemy++;
         info.Enemy = EnemyParty[info.CurrentEnemy];
         info.Enemy.CalculateUnmodifiedStats();
+        info.Enemy.AttackModifider = 7;
+        info.Enemy.DefenseModifider = 7;
+        info.Enemy.SpeedModifider = 7;
+        info.Enemy.SpecialModifider = 7;
+        info.Enemy.AccuracyModifider = 7;
+        info.Enemy.EvasionModifider = 7;
     }
 
-    bool? FightDone(Info info)
+    bool? DefaultFightDone(Info info)
     {
         if(info.Player.HP == 0)
             return false;
-        // if(info.Enemy.HP == 0)
-        if(info.Enemy.HP == 0 && info.Player.XAccuracyEffect)
+        if(info.Enemy.HP == 0 && (info.CurrentEnemy == EnemyParty.Length - 1 || info.Player.XAccuracyEffect))
             return true;
         return null;
-    }
-
-    string DeterminePlayerMove(Info info)
-    {
-        // return "MEGA PUNCH";
-
-        // if(!info.Player.XAccuracyEffect)
-        //     return "X ACCURACY";
-        // return "HORN DRILL";
-
-        // if(info.Turn == 0)
-        //     return "X SPECIAL";
-        // if(!info.Player.XAccuracyEffect)
-        //     if(info.Enemy.ChargingUp)
-        //         return "BLIZZARD";
-        //     else if(info.Enemy.Species.Name == "ALAKAZAM")
-        //         return "EARTHQUAKE";
-        //     else
-        //         return "X ACCURACY";
-        // return "HORN DRILL";
-
-        if(info.Turn == 0)
-            return "X SPECIAL";
-        if(!info.Player.XAccuracyEffect)
-            if(info.Enemy.Species.Name == "PIDGEOT" && LastMoveUsed(info, Enemy) == "SKY ATTACK")
-                return "BLIZZARD";
-            else if(info.Enemy.Species.Name == "PIDGEOT" && info.Player.HP <= 14)
-                return "POTION";
-            else if(info.Enemy.Species.Name == "ALAKAZAM")
-                return "EARTHQUAKE";
-            else
-                return "X ACCURACY";
-        return "HORN DRILL";
     }
 
     public void Zubat()
@@ -647,21 +624,98 @@ public class BattleCalculator : Red
         Start(BattleMon, EnemyMon, turns);
     }
 
-    public void Test()
+    public BattleCalculator() : base()
     {
-        // LoadState("basesaves/red/bridge3.gqs");
-        // LoadState("basesaves/red/blackbelt2.gqs");
-        LoadState("basesaves/red/champanims_redbar.gqs");
-        // CpuWriteBE<ushort>("wPartyMon2HP", 34);
+        FightDone = DefaultFightDone;
+    }
+
+    public void Bridge3()
+    {
+        LoadState("basesaves/red/bridge3.gqs");
         ClearText();
         AvgOnly = true;
         LockThreshold = 0.001;
-        // LockThreshold = 0.000001;
-
+        DeterminePlayerMove = info =>
+        {
+            return "MEGA PUNCH";
+        };
         Start2(BattleMon, EnemyMon);
     }
 
-    public BattleCalculator() : base()
+    public void Blackbelt()
     {
+        LoadState("basesaves/red/champ.gqs");
+        CpuWriteBE<ushort>("wPartyMon2HP", 34);
+        ClearText();
+        AvgOnly = true;
+        LockThreshold = 0.001;
+        DeterminePlayerMove = info =>
+        {
+            if(!info.Player.XAccuracyEffect)
+                return "X ACCURACY";
+            return "HORN DRILL";
+        };
+        Start2(BattleMon, EnemyMon);
+    }
+
+    public void Champ()
+    {
+        LoadState("basesaves/red/blackbelt.gqs");
+        ClearText();
+        AvgOnly = true;
+        LockThreshold = 0.001;
+        DeterminePlayerMove = info =>
+        {
+            if(info.Turn == 0)
+                return "X SPECIAL";
+            if(!info.Player.XAccuracyEffect)
+                if(info.Enemy.ChargingUp)
+                    return "BLIZZARD";
+                else if(info.Enemy.Species.Name == "ALAKAZAM")
+                    return "EARTHQUAKE";
+                else
+                    return "X ACCURACY";
+            return "HORN DRILL";
+        };
+        DeterminePlayerMove = info =>
+        {
+            if(info.Turn == 0)
+                return "X SPECIAL";
+            if(!info.Player.XAccuracyEffect)
+                if(info.Enemy.Species.Name == "PIDGEOT" && LastMoveUsed(info, Enemy) == "SKY ATTACK")
+                    return "BLIZZARD";
+                else if(info.Enemy.Species.Name == "PIDGEOT" && info.Player.HP <= 14)
+                    return "POTION";
+                else if(info.Enemy.Species.Name == "ALAKAZAM")
+                    return "EARTHQUAKE";
+                else
+                    return "X ACCURACY";
+            return "HORN DRILL";
+        };
+        Start2(BattleMon, EnemyMon);
+    }
+
+    public void ClassicBlackbelt()
+    {
+        LoadState("basesaves/red/classicblackbelt.gqs");
+        ClearText();
+        LockThreshold = 0.000000001;
+        Print = false;
+        DeterminePlayerMove = info =>
+        {
+            if(info.Enemy.HP < 50)
+                return "THUNDERBOLT";
+            return "EARTHQUAKE";
+        };
+        for(int atk = 104; atk <= 121; ++atk)
+        {
+            Trace.WriteLine(atk + " Atk");
+            var nido = BattleMon;
+            nido.Attack = (ushort)(atk * 9 / 8);
+            var w = Stopwatch.StartNew();
+            Start2(nido, EnemyMon);
+            Console.WriteLine(w.Elapsed.TotalSeconds + "s");
+            Trace.WriteLine("");
+        }
     }
 }

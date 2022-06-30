@@ -40,7 +40,8 @@ public partial class Rby {
         damage *= damageRoll;
         damage /= 255;
 
-        return Math.Max(damage, 1);
+        // return Math.Max(damage, 1);
+        return Math.Clamp(damage, 1, defender.HP);
     }
 
     public int[] CalcDamage(RbyPokemon attacker, RbyPokemon defender, RbyMove move, bool crit) {
