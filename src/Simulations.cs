@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public static class Simulations
 {
@@ -235,5 +236,24 @@ public static class Simulations
                 gb.UseMove("THUNDERBOLT");
             return gb.BattleMon.HP > 0;
         });
+    }
+
+    public static void NpcIgt()
+    {
+        var s = new Simulation<Red>("basesaves/red/npcigt.gqs", 65536);
+        int[] npcTimer = new int[256];
+        s.Simulate("Npc Igt", gb =>
+        {
+            gb.CpuWrite("wGrassRate", 0);
+            gb.Execute("L L L L L L U U U U U U U U");
+            // gb.Execute("D D U U");
+            gb.AdvanceFrames(1000);
+            gb.Press(Joypad.Start);
+            npcTimer[gb.CpuRead("wSprite04StateData2MovementDelay")]++;
+            return true;
+        });
+
+        for(int i = 0; i < 256; ++i)
+            Trace.WriteLine(i + " " + npcTimer[i]);
     }
 }

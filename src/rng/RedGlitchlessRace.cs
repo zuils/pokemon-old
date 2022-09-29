@@ -394,6 +394,7 @@ public class RedGlitchlessRace : RedBlueForceComparisons
             // HIKER
             MoveTo("Route25", 14, 7);
             ClearText();
+            // MoveSwap("MEGA PUNCH", "WATER GUN");
             ForceTurn(new RbyTurn("WATER GUN"));
 
             // LASS
@@ -416,6 +417,7 @@ public class RedGlitchlessRace : RedBlueForceComparisons
             ForceTurn(new RbyTurn("HORN ATTACK"));
             TeachLevelUpMove("WATER GUN");
             ForceTurn(new RbyTurn("THRASH"));
+            // ForceTurn(new RbyTurn("HORN ATTACK"));
 
             TalkTo("BillsHouse", 6, 5, Action.Right);
             Yes();
@@ -444,7 +446,6 @@ public class RedGlitchlessRace : RedBlueForceComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
-            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("KARATE CHOP", Crit));
             ForceTurn(new RbyTurn("THRASH", Crit));
             ForceTurn(new RbyTurn("THRASH"));

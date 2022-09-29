@@ -325,6 +325,7 @@ public class RedGlitchlessDME : RedBlueForceComparisons
             // HIKER
             MoveTo("Route25", 14, 7);
             ClearText();
+            MoveSwap("MEGA PUNCH", "WATER GUN");
             ForceTurn(new RbyTurn("WATER GUN"));
 
             // LASS
@@ -369,7 +370,6 @@ public class RedGlitchlessDME : RedBlueForceComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
-            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"));
             ForceTurn(new RbyTurn("THRASH"));
 
@@ -618,7 +618,7 @@ public class RedGlitchlessDME : RedBlueForceComparisons
 
             // CHANNELER 1
             TalkTo("PokemonTower4F", 15, 7);
-            // MoveSwap("THRASH", "ROCK SLIDE");
+            MoveSwap("THRASH", "ROCK SLIDE");
             ForceTurn(new RbyTurn("ROCK SLIDE"));
             ForceTurn(new RbyTurn("ROCK SLIDE"));
 
@@ -830,7 +830,7 @@ public class RedGlitchlessDME : RedBlueForceComparisons
 
             // JUGGLER 1
             TalkTo("FuchsiaGym", 7, 8);
-            // MoveSwap("HORN DRILL", "EARTHQUAKE");
+            MoveSwap("HORN DRILL", "EARTHQUAKE");
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));
             ForceTurn(new RbyTurn("EARTHQUAKE"));

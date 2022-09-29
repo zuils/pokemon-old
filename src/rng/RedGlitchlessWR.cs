@@ -347,6 +347,7 @@ public class RedGlitchlessWR : RedBlueForceComparisons
             // HIKER
             MoveTo("Route25", 14, 7);
             ClearText();
+            // MoveSwap("MEGA PUNCH", "WATER GUN");
             ForceTurn(new RbyTurn("WATER GUN"));
 
             // LASS
@@ -392,7 +393,6 @@ public class RedGlitchlessWR : RedBlueForceComparisons
             // DIG ROCKET
             MoveTo("CeruleanCity", 30, 9);
             ClearText();
-            // MoveSwap("MEGA PUNCH", "THRASH");
             ForceTurn(new RbyTurn("THRASH"), new RbyTurn("KARATE CHOP", Crit));
             ForceTurn(new RbyTurn("THRASH"));
             ForceTurn(new RbyTurn("THRASH"));
@@ -1009,7 +1009,6 @@ public class RedGlitchlessWR : RedBlueForceComparisons
             ClearText();
             ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("AGILITY"));
             ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("AGILITY"));
-            // MoveSwap("EARTHQUAKE", "HORN DRILL");
             ForceTurn(new RbyTurn("BLIZZARD"), new RbyTurn("AGILITY"));
             ForceTurn(new RbyTurn("BLIZZARD"));
             ForceTurn(new RbyTurn("HORN DRILL"));

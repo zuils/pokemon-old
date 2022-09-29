@@ -322,7 +322,7 @@ public class YellowComparisons : YellowForceComparisons
             Fly("PalletTown");
             UseItem("SUPER REPEL");
             UseItem("ELIXER", "NIDOKING");
-            UseItem("FULL RESTORE", "NIDOKING");
+            // UseItem("FULL RESTORE", "NIDOKING");
             UseItem("TM13", "NIDOKING", "THRASH");
             ItemSwap("S.S.TICKET", "X ATTACK");
             UseItem("HM04", "LAPRAS");
@@ -341,7 +341,7 @@ public class YellowComparisons : YellowForceComparisons
             RunUntil("JoypadOverworld");
             UseItem("SUPER REPEL");
             UseItem("ELIXER", "NIDOKING");
-            UseItem("FULL RESTORE", "NIDOKING");
+            // UseItem("FULL RESTORE", "NIDOKING");
             UseItem("TM13", "NIDOKING", "THRASH");
             ItemSwap("S.S.TICKET", "X ATTACK");
             UseItem("HM04", "LAPRAS");
@@ -360,7 +360,7 @@ public class YellowComparisons : YellowForceComparisons
             Fly("PalletTown");
             UseItem("SUPER REPEL");
             UseItem("ELIXER", "NIDOKING");
-            UseItem("FULL RESTORE", "NIDOKING");
+            // UseItem("FULL RESTORE", "NIDOKING");
             UseItem("TM13", "NIDOKING", "THRASH");
             ItemSwap("S.S.TICKET", "X ATTACK");
             UseItem("HM04", "LAPRAS");
@@ -376,7 +376,7 @@ public class YellowComparisons : YellowForceComparisons
             RunUntil("JoypadOverworld");
             UseItem("SUPER REPEL");
             UseItem("ELIXER", "NIDOKING");
-            UseItem("FULL RESTORE", "NIDOKING");
+            // UseItem("FULL RESTORE", "NIDOKING");
             UseItem("TM13", "NIDOKING", "THRASH");
             ItemSwap("S.S.TICKET", "X ATTACK");
             UseItem("HM04", "LAPRAS");
@@ -389,7 +389,7 @@ public class YellowComparisons : YellowForceComparisons
             Surf();
             MoveTo(32, 4, 0);
         });
-        Comparison.Compare("momheal", "basesaves/yellow/fuchsiamenu.gqs", () =>
+        Comparison.Compare("momheal", "basesaves/yellow/fuchsiamenulow.gqs", () =>
         {
             RunUntil("JoypadOverworld");
             Fly("PalletTown");
@@ -474,6 +474,24 @@ public class YellowComparisons : YellowForceComparisons
             TalkTo(210, 8, 13, Action.Left);
             TalkTo(208, 17, 9);
             MoveTo(212, 4, 2, Action.Left);
+        });
+    }
+    void Gambler()
+    {
+        Comparison.Compare("basesaves/yellow/gambler.gqs", () =>
+        {
+            ClearText();
+            MoveSwap("THRASH", "BUBBLEBEAM");
+            ForceTurn(new RbyTurn("BUBBLEBEAM", 1), new RbyTurn("ROAR"));
+            ForceTurn(new RbyTurn("THRASH"));
+            ForceTurn(new RbyTurn("THRASH"));
+        }, () =>
+        {
+            ClearText();
+            MoveSwap("THRASH", "BUBBLEBEAM");
+            ForceTurn(new RbyTurn("BUBBLEBEAM", 1), new RbyTurn("ROAR"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THRASH"));
         });
     }
 
