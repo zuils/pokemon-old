@@ -1,3 +1,6 @@
+using System.IO;
+
+
 public class BlueNidoTas : RedBlueForce {
 
     // TODO:
@@ -8,8 +11,8 @@ public class BlueNidoTas : RedBlueForce {
     public BlueNidoTas() : base("roms/pokeblue.gbc", true) {
         // NOTE: Record requires ffmpeg.exe to be in PATH, it will output to movies/video.mp4, movies/audio.mp3, stitch the two together and save to movies/blue-tas.mp4
         //       If only a black window shows up, change https://github.com/stringflow/pokemon/blob/main/src/gfx/Renderer.cs#L77 to SDL2RenderContext.
-        Record("blue-tas");
-        //Show();
+        //Record("blue-tas");
+        Show();
 
         /*
             Note: you may start after the playback of an existing bk2:
@@ -54,11 +57,6 @@ public class BlueNidoTas : RedBlueForce {
             Press(Joypad.A, Joypad.None, Joypad.A, Joypad.Start);
             ClearText(Joypad.A); // Journey begins!
 
-            /*
-                Sets the in-game options. Note: This function currently only works in the overworld, and will not work on the new-game-screen.
-                The parameter is a bit field of the options you want to set.
-            */
-            SetOptions(Fast | Off | Set);
 
             /*
                 Moves to the specified coordinates via pathfinding.
@@ -69,7 +67,7 @@ public class BlueNidoTas : RedBlueForce {
                 Therefore the parameters below will pathfind to https://gunnermaniac.com/pokeworld?local=0#10/1.
             */
             MoveTo("PalletTown", 10, 1); // Oak cutscene
-            ClearText();
+            ClearText(Joypad.B);
 
             /*
                 Pathfinds in such a way to face the specified tile (or NPC), then presses 'A' to interact, and calls 'ClearText'.
@@ -84,9 +82,9 @@ public class BlueNidoTas : RedBlueForce {
             /*
                 Chooses Yes on Yes/No boxes.
             */
-            Yes();
-            ClearText();
-            Yes();
+            ClearText(Joypad.B);
+            ClearText(Joypad.B);
+            ClearText(Joypad.B);
             Press(Joypad.None, Joypad.A, Joypad.Start); // TODO: Nickname function?
             /*
                 Modifies the RNG to produce the specified DVs when receiving a gift pokemon.
@@ -94,10 +92,10 @@ public class BlueNidoTas : RedBlueForce {
                 Therefore the parameters below will produce 14 dv attack, 1 dv defense, 7 dv speed, and 8 dv special.
             */
             ForceGiftDVs(0xe178);
-            ClearText(); // Squirtle received
+            ClearText(Joypad.B); // Squirtle received
 
             MoveTo(5, 6);
-            ClearText();
+            ClearText(Joypad.B);
 
             // RIVAL1
             /*
@@ -117,16 +115,21 @@ public class BlueNidoTas : RedBlueForce {
                     - Moves such as Thrash, Wrap or Fury Attack will default to the maximum number of turns if the Turns flag isn't used.
                     - If the opponent will not get a turn, but may use a priority move, the opponent's turn may still be omitted and a non-priority move will be forced.
             */
-            ForceTurn(new RbyTurn("TAIL WHIP"), new RbyTurn("GROWL", Miss));
+            ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("GROWL", Miss));
             ForceTurn(new RbyTurn("TACKLE"));
-            ClearText(); // sneaky joypad call
+            ClearText(Joypad.A); // sneaky joypad call
         });
 
         CacheState("parcel", () => {
             MoveTo("ViridianCity", 29, 19);
-            ClearText(); // Receive parcel
+            ClearText(Joypad.B); // Receive parcel
+            /*
+                Sets the in-game options. Note: This function currently only works in the overworld, and will not work on the new-game-screen.
+                The parameter is a bit field of the options you want to set.
+            */
+            SetOptions(Fast | Off | Set);
             TalkTo("OaksLab", 5, 2, Action.Right); // give parcel
         });
 
@@ -1026,8 +1029,10 @@ public class BlueNidoTas : RedBlueForce {
             ForceTurn(new RbyTurn("HORN DRILL"));
 
             ClearText();
-        });
+            StreamWriter writer = new StreamWriter("blueTAS.txt");
+            writer.AutoFlush = true;
 
+        });
         Dispose();
     }
 }
