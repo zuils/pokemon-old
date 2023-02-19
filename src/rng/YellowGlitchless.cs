@@ -1,9 +1,8 @@
-public class YellowGlitchless : YellowComparisons
+public class YellowGlitchless : YellowForceComparisons
 {
     public YellowGlitchless()
     {
         // RecordAndTime("yellow-glitchless");
-        // Show();
         RbyTurn.DefaultRoll = 20;
 
         // ClearCache();
@@ -75,7 +74,7 @@ public class YellowGlitchless : YellowComparisons
 
             MoveTo("ViridianCity", 19, 9);
             ClearText();
-            MoveTo("Route2", 6, 51, Action.Up);
+            MoveTo("Route2", 7, 51, Action.Up);
             SaveAndQuit();
 
             NoPal.Execute(this, true);
@@ -93,7 +92,7 @@ public class YellowGlitchless : YellowComparisons
             MoveTo("ViridianForest", 25, 32);
             PartySwap("PIKACHU", "NIDORANM");
 
-            TalkTo(30, 33, Joypad.Down);
+            TalkTo(30, 33, Action.Down);
             ForceTurn(new RbyTurn("LEER"), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT"), false);
@@ -106,7 +105,7 @@ public class YellowGlitchless : YellowComparisons
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("TACKLE"), new RbyTurn("STRING SHOT"));
 
-            TalkTo(13, 17, Joypad.Down);
+            TalkTo(13, 17, Action.Down);
             ForceTurn(new RbyTurn("LEER"), new RbyTurn("STRING SHOT"));
             ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("TACKLE"));
             ForceTurn(new RbyTurn("HORN ATTACK"), new RbyTurn("STRING SHOT"));

@@ -258,6 +258,23 @@ public class RedComparisons : RedBlueForceComparisons
     }
     void Options()
     {
+        Comparison.Compare("optionstile", "basesaves/red/options.gqs", () =>
+        {
+            ClearText();
+            MoveTo(4, 11);
+            SetOptions(Fast | Off | Set);
+            MoveTo(4, 12);
+            Inject(Joypad.Down);
+            Hold(Joypad.Down, "EnterMap");
+        }, () =>
+        {
+            ClearText();
+            MoveTo(4, 9);
+            SetOptions(Fast | Off | Set);
+            MoveTo(4, 12);
+            Inject(Joypad.Down);
+            Hold(Joypad.Down, "EnterMap");
+        });
         Comparison.Compare("basesaves/red/options.gqs", () =>
         {
             ClearText();
@@ -1588,6 +1605,27 @@ public class RedComparisons : RedBlueForceComparisons
             Inject(Joypad.Up);
             RunUntil("EnterMap");
         });
+        Comparison.Compare("basesaves/red/biketower2.gqs", () =>
+        {
+            MoveTo("Route16", 7, 6);
+            ItemSwap("S.S.TICKET", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("HM02", "PIDGEY");
+            Press(Joypad.Up | Joypad.Left, Joypad.Up | Joypad.Right, Joypad.Up | Joypad.Left, Joypad.Up | Joypad.Right);
+            Fly("LavenderTown");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            UseItem("BICYCLE");
+            MoveTo(14, 5);
+        }, () =>
+        {
+            MoveTo("Route16", 7, 6);
+            ItemSwap("S.S.TICKET", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("HM02", "PIDGEY");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            Fly("LavenderTown");
+            MoveTo(14, 5);
+        });
     }
     void ChampAnims()
     {
@@ -1826,33 +1864,81 @@ public class RedComparisons : RedBlueForceComparisons
     }
     void WildEncounter()
     {
-        Comparison.Compare("basesaves/red/wildrt3.gqs", () =>
-        {
-            MoveTo(27, 9);
-            ForceEncounter(Action.Down, 0, 0x8888);
-            RunAway();
-            MoveTo(27, 11);
-        }, () =>
-        {
-            MoveTo(27, 11);
-        });
-        Comparison.Compare("basesaves/red/wildrt1.gqs", () =>
+        Comparison.Compare("basesaves/red/wildrt1.gqs", new Scenario[] {() =>
         {
             MoveTo(14, 8);
-            ForceEncounter(Action.Up, 1, 0x8888);
+            ForceEncounter(Action.Up, 0, 0x8888); // pidgey
+            RunAway();
+            MoveTo(14, 5);
+        }, () =>
+        {
+            MoveTo(14, 8);
+            ForceEncounter(Action.Up, 1, 0x8888); // rat
             RunAway();
             MoveTo(14, 5);
         }, () =>
         {
             MoveTo(14, 5);
-        });
-        Comparison.Compare("basesaves/red/wildmoon.gqs", () =>
+        }});
+        Comparison.Compare("basesaves/red/wildforest.gqs", new Scenario[] {() =>
+        {
+            MoveTo(1, 8);
+            ForceEncounter(Action.Up, 0, 0x8888); // weedle
+            RunAway();
+            MoveTo(1, 5);
+        }, () =>
+        {
+            MoveTo(1, 8);
+            ForceEncounter(Action.Up, 1, 0x8888); // kakuna
+            RunAway();
+            MoveTo(1, 5);
+        }, () =>
+        {
+            MoveTo(1, 5);
+        }});
+        Comparison.Compare("basesaves/red/wildrt3.gqs", new Scenario[] {() =>
+        {
+            MoveTo(27, 9);
+            ForceEncounter(Action.Down, 0, 0x8888); // pidgey
+            RunAway();
+            MoveTo(27, 11);
+        }, () =>
+        {
+            MoveTo(27, 9);
+            ForceEncounter(Action.Down, 1, 0x8888); // spearow
+            RunAway();
+            MoveTo(27, 11);
+        }, () =>
+        {
+            MoveTo(27, 9);
+            ForceEncounter(Action.Down, 9, 0x8888); // puff
+            RunAway();
+            MoveTo(27, 11);
+        }, () =>
+        {
+            MoveTo(27, 11);
+        }});
+        Comparison.Compare("basesaves/red/wildmoon.gqs", new Scenario[] {() =>
         {
             AfterMoveAndSplit();
             MoveTo(24, 3);
-            // ForceEncounter(Action.Right, 0, 0x8888); // zubat
+            ForceEncounter(Action.Right, 0, 0x8888); // zubat
+            RunAway();
+            MoveTo(26, 3);
+            MoveAndSplit(Joypad.Right);
+        }, () =>
+        {
+            AfterMoveAndSplit();
+            MoveTo(24, 3);
             ForceEncounter(Action.Right, 2, 0x8888); // geo
-            // ForceEncounter(Action.Right, 5, 0x8888); // paras
+            RunAway();
+            MoveTo(26, 3);
+            MoveAndSplit(Joypad.Right);
+        }, () =>
+        {
+            AfterMoveAndSplit();
+            MoveTo(24, 3);
+            ForceEncounter(Action.Right, 5, 0x8888); // paras
             RunAway();
             MoveTo(26, 3);
             MoveAndSplit(Joypad.Right);
@@ -1861,30 +1947,29 @@ public class RedComparisons : RedBlueForceComparisons
             AfterMoveAndSplit();
             MoveTo(26, 3);
             MoveAndSplit(Joypad.Right);
-        });
-        Comparison.Compare("basesaves/red/wildrt6.gqs", () =>
+        }});
+        Comparison.Compare("basesaves/red/wildrt6.gqs", new Scenario[] {() =>
         {
             MoveTo(17, 17);
             ForceEncounter(Action.Down, 1, 0x8888); // pidgey
-            // ForceEncounter(Action.Down, 0, 0x8888); // oddish
-            // ForceEncounter(Action.Down, 3, 0x8888); // mankey
+            RunAway();
+            MoveTo(17, 20);
+        }, () =>
+        {
+            MoveTo(17, 17);
+            ForceEncounter(Action.Down, 0, 0x8888); // oddish
+            RunAway();
+            MoveTo(17, 20);
+        }, () =>
+        {
+            MoveTo(17, 17);
+            ForceEncounter(Action.Down, 3, 0x8888); // mankey
             RunAway();
             MoveTo(17, 20);
         }, () =>
         {
             MoveTo(17, 20);
-        });
-        Comparison.Compare("basesaves/red/wildforest.gqs", () =>
-        {
-            MoveTo(1, 8);
-            // ForceEncounter(Action.Up, 0, 0x8888); // w
-            ForceEncounter(Action.Up, 1, 0x8888); // k
-            RunAway();
-            MoveTo(1, 5);
-        }, () =>
-        {
-            MoveTo(1, 5);
-        });
+        }});
     }
     void BirdCatch()
     {
@@ -4001,10 +4086,15 @@ public class RedComparisons : RedBlueForceComparisons
     }
     void MoonLag()
     {
-        Comparison.Compare("basesaves/red/moonlag0.gqs", () =>
+        void Pick()
+        {
+            Inject(Joypad.A);
+            Hold(Joypad.A, SYM["PlaySound"]);
+        }
+        Comparison.Compare("basesaves/red/moonlag1.gqs", () =>
         {
             MoveTo(21, 22);
-            MoveTo(24, 26);
+            MoveTo(24, 26); // 26 or 27
             MoveTo(24, 31, Action.Left);
         }, () =>
         {
@@ -4013,25 +4103,58 @@ public class RedComparisons : RedBlueForceComparisons
             MoveTo(25, 16);
             MoveTo(24, 31, Action.Left);
         });
-        Comparison.Compare("basesaves/red/moonlag1.gqs", () =>
+        Comparison.Compare("basesaves/red/moonlag2.gqs", () =>
         {
             ClearText();
             MoveTo(30, 31);
             PickupItemAt(35, 31);
             MoveTo(35, 31);
             MoveTo(36, 23, Action.Right);
-            Inject(Joypad.A);
-            Hold(Joypad.A, SYM["PlaySound"]);
+            Pick();
         }, () =>
         {
             ClearText();
             MoveTo(30, 31);
             PickupItemAt(35, 31);
             MoveTo(36, 23, Action.Right);
-            Inject(Joypad.A);
-            Hold(Joypad.A, SYM["PlaySound"]);
+            Pick();
         });
-        Comparison.Compare("basesaves/red/moonlag2.gqs", () =>
+        Comparison.Compare("moonlag2full", "basesaves/red/moonlag2b.gqs", new Scenario[] {() =>
+        {
+            AdvanceFrames(116, Joypad.Right);
+            AdvanceFrames(140, Joypad.Up);
+            AdvanceFrames(2, Joypad.Right);
+            AdvanceFrames(2, Joypad.A);
+            Pick();
+        }, () =>
+        {
+            AdvanceFrames(116, Joypad.Right);
+            AdvanceFrames(140, Joypad.Up);
+            AdvanceFrames(4, Joypad.Right);
+            AdvanceFrames(2, Joypad.A);
+            Pick();
+        }, () =>
+        {
+            AdvanceFrames(116, Joypad.Right);
+            AdvanceFrames(140, Joypad.Up);
+            AdvanceFrames(6, Joypad.Right);
+            AdvanceFrames(2, Joypad.A);
+            Pick();
+        }, () =>
+        {
+            AdvanceFrames(116, Joypad.Right);
+            AdvanceFrames(140, Joypad.Up);
+            AdvanceFrames(8, Joypad.Right);
+            AdvanceFrames(2, Joypad.A);
+            Pick();
+        }, () =>
+        {
+            AdvanceFrames(240, Joypad.Up);
+            AdvanceFrames(15, Joypad.Right);
+            AdvanceFrames(10, Joypad.A);
+            Pick();
+        }});
+        Comparison.Compare("basesaves/red/moonlag3.gqs", () =>
         {
             MoveTo(35, 22);
             MoveTo(30, 11);
@@ -4042,18 +4165,74 @@ public class RedComparisons : RedBlueForceComparisons
             MoveTo(34, 7);
             MoveTo(30, 7);
         });
-        Comparison.Compare("basesaves/red/moonlag3.gqs", () =>
+        Comparison.Compare("basesaves/red/moonlag4.gqs", () =>
         {
-            MoveTo(11, 6);
+            // MoveTo(11, 6);
+            MoveTo(11, 11);
+            MoveTo(10, 11);
+            MoveTo(10, 6);
             MoveTo(6, 6);
         }, () =>
         {
-            MoveTo(6, 6, Action.Left);
+            MoveTo(8, 6);
+            MoveTo(6, 6);
+        });
+        return;
+        Comparison.Compare("moonlag4b", "basesaves/red/moonlag4.gqs", () =>
+        {
+            MoveTo(11, 2);
+            MoveTo(3, 2);
+            Pick();
+        }, () =>
+        {
+            MoveTo(8, 2);
+            MoveTo(3, 2);
+            Pick();
+        });
+        Comparison.Compare("basesaves/red/moonlag5.gqs", () =>
+        {
+            MoveTo(3, 5);
+            MoveTo(5, 5);
+            // MoveTo(5, 17);
+            MoveTo(5, 16);
+            MoveTo(21, 16);
+            MoveTo(21, 17);
+        }, () =>
+        {
+            MoveTo(5, 2);
+            MoveTo(5, 5);
+            MoveTo(7, 5);
+            // MoveTo(7, 17);
+            MoveTo(7, 16);
+            MoveTo(21, 16);
+            MoveTo(21, 17);
+        });
+        Comparison.Compare("basesaves/red/moonlag6.gqs", () =>
+        {
+            AfterMoveAndSplit();
+            MoveTo(21, 14);
+            MoveTo(27, 14);
+            MoveTo(32, 14);
+            MoveTo(32, 22);
+            MoveTo(11, 21);
+            MoveTo(10, 17);
+            Execute("R");
+        }, () =>
+        {
+            AfterMoveAndSplit();
+            MoveTo(23, 17);
+            MoveTo(26, 16);
+            MoveTo(33, 16);
+            MoveTo(36, 24);
+            MoveTo(34, 31);
+            MoveTo(10, 31);
+            MoveTo(10, 17);
+            Execute("R");
         });
     }
     void SafariOneRepel()
     {
-        Comparison.Compare("basesaves/red/safarionerepel.gqs", () =>
+        void OneRepel(int enc = 0)
         {
             ClearText();
             ItemSwap("PARLYZ HEAL", "TM26");
@@ -4076,38 +4255,13 @@ public class RedComparisons : RedBlueForceComparisons
             MoveTo(218, 39, 30);
 
             MoveTo(218, 11, 1);
-            MoveTo(218, 6, 1);
-            MoveTo(218, 6, 13);
+            MoveTo(218, 5, 2, Action.Down);
+            if(enc >= 1) { ForceEncounter(Action.Down, 9, 0); RunAway(); }
+            MoveTo(218, 5, 7);
+            if(enc == 2) { ForceEncounter(Action.Down, 9, 0); RunAway(); }
+            MoveTo(218, 5, 13);
             MoveTo(218, 3, 14);
-        }, () =>
-        {
-            ClearText();
-            ItemSwap("PARLYZ HEAL", "TM26");
-            UseItem("PP UP", "NIDOKING", "HORN DRILL");
-            UseItem("TM26", "NIDOKING", "THRASH");
-            UseItem("BICYCLE");
-
-            CutAt("FuchsiaCity", 18, 19);
-            CutAt(16, 11);
-            MoveTo("SafariZoneGate", 3, 2);
-            ClearText();
-            Yes();
-            ClearText();
-            ClearText();
-
-            UseItem("BICYCLE");
-            MoveTo(20, 14);
-            MoveTo(23, 14);
-            MoveTo(23, 11);
-
-            MoveTo(217, 4, 23);
-            UseItem("SUPER REPEL");
-            CloseMenu(Joypad.Up);
-
-            MoveTo(218, 7, 13);
-            MoveTo(218, 3, 14);
-        });
-
+        }
         Scenario NormalRepeling = () =>
         {
             ClearText();
@@ -4134,6 +4288,48 @@ public class RedComparisons : RedBlueForceComparisons
             MoveTo(218, 7, 13);
             MoveTo(218, 3, 14);
         };
+        Scenario BadOneRepel = () =>
+        {
+            ClearText();
+            ItemSwap("PARLYZ HEAL", "TM26");
+            UseItem("PP UP", "NIDOKING", "HORN DRILL");
+            UseItem("TM26", "NIDOKING", "THRASH");
+            UseItem("BICYCLE");
+
+            CutAt("FuchsiaCity", 18, 19);
+            CutAt(16, 11);
+            MoveTo("SafariZoneGate", 3, 2);
+            ClearText();
+            Yes();
+            ClearText();
+            ClearText();
+
+            UseItem("BICYCLE");
+            MoveTo(20, 14);
+            MoveTo(23, 14);
+            MoveTo(23, 11);
+
+            MoveTo(217, 4, 23);
+            UseItem("SUPER REPEL");
+            CloseMenu(Joypad.Up);
+
+            MoveTo(218, 7, 13);
+            MoveTo(218, 3, 14);
+        };
+
+        Comparison.Compare("basesaves/red/safarionerepel.gqs", new Scenario[] {()=>
+        {
+            OneRepel(0);
+        }, () =>
+        {
+            OneRepel(1);
+        }, () =>
+        {
+            OneRepel(2);
+        }, () =>
+        {
+            NormalRepeling();
+        }});
     }
     void BlackBeltRevive()
     {
@@ -4523,6 +4719,17 @@ public class RedComparisons : RedBlueForceComparisons
             ClearText();
             ForceTurn(new RbyTurn("BUBBLEBEAM", 1), new RbyTurn("ROAR"));
             ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THRASH"));
+        });
+        Comparison.Compare("gamblerbb", "basesaves/red/gambler.gqs", () =>
+        {
+            ClearText();
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+        }, () =>
+        {
+            ClearText();
+            ForceTurn(new RbyTurn("THRASH"));
             ForceTurn(new RbyTurn("THRASH"));
         });
     }
@@ -5046,12 +5253,406 @@ public class RedComparisons : RedBlueForceComparisons
             LoreleiSplit(true);
         });
     }
+    void CryLength()
+    {
+        Comparison.Compare("basesaves/red/crylength.gqs", () =>
+        {
+            Inject(Joypad.Down);
+            Hold(Joypad.Down, SYM["TryDoWildEncounter.gotWildEncounterType"] + 8);
+            A = 165;
+            RunUntil("ManualTextScroll");
+        }, () =>
+        {
+            Inject(Joypad.Down);
+            Hold(Joypad.Down, SYM["TryDoWildEncounter.gotWildEncounterType"] + 8);
+            A = 132;
+            RunUntil("ManualTextScroll");
+        });
+        Comparison.Compare("crylength", "basesaves/red/crylength2.gqs", () =>
+        {
+            CpuWrite("wEnemyMonSpecies2", Species["SNORLAX"].Id);
+            RunUntil("ManualTextScroll");
+        }, () =>
+        {
+            CpuWrite("wEnemyMonSpecies2", Species["PIDGEY"].Id);
+            RunUntil("ManualTextScroll");
+        });
+    }
+    void Route1Manip()
+    {
+        Comparison.Compare("route1manip", "basesaves/red/route1.gqs", () =>
+        {
+            ClearText();
+            MoveTo(10, 0);
+            SaveAndQuit();
+            new RbyIntroSequence(RbyStrat.PalAB).Execute(this, true);
+            Execute(SpacePath("UAUUUULLUUUUUUURRRRUUUULLLUURRUURARUURUUUUUUUUUUUULLLLUUUUUUUUUULUUUUUUUURRRRRRRRRRU"));
+            ClearText();
+            MoveTo("ViridianCity", 29, 20);
+            Execute(SpacePath("DDDDDDDDDLLLLLLLLDDDDDD"));
+            Execute(SpacePath("DDDDRRRDDDDDADDADDDLLDDDDDDDDDDDLLDDDDDDDD"));
+            MoveTo(0, 10, 2);
+        }, () =>
+        {
+            ClearText();
+            MoveTo("Route1", 11, 24);
+            MoveTo("Route1", 11, 14);
+
+            MoveTo("Route1", 14, 10);
+            ForceEncounter(Action.Up, 0, 0x0000);
+            RunAway();
+            MoveTo("Route1", 14, 7);
+            ForceEncounter(Action.Up, 1, 0x0000);
+            RunAway();
+
+            MoveTo("ViridianCity", 21, 30);
+            MoveTo("ViridianCity", 20, 20);
+            MoveTo("ViridianCity", 29, 19);
+            ClearText();
+            MoveTo("Route1", 8, 6);
+            MoveTo("Route1", 9, 14);
+            MoveTo("Route1", 16, 22);
+            MoveTo("Route1", 16, 24);
+            MoveTo("Route1", 16, 26);
+            MoveTo("Route1", 14, 26);
+            MoveTo("Route1", 14, 28);
+            MoveTo("Route1", 10, 28);
+            MoveTo("Route1", 10, 35);
+            MoveTo(0, 10, 2);
+        });
+    }
+    void FlyMenuPg()
+    {
+        Comparison.Compare("flymenupg", "basesaves/red/flymenu_slot1.gqs", () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("HM02", "PIDGEY");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            Fly("LavenderTown");
+
+            // LAVENDER RIVAL
+            MoveTo("PokemonTower2F", 15, 5);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+            ForceTurn(new RbyTurn("THRASH"));
+            ForceTurn(new RbyTurn("THRASH", Crit));
+
+            // CHANNELER 1
+            TalkTo("PokemonTower4F", 15, 7);
+            MoveSwap("THRASH", "ROCK SLIDE");
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            PickupItemAt(12, 10); // elixer
+            PickupItemAt("PokemonTower5F", 4, 12); // elixer
+
+            MoveTo("PokemonTower5F", 11, 9);
+            ClearText(); // heal pad
+
+            // CHANNELER 2
+            MoveTo("PokemonTower6F", 15, 5);
+            ClearText();
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            // CHANNELER 3
+            TalkTo("PokemonTower6F", 9, 5);
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            PickupItemAt(6, 8); // rare candy
+
+            MoveTo(10, 15);
+            UseItem("TM07", "NIDOKING", "ROCK SLIDE");
+
+            MoveTo(10, 16);
+            SaveState("basesaves/red/ghostmenu_alt.gqs");
+            ClearText();
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("POKE DOLL"); // escape ghost
+
+            // ROCKET 1
+            MoveTo("PokemonTower7F", 10, 11);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+
+            // ROCKET 2
+            MoveTo(10, 9);
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("SMOG", Miss));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+
+            // ROCKET 3
+            MoveTo(10, 7);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THRASH"));
+            ForceTurn(new RbyTurn("THRASH"));
+
+            // Get Pokéflute
+            TalkTo(10, 3);
+            TalkTo(3, 1);
+            ClearText();
+
+            MoveTo("LavenderTown", 7, 10);
+            Fly("CeladonCity");
+            TalkTo("CeladonPokecenter", 3, 2);
+            Yes();
+            ClearText(); // healed at center
+
+            MoveTo("CeladonCity", 41, 10);
+            UseItem("BICYCLE");
+
+            MoveTo("Route7Gate", 3, 4);
+            ClearText();
+            MoveTo("Route7", 18, 10);
+            UseItem("BICYCLE");
+
+            PickupItemAt("SilphCo5F", 12, 3);
+
+            // ARBOK ROCKET
+            TalkTo(8, 16);
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("LEER", Miss));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+
+            PickupItemAt(21, 16);
+            TalkTo(7, 13);
+            TalkTo("SilphCo3F", 17, 9);
+
+            // SILPH RIVAL
+            MoveTo("SilphCo7F", 3, 2, Action.Left);
+            SaveState("basesaves/red/silphrival_alt.gqs");
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ItemSwap("HM01", "SUPER REPEL");
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        }, () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("HM02", "PIDGEY");
+            Fly("LavenderTown");
+
+            // LAVENDER RIVAL
+            MoveTo("PokemonTower2F", 15, 5);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+            ForceTurn(new RbyTurn("THRASH"));
+            ForceTurn(new RbyTurn("THRASH", Crit));
+
+            // CHANNELER 1
+            TalkTo("PokemonTower4F", 15, 7);
+            MoveSwap("THRASH", "ROCK SLIDE");
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            PickupItemAt(12, 10); // elixer
+            PickupItemAt("PokemonTower5F", 4, 12); // elixer
+
+            MoveTo("PokemonTower5F", 11, 9);
+            ClearText(); // heal pad
+
+            // CHANNELER 2
+            MoveTo("PokemonTower6F", 15, 5);
+            ClearText();
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            // CHANNELER 3
+            TalkTo("PokemonTower6F", 9, 5);
+            ForceTurn(new RbyTurn("ROCK SLIDE"));
+
+            PickupItemAt(6, 8); // rare candy
+
+            MoveTo(10, 15);
+            UseItem("TM07", "NIDOKING", "ROCK SLIDE");
+
+            MoveTo(10, 16);
+            SaveState("basesaves/red/ghostmenu.gqs");
+            ClearText();
+            ItemSwap("HM01", "SUPER REPEL");
+            UseItem("POKE DOLL"); // escape ghost
+
+            // ROCKET 1
+            MoveTo("PokemonTower7F", 10, 11);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+
+            // ROCKET 2
+            MoveTo(10, 9);
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("SMOG", Miss));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+
+            // ROCKET 3
+            MoveTo(10, 7);
+            ClearText();
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THUNDERBOLT"));
+            ForceTurn(new RbyTurn("THRASH"));
+            ForceTurn(new RbyTurn("THRASH"));
+
+            // Get Pokéflute
+            TalkTo(10, 3);
+            TalkTo(3, 1);
+            ClearText();
+
+            MoveTo("LavenderTown", 7, 10);
+            Fly("CeladonCity");
+            TalkTo("CeladonPokecenter", 3, 2);
+            Yes();
+            ClearText(); // healed at center
+
+            MoveTo("CeladonCity", 41, 10);
+            UseItem("BICYCLE");
+
+            MoveTo("Route7Gate", 3, 4);
+            ClearText();
+            MoveTo("Route7", 18, 10);
+            UseItem("BICYCLE");
+
+            PickupItemAt("SilphCo5F", 12, 3);
+
+            // ARBOK ROCKET
+            TalkTo(8, 16);
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("LEER", Miss));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+
+            PickupItemAt(21, 16);
+            TalkTo(7, 13);
+            TalkTo("SilphCo3F", 17, 9);
+
+            // SILPH RIVAL
+            MoveTo("SilphCo7F", 3, 2, Action.Left);
+            SaveState("basesaves/red/silphrival.gqs");
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("X SPECIAL"), new RbyTurn("HYDRO PUMP"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("BUBBLEBEAM"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        });
+        Comparison.Compare("flymenupg1", "basesaves/red/flymenu_slot1.gqs", () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("HM02", "PIDGEY");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            Fly("LavenderTown");
+        }, () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("HM02", "PIDGEY");
+            Fly("LavenderTown");
+        });
+        Comparison.Compare("flymenupg2", "basesaves/red/ghostmenu_alt.gqs", "basesaves/red/ghostmenu.gqs", () =>
+        {
+            ClearText();
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("POKE DOLL");
+        }, () =>
+        {
+            ClearText();
+            ItemSwap("HM01", "SUPER REPEL");
+            UseItem("POKE DOLL");
+        });
+        Comparison.Compare("flymenupg3", "basesaves/red/silphrival_alt.gqs", "basesaves/red/silphrival.gqs", () =>
+        {
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ItemSwap("HM01", "SUPER REPEL");
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        }, () =>
+        {
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        });
+        Comparison.Compare("flymenupgshort", "basesaves/red/flymenu_slot1.gqs", () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("HM02", "PIDGEY");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            Fly("LavenderTown");
+            LoadState("basesaves/red/ghostmenu_alt.gqs");
+            ClearText();
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("POKE DOLL");
+            LoadState("basesaves/red/silphrival_alt.gqs");
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ItemSwap("HM01", "SUPER REPEL");
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        }, () =>
+        {
+            ItemSwap("HELIX FOSSIL", "TM07");
+            UseItem("SUPER REPEL");
+            UseItem("TM48", "NIDOKING", "MEGA PUNCH");
+            ItemSwap("S.S.TICKET", "X ACCURACY");
+            UseItem("HM02", "PIDGEY");
+            Fly("LavenderTown");
+            LoadState("basesaves/red/ghostmenu.gqs");
+            ClearText();
+            ItemSwap("HM01", "SUPER REPEL");
+            UseItem("POKE DOLL");
+            LoadState("basesaves/red/silphrival.gqs");
+            ClearText();
+            ForceTurn(new RbyTurn("X ACCURACY"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("X SPEED"), new RbyTurn("WHIRLWIND"));
+            ForceTurn(new RbyTurn("HORN DRILL"));
+        });
+    }
+    void AgathaMenuClassic()
+    {
+        Comparison.Compare("basesaves/red/agathamenuclassic.gqs", () =>
+        {
+            ClearText();
+            UseItem("SUPER POTION", "NIDOKING");
+            UseItem("ELIXER", "NIDOKING");
+            // CloseMenu();
+            Execute("U");
+        }, () =>
+        {
+            ClearText();
+            UseItem("ELIXER", "NIDOKING");
+            UseItem("SUPER POTION", "NIDOKING");
+            // CloseMenu();
+            Execute("U");
+        });
+    }
 
     Comparison Comparison;
     public RedComparisons() : base()
     {
         Comparison = new Comparison(this);
-        LoreleiPPUPvsMaxEther();
+        MoonLag();
         Environment.Exit(0);
     }
 }
