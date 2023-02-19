@@ -724,20 +724,16 @@ public class RbyForce : Rby {
                 }
                 break;
             case "ItemUseVitamin": // Can only be used outside of battle
-                if(item.Name == "RARE CANDY") {
-                    ChooseMenuItem(0); // USE
-                    ChooseMenuItem(target1);
-                    ClearText();
-                } else {
-                    // TODO: Implement
-                }
+                ChooseMenuItem(0); // USE
+                ChooseMenuItem(target1);
+                ClearText();
                 break;
             case "ItemUsePPRestore":
                 if(!InBattle) ChooseMenuItem(0); // USE
                 ChooseMenuItem(target1);
                 if(item.Name.Contains("ETHER")) {
-                    ClearText();
-                    ChooseMenuItem(target2 + 1); // those are 1-4 indexes for some reason
+                    RunUntil("HandleMenuInput_.getJoypadState");
+                    ChooseMenuItem(target2);
                 }
                 RunUntil("ManualTextScroll");
                 Inject(Joypad.B);
@@ -749,8 +745,8 @@ public class RbyForce : Rby {
             case "ItemUsePPUp":
                 ChooseMenuItem(0); // USE
                 ChooseMenuItem(target1);
-                ClearText();
-                ChooseMenuItem(target2 + 1);
+                RunUntil("HandleMenuInput_.getJoypadState");
+                ChooseMenuItem(target2);
                 ClearText();
                 break;
             case "ItemUseSuperRepel":
@@ -906,6 +902,7 @@ public class RbyForce : Rby {
     }
 
     public void RunAway() {
+        ClearText();
         BattleMenu(1, 1);
         ClearText();
     }
@@ -1112,7 +1109,7 @@ public class RbyForce : Rby {
             }
             CpuWrite(SYM["wSpritePlayerStateData2MovementByte1"] + offset, (byte) RbySpriteMovement.Walk);
 
-            RunUntil(SYM["TryWalking"] + 0x19);
+            RunUntil(SYM["TryWalking"] + (IsYellow ? 0x0B : 0x19));
             if((F & 0x10) == 0) {
                 // movement succeeded
                 NpcMovements.Remove(npc);

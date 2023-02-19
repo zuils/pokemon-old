@@ -45,6 +45,12 @@ public partial class PokemonGame : GameBoy {
         Press(joypad);
     }
 
+    public void MenuPress(params Joypad[] joypads) {
+        foreach(Joypad joypad in joypads) {
+            MenuPress(joypad);
+        }
+    }
+
     public virtual byte[] ReadCollisionMap() {
         throw new NotImplementedException();
     }
