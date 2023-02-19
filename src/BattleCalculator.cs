@@ -94,27 +94,31 @@ public class BattleCalculator : Red
     }
     static void AttackStage(RbyPokemon poke, int stage, Info info)
     {
+        poke.Attack = poke.UnmodifiedAttack;
         if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.AttackModifider = (byte) Math.Clamp(poke.AttackModifider + stage, 1, 13);
-        poke.Attack = GetModifiedStat(poke.UnmodifiedAttack, poke.AttackModifider);
+        poke.Attack = GetModifiedStat(poke.Attack, poke.AttackModifider);
     }
     static void DefenseStage(RbyPokemon poke, int stage, Info info)
     {
+        poke.Defense = poke.UnmodifiedDefense;
         if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.DefenseModifider = (byte) Math.Clamp(poke.DefenseModifider + stage, 1, 13);
-        poke.Defense = GetModifiedStat(poke.UnmodifiedDefense, poke.DefenseModifider);
+        poke.Defense = GetModifiedStat(poke.Defense, poke.DefenseModifider);
     }
     static void SpeedStage(RbyPokemon poke, int stage, Info info)
     {
+        poke.Speed = poke.UnmodifiedSpeed;
         if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.SpeedModifider = (byte) Math.Clamp(poke.SpeedModifider + stage, 1, 13);
-        poke.Speed = GetModifiedStat(poke.UnmodifiedSpeed, poke.SpeedModifider);
+        poke.Speed = GetModifiedStat(poke.Speed, poke.SpeedModifider);
     }
     static void SpecialStage(RbyPokemon poke, int stage, Info info)
     {
+        poke.Special = poke.UnmodifiedSpecial;
         if(poke == info.Player) ApplyBadgeBoosts(poke);
         poke.SpecialModifider = (byte) Math.Clamp(poke.SpecialModifider + stage, 1, 13);
-        poke.Special = GetModifiedStat(poke.UnmodifiedSpecial, poke.SpecialModifider);
+        poke.Special = GetModifiedStat(poke.Special, poke.SpecialModifider);
     }
     static void AccuracyStage(RbyPokemon poke, int stage, Info info)
     {
@@ -644,7 +648,7 @@ public class BattleCalculator : Red
 
     public void Blackbelt()
     {
-        LoadState("basesaves/red/champ.gqs");
+        LoadState("basesaves/red/blackbelt.gqs");
         CpuWriteBE<ushort>("wPartyMon2HP", 34);
         ClearText();
         AvgOnly = true;
@@ -660,7 +664,7 @@ public class BattleCalculator : Red
 
     public void Champ()
     {
-        LoadState("basesaves/red/blackbelt.gqs");
+        LoadState("basesaves/red/champ.gqs");
         ClearText();
         AvgOnly = true;
         LockThreshold = 0.001;
@@ -669,7 +673,7 @@ public class BattleCalculator : Red
             if(info.Turn == 0)
                 return "X SPECIAL";
             if(!info.Player.XAccuracyEffect)
-                if(info.Enemy.ChargingUp)
+                if(info.Enemy.Species.Name == "PIDGEOT" && LastMoveUsed(info, Enemy) == "SKY ATTACK")
                     return "BLIZZARD";
                 else if(info.Enemy.Species.Name == "ALAKAZAM")
                     return "EARTHQUAKE";
@@ -684,7 +688,7 @@ public class BattleCalculator : Red
             if(!info.Player.XAccuracyEffect)
                 if(info.Enemy.Species.Name == "PIDGEOT" && LastMoveUsed(info, Enemy) == "SKY ATTACK")
                     return "BLIZZARD";
-                else if(info.Enemy.Species.Name == "PIDGEOT" && info.Player.HP <= 14)
+                else if(info.Enemy.Species.Name == "PIDGEOT" && info.Player.HP <= 14 && info.Turn <= 2)
                     return "POTION";
                 else if(info.Enemy.Species.Name == "ALAKAZAM")
                     return "EARTHQUAKE";
